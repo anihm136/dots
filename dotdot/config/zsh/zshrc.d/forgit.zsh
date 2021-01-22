@@ -1,0 +1,9 @@
+forgit_log=glog
+forgit_diff=gdiff
+forgit_add=ga
+forgit_reset_head=grh
+forgit_ignore=gignore
+forgit_restore=gcheck
+forgit_clean=gclean
+forgit_stash_show=gss
+forgit_cherry_pick=gcp

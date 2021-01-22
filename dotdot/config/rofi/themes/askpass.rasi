@@ -1,0 +1,36 @@
+/*
+ * by Siddharth Dushantha 2020
+ * A very minimal graphical helper for sudo's askpass.
+ *
+ */
+
+
+* {
+    background-color:      #222222aa;
+    text-color:           #D8DEE9;
+    font:            "Overpass 12";
+}
+
+#window {
+    /* Change the this according to your screen width */
+    width:      380px;
+
+    /* Change this value according to your screen height */
+    y-offset: -10%;
+
+    /* This padding is given just for aesthetic purposes */
+    padding:    40px;
+    border-radius: 10px;
+}
+
+
+#entry {
+    /*
+     * For some reason, without this option, a dash/hyphen appears
+     * at the end of the entry
+     */
+    expand: true;
+
+    /* Keeping using 200px so that long passwords can be typed */
+    width: 200px;
+}
