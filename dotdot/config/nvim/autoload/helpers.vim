@@ -64,14 +64,14 @@ fun! helpers#navMap(mode) abort
     nnoremap <silent><buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
     nnoremap <silent><buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
   elseif a:mode == 2
-    nnoremap <silent><buffer><expr> <leader>cd ':cs find g ' . expand('<cword>') . '<cr>'
-    nnoremap <silent><buffer><expr> <leader>cD ':cs find c ' . expand('<cword>') . '<cr>'
-    nnoremap <silent><buffer><expr> <leader>cs ':cs find s ' . expand('<cword>') . '<cr>'
+    nnoremap <silent><buffer><expr> <leader>cd ':cs find g ' . expand('<cword>') . '<CR>'
+    nnoremap <silent><buffer><expr> <leader>cD ':cs find c ' . expand('<cword>') . '<CR>'
+    nnoremap <silent><buffer><expr> <leader>cs ':cs find s ' . expand('<cword>') . '<CR>'
   elseif a:mode == 3
-    nnoremap <silent><buffer> <leader>cd :Gtags<cr>
-    nnoremap <silent><buffer> <leader>cD :GtagsCursor<cr>
-    nnoremap <silent><buffer> <leader>cs :Gtags -g<cr>
-    nnoremap <silent><buffer> g0 :Gtags -f %<cr>
+    nnoremap <silent><buffer> <leader>cd :Gtags<CR>
+    nnoremap <silent><buffer> <leader>cD :GtagsCursor<CR>
+    nnoremap <silent><buffer> <leader>cs :Gtags -g<CR>
+    nnoremap <silent><buffer> g0 :Gtags -f %<CR>
   endif
 endfunction
 
@@ -141,7 +141,7 @@ function! helpers#toggleFileExplorer() abort
   endfor
   if flag == 1
     silent exe 'Vexplore'
-    nmap <buffer> <cr> :call dirvish#open("edit",1)<cr>
+    nmap <buffer> <CR> :call dirvish#open("edit",1)<CR>
     nmap <buffer><silent> q gq:q<CR>
   endif
 endfunction

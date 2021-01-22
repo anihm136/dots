@@ -1,19 +1,9 @@
-local should_reload = true
-local reloader = function()
-    if should_reload then
-        RELOAD("plenary")
-        RELOAD("popup")
-        RELOAD("telescope")
-    end
-end
-
-reloader()
-
 local actions = require("telescope.actions")
 local sorters = require("telescope.sorters")
 local themes = require("telescope.themes")
+local telescope = require("telescope")
 
-require("telescope").setup {
+telescope.setup {
     defaults = {
         prompt_prefix = " >",
         winblend = 0,
@@ -42,7 +32,8 @@ require("telescope").setup {
         file_sorter = sorters.get_fzy_sorter
     }
 }
-require('telescope').load_extension('fzy_native')
+telescope.load_extension('fzy_native')
+telescope.load_extension('frecency')
 
 local M = {}
 
@@ -124,11 +115,14 @@ function M.help_tags()
     }
 end
 
+function M.recent()
+    require("telescope").extensions.frecency.frecency()
+end
+
 return setmetatable(
     {},
     {
         __index = function(_, k)
-            reloader()
             if M[k] then
                 return M[k]
             else
