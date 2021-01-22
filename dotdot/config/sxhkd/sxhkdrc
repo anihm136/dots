@@ -1,0 +1,56 @@
+super + b
+  $BROWSER
+
+super + F9
+  mnt
+
+super + F10
+  umt
+
+super + BackSpace
+  power
+
+super + e
+  $GUIEDITOR
+
+super + f
+  $FILE
+
+super + Return
+  $TERMINAL
+
+super + shift + s
+  $SETTINGS
+
+super + c
+  $CALC
+
+super + shift + x
+  eval $LOCKER
+
+super + d
+  eval $LAUNCHER
+
+alt + Tab
+  rofiwindow
+
+XF86AudioNext
+  music playnext
+
+XF86AudioPrev
+  music playprev
+
+XF86AudioPlay
+  music playpause
+
+XF86AudioRaiseVolume
+  vol up
+
+XF86AudioLowerVolume
+  vol down
+
+XF86AudioMute
+  vol toggle
+
+Print
+  flameshot gui

@@ -7,5 +7,81 @@ config:
   link_on_import: link
   longkey: true
   showdiff: true
+  workdir: ~/.local/share/dotdrop
 dotfiles:
+  d_config_nvim:
+    src: config/nvim
+    dst: ~/.config/nvim
+    link: link_children
+  d_config_alacritty:
+    src: config/alacritty
+    dst: ~/.config/alacritty
+    link: link_children
+  d_config_awesome:
+    src: config/awesome
+    dst: ~/.config/awesome
+    link: link_children
+  d_config_beets:
+    src: config/beets
+    dst: ~/.config/beets
+    link: link_children
+  d_config_direnv:
+    src: config/direnv
+    dst: ~/.config/direnv
+    link: link_children
+  d_config_doom:
+    src: config/doom
+    dst: ~/.config/doom
+    link: link_children
+  d_config_kitty:
+    src: config/kitty
+    dst: ~/.config/kitty
+    link: link_children
+  d_config_nnn:
+    src: config/nnn
+    dst: ~/.config/nnn
+    link: link_children
+  f_config_picom.conf:
+    src: config/picom.conf
+    dst: ~/.config/picom.conf
+  d_config_ripgrep:
+    src: config/ripgrep
+    dst: ~/.config/ripgrep
+    link: link_children
+  d_config_rofi:
+    src: config/rofi
+    dst: ~/.config/rofi
+    link: link_children
+  d_config_sxhkd:
+    src: config/sxhkd
+    dst: ~/.config/sxhkd
+    link: link_children
+  d_config_tilda:
+    src: config/tilda
+    dst: ~/.config/tilda
+    chmod: '700'
+    link: link_children
+  d_config_zsh:
+    src: config/zsh
+    dst: ~/.config/zsh
+    link: link_children
+  f_config_screenkey.json:
+    src: config/screenkey.json
+    dst: ~/.config/screenkey.json
 profiles:
+  sorcery:
+    dotfiles:
+    - d_config_nvim
+    - d_config_awesome
+    - d_config_beets
+    - d_config_direnv
+    - d_config_doom
+    - d_config_kitty
+    - d_config_nnn
+    - f_config_picom.conf
+    - d_config_ripgrep
+    - d_config_rofi
+    - d_config_sxhkd
+    - d_config_tilda
+    - d_config_zsh
+    - f_config_screenkey.json

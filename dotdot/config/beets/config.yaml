@@ -1,0 +1,22 @@
+plugins: deezer chroma edit embedart fetchart ftintitle zero info lastgenre duplicates lyrics
+import:
+  copy: yes
+  resume: yes
+  write: yes
+  incremental: yes
+  group_albums: yes
+  autotag: no
+  log: beet_log.txt
+paths:
+  default: $albumartist/$album/$title
+  singleton: Singles/$artist/$title
+  album::.*:\ Soundtrack: Soundtracks/%first{$album,1,0,:, }/$title
+embedart:
+  remove_art_file: yes
+zero:
+  keep_fields: title artist album albumartist year genre images
+lastgenre:
+  canonical: yes
+  count: 3
+  whitelist: ~/.config/beets/genre_whitelist.txt
+  prefer_specific: yes
