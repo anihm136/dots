@@ -3,5 +3,5 @@ if !get(g:, 'loaded_gitgutter', v:false)
 endif
 
 let g:gitgutter_map_keys=0
-map <silent> <Leader>gF :GitGutterFold<cr>
+map <silent> <Leader>gF :GitGutterFold<CR>
 

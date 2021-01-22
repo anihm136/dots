@@ -904,13 +904,13 @@ function! s:switch_out(...)
 endfunction
 
 function! s:finish_bindings()
-  nnoremap <silent> <buffer> R  :call <SID>retry()<cr>
-  nnoremap <silent> <buffer> D  :PlugDiff<cr>
-  nnoremap <silent> <buffer> S  :PlugStatus<cr>
-  nnoremap <silent> <buffer> U  :call <SID>status_update()<cr>
-  xnoremap <silent> <buffer> U  :call <SID>status_update()<cr>
-  nnoremap <silent> <buffer> ]] :silent! call <SID>section('')<cr>
-  nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<cr>
+  nnoremap <silent> <buffer> R  :call <SID>retry()<CR>
+  nnoremap <silent> <buffer> D  :PlugDiff<CR>
+  nnoremap <silent> <buffer> S  :PlugStatus<CR>
+  nnoremap <silent> <buffer> U  :call <SID>status_update()<CR>
+  xnoremap <silent> <buffer> U  :call <SID>status_update()<CR>
+  nnoremap <silent> <buffer> ]] :silent! call <SID>section('')<CR>
+  nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<CR>
 endfunction
 
 function! s:prepare(...)
@@ -934,7 +934,7 @@ function! s:prepare(...)
     call s:new_window()
   endif
 
-  nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<cr>
+  nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<CR>
   if a:0 == 0
     call s:finish_bindings()
   endif
@@ -943,7 +943,7 @@ function! s:prepare(...)
   let s:plug_buf = winbufnr(0)
   call s:assign_name()
 
-  for k in ['<cr>', 'L', 'o', 'X', 'd', 'dd']
+  for k in ['<CR>', 'L', 'o', 'X', 'd', 'dd']
     execute 'silent! unmap <buffer>' k
   endfor
   setlocal buftype=nofile bufhidden=wipe nobuflisted nolist noswapfile nowrap cursorline modifiable nospell
@@ -994,7 +994,7 @@ function! s:bang(cmd, ...)
       let [batchfile, cmd] = s:batchfile(cmd)
     endif
     let g:_plug_bang = (s:is_win && has('gui_running') ? 'silent ' : '').'!'.escape(cmd, '#!%')
-    execute "normal! :execute g:_plug_bang\<cr>\<cr>"
+    execute "normal! :execute g:_plug_bang\<CR>\<CR>"
   finally
     unlet g:_plug_bang
     let [&shell, &shellcmdflag, &shellredir] = [sh, shellcmdflag, shrd]
@@ -2422,9 +2422,9 @@ function! s:clean(force)
       call s:delete([6, line('$')], 1)
     else
       call setline(4, 'Cancelled.')
-      nnoremap <silent> <buffer> d :set opfunc=<sid>delete_op<cr>g@
+      nnoremap <silent> <buffer> d :set opfunc=<sid>delete_op<CR>g@
       nmap     <silent> <buffer> dd d_
-      xnoremap <silent> <buffer> d :<c-u>call <sid>delete_op(visualmode(), 1)<cr>
+      xnoremap <silent> <buffer> d :<c-u>call <sid>delete_op(visualmode(), 1)<CR>
       echo 'Delete the lines (d{motion}) to delete the corresponding directories'
     endif
   endif
@@ -2545,8 +2545,8 @@ function! s:status()
   setlocal nomodifiable
   if unloaded
     echo "Press 'L' on each line to load plugin, or 'U' to update"
-    nnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<cr>
-    xnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<cr>
+    nnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<CR>
+    xnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<CR>
   end
 endfunction
 
@@ -2634,7 +2634,7 @@ function! s:preview_commit()
     endif
   endtry
   setlocal nomodifiable
-  nnoremap <silent> <buffer> q :q<cr>
+  nnoremap <silent> <buffer> q :q<CR>
   wincmd p
 endfunction
 
@@ -2703,16 +2703,16 @@ function! s:diff()
         \ . (cnts[1] ? printf(' %d plugin(s) have pending updates.', cnts[1]) : ''))
 
   if cnts[0] || cnts[1]
-    nnoremap <silent> <buffer> <plug>(plug-preview) :silent! call <SID>preview_commit()<cr>
-    if empty(maparg("\<cr>", 'n'))
-      nmap <buffer> <cr> <plug>(plug-preview)
+    nnoremap <silent> <buffer> <plug>(plug-preview) :silent! call <SID>preview_commit()<CR>
+    if empty(maparg("\<CR>", 'n'))
+      nmap <buffer> <CR> <plug>(plug-preview)
     endif
     if empty(maparg('o', 'n'))
       nmap <buffer> o <plug>(plug-preview)
     endif
   endif
   if cnts[0]
-    nnoremap <silent> <buffer> X :call <SID>revert()<cr>
+    nnoremap <silent> <buffer> X :call <SID>revert()<CR>
     echo "Press 'X' on each block to revert the update"
   endif
   normal! gg

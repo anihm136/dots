@@ -4,7 +4,7 @@ endif
 
 nmap <silent> [e <Plug>(ale_previous_wrap)
 nmap <silent> ]e <Plug>(ale_next_wrap)
-nmap <silent> <leader>ce <cmd>lopen<cr>
+nmap <silent> <leader>ce <cmd>lopen<CR>
 let g:ale_linters_explicit = 1
 highlight clear ALEErrorSign
 highlight clear ALEWarningSign
@@ -24,4 +24,4 @@ let g:ale_fixers = {
 			\   '*': ['remove_trailing_lines', 'trim_whitespace'],
 			\   'javascript': ['eslint'],
 			\}
-nnoremap <silent><F4> :ALEFix<cr>
+nnoremap <silent><F4> :ALEFix<CR>

@@ -3,5 +3,5 @@ if !get(g:, 'loaded_gtags', v:false)
 endif
 
 let g:Gtags_No_Auto_Jump = 1
-nnoremap <silent> <F6> :call helpers#toggleTags()<cr>
+nnoremap <silent> <F6> :call helpers#toggleTags()<CR>
 

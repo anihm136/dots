@@ -23,6 +23,7 @@ Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'justinmk/vim-dirvish'
 Plug 'antonk52/dirvish-fs.vim'
 Plug 'kkoomen/vim-doge'
+Plug 'romgrk/searchReplace.vim'
 " Git
 Plug 'tpope/vim-fugitive'
 Plug 'rhysd/git-messenger.vim'

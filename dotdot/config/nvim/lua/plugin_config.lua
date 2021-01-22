@@ -32,7 +32,7 @@ vim.api.nvim_set_keymap(
 )
 vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd>lua require('telescope_config').git_files()<CR>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>fd", "<cmd>lua require('telescope_config').edit_dotfiles()<CR>", {noremap = true})
-vim.api.nvim_set_keymap("n", "<leader>fr", "<cmd>lua require('telescope_config').oldfiles()<CR>", {noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>fr", "<cmd>lua require('telescope_config').recent()<CR>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>rl", "<cmd>lua require('telescope_config').live_grep()<CR>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>rw", "<cmd>lua require('telescope_config').grep_prompt()<CR>", {noremap = true})
 vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd>lua require('telescope_config').buffers()<CR>", {noremap = true})
