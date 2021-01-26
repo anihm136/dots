@@ -18,35 +18,6 @@ function! helpers#bufcloseCloseIt() abort
   silent redrawtabline
 endfunction
 
-fun! helpers#toggleFt() abort
-  if exists("b:is_php")
-    if &filetype == 'php'
-      set ft=html
-      echo "HTML mode"
-    else
-      set ft=php
-      echo "PHP mode"
-    endif
-  else
-    if &filetype == 'htmljinja'
-      set ft=htmldjango
-      echo "Django mode"
-    elseif &filetype == 'htmldjango'
-      set ft=html
-      echo "HTML mode"
-    else
-      set ft=htmljinja
-      echo "Jinja mode"
-    endif
-  endif
-endfunction
-
-fun! helpers#djangoFt() abort
-  if exists("b:is_django") && b:is_django
-    set ft=htmldjango
-  endif
-endfunction
-
 fun! helpers#navMap(mode) abort
   silent! nunmap <buffer> <leader>cd
   silent! nunmap <buffer> <leader>cD
