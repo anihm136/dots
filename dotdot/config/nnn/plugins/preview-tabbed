@@ -54,7 +54,7 @@ PAGER=${PAGER:-"vim -R"}
 NUKE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins/nuke"
 
 
-TERMINAL="alacritty --embed"
+TERMINAL="urxvt -embed"
 
 term_nuke () {
     # $1 -> $XID, $2 -> $FILE
@@ -77,7 +77,7 @@ start_tabbed () {
     fi
 
     read -r XID < "$FIFO"
-    XID=$(printf "%d" $XID)
+    # XID=$(printf "%d" $XID)
 
     rm "$FIFO"
 }
