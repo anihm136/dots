@@ -10,20 +10,20 @@ require("pl.stringx").import()
 
 local theme = {}
 theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
-theme.wallpaper = function()
-  local wall_dir = "~/Pictures/wallpapers/"
-  local walls = io.popen("fd . "..wall_dir):lines()
-  local iter_to_arr = function()
-    local res = {}
-    for line in walls do
-      table.insert(res,line)
-    end
-    return res
-  end
-  walls = iter_to_arr(walls)
-  math.randomseed((''..os.time()):reverse())
-  return walls[math.random(1,#walls)]
-end
+-- theme.wallpaper = function()
+--   local wall_dir = "~/Pictures/wallpapers/"
+--   local walls = io.popen("fd . "..wall_dir):lines()
+--   local iter_to_arr = function()
+--     local res = {}
+--     for line in walls do
+--       table.insert(res,line)
+--     end
+--     return res
+--   end
+--   walls = iter_to_arr(walls)
+--   math.randomseed((''..os.time()):reverse())
+--   return walls[math.random(1,#walls)]
+-- end
 theme.font = "Overpass 13"
 theme.taglist_font = "Kimberley Bl 11"
 theme.fg_normal = "#BBBBBB"
@@ -222,17 +222,6 @@ awful.widget.taglist.filter.all = function(t, args)
 end
 
 function theme.at_screen_connect(s)
-    -- If wallpaper is a function, call it with the screen
-    if s.index==1 then
-        require('theme/screen_1').at_screen_connect(s)
-        return
-    end
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
-    end
-    gears.wallpaper.maximized(wallpaper, s, true)
-
     -- Tags
     local layout = awful.layout.layouts[1]
     for i, tag in pairs(awful.util.tagnames_2) do
