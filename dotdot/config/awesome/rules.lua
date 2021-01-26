@@ -27,11 +27,12 @@ function rules.create(clientkeys, clientbuttons)
         buttons = clientbuttons,
         screen = awful.screen.preferred,
         placement = awful.placement.no_overlap + awful.placement.no_offscreen,
-        size_hints_honor = false,
-        maximized = false,
-        maximized_horizontal = false,
-        maximized_vertical = false,
+        size_hints_honor = true,
         callback = function(c)
+          c.maximized, c.maximized_vertical, c.maximized_horizontal = false, false, false
+          if (c.transient_for) then
+            c:move_to_tag(c.transient_for.first_tag)
+          end
           if (c.floating) then
             awful.placement.centered(c)
           end
@@ -49,7 +50,7 @@ function rules.create(clientkeys, clientbuttons)
       properties = {screen = 1, tag = awful.util.tagnames_1[3]}
     },
     {
-      rule_any = {class = {"Thunderbird", "discord", "Slack", "Element", "whatsapp-nativefier-d40211", "instagram-nativefier-51e18f", "Microsoft Teams - Preview"}},
+      rule_any = {class = {"Thunderbird", "discord", "Slack", "Element", "whatsapp-nativefier-d40211", "instagram-nativefier-51e18f", "Microsoft Teams - Preview", "TelegramDesktop"}},
       properties = {screen = 2, tag = awful.util.tagnames_2[3]}
     },
     {

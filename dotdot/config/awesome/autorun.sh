@@ -31,6 +31,7 @@ run thunderbird
 run slack
 run teams
 run element-desktop
+run telegram-desktop
 run2 "discord" "Discord"
 run2 "whatsapp-nativefier" "WhatsApp"
 run2 "instagram-nativefier" "Instagram"

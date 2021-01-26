@@ -14,8 +14,6 @@ local keys = require("keys")
 root.keys(keys.globalkeys)
 root.buttons(keys.desktopbuttons)
 
-local machi = require("layout-machi")
-beautiful.layout_machi = machi.get_icon()
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 require("awful.hotkeys_popup.keys")
 
@@ -93,6 +91,17 @@ client.connect_signal(
         end
     end
 )
+
+-- Refocus parent window after transient window closes
+local last_focus
+client.connect_signal("unfocus", function(c) last_focus = c end)
+client.connect_signal("focus", function(c) last_focus = nil end)
+client.connect_signal("unmanage", function(c)
+    if last_focus == c and c.transient_for then
+        client.focus = c.transient_for
+        c.transient_for:raise()
+    end
+end)
 
 -- ===================================================================
 -- Client Focusing
