@@ -118,13 +118,6 @@ awful.widget.taglist.filter.all = function(t, args)
 end
 
 function theme.at_screen_connect(s)
-  -- If wallpaper is a function, call it with the screen
-  local wallpaper = theme.wallpaper
-  if type(wallpaper) == "function" then
-    wallpaper = wallpaper()
-  end
-  gears.wallpaper.maximized(wallpaper, s, true)
-
   -- Tags
   for i, tag in pairs(awful.util.tagnames_1) do
     awful.tag.add(

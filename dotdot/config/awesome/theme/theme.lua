@@ -9,7 +9,20 @@ local my_table = gears.table
 
 local theme = {}
 theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
-theme.wallpaper = theme.dir .. "/wall.jpg"
+theme.wallpaper = function(s)
+  local wall_dir = "~/Pictures/wallpapers/"
+  local walls = io.popen("fd . "..wall_dir):lines()
+  local iter_to_arr = function()
+    local res = {}
+    for line in walls do
+      table.insert(res,line)
+    end
+    return res
+  end
+  walls = iter_to_arr(walls)
+  math.randomseed(io.popen('od -vAn -N2 -d < /dev/urandom'):read('*a'))
+  return walls[math.random(1,#walls)]
+end
 theme.font = "Overpass 13"
 theme.fg_normal = "#BBBBBB"
 theme.fg_focus = "#78A4FF"
@@ -52,6 +65,12 @@ theme.tasklist_disable_icon = true
 
 function theme.at_screen_connect(s)
     -- We need one layoutbox per screen.
+    local wallpaper = theme.wallpaper
+    if type(wallpaper) == "function" then
+      wallpaper = wallpaper(s)
+    end
+    gears.wallpaper.maximized(wallpaper, s, true)
+
     s.mylayoutbox = awful.widget.layoutbox(s)
     s.mylayoutbox:buttons(
         my_table.join(
