@@ -103,6 +103,11 @@ client.connect_signal("unmanage", function(c)
     end
 end)
 
+-- Change focused window when client is switched
+client.connect_signal("focus", function(c)
+    awful.screen.focus(c.screen)
+end)
+
 -- ===================================================================
 -- Client Focusing
 -- ===================================================================
