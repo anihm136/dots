@@ -8,7 +8,20 @@ local awesome, client, os = awesome, client, os
 
 local theme = {}
 theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
-theme.wallpaper = "~/Pictures/wallpapers/wall.jpg"
+theme.wallpaper = function()
+  local wall_dir = "~/Pictures/wallpapers/"
+  local walls = io.popen("fd . "..wall_dir):lines()
+  local iter_to_arr = function()
+    local res = {}
+    for line in walls do
+      table.insert(res,line)
+    end
+    return res
+  end
+  walls = iter_to_arr(walls)
+  math.randomseed(io.popen('od -vAn -N2 -d < /dev/urandom'):read('*a'))
+  return walls[math.random(1,#walls)]
+end
 theme.font = "Overpass 14"
 theme.taglist_font = "Kimberley Bl 12"
 theme.fg_normal = "#BBBBBB"
@@ -40,24 +53,24 @@ mytextclock.forced_width = 78
 
 -- Calendar
 theme.cal =
-    lain.widget.cal(
+  lain.widget.cal(
     {
-        attach_to = {mytextclock},
-        notification_preset = {
-            title = "",
-            icon_size = 110,
-            margin = 5,
-            font = "Overpass Mono 11",
-            fg = theme.fg_normal,
-            bg = theme.bg_normal
-        }
+      attach_to = {mytextclock},
+      notification_preset = {
+        title = "",
+        icon_size = 110,
+        margin = 5,
+        font = "Overpass Mono 11",
+        fg = theme.fg_normal,
+        bg = theme.bg_normal
+      }
     }
-)
+  )
 
 -- /home fs
 local fsicon = wibox.widget.imagebox(theme.disk)
 local fsbar =
-    wibox.widget {
+  wibox.widget {
     forced_height = dpi(1),
     forced_width = dpi(65),
     color = theme.fg_normal,
@@ -67,19 +80,19 @@ local fsbar =
     ticks = true,
     ticks_size = dpi(6),
     widget = wibox.widget.progressbar
-}
+  }
 theme.fs =
-    lain.widget.fs {
+  lain.widget.fs {
     notification_preset = {fg = theme.fg_normal, bg = theme.bg_normal, font = "Overpass Mono 10.5"},
     settings = function()
-        if fs_now["/"].percentage < 90 then
-            fsbar:set_color(theme.fg_normal)
-        else
-            fsbar:set_color("#EB8F8F")
-        end
-        fsbar:set_value(fs_now["/"].percentage / 100)
+      if fs_now["/"].percentage < 90 then
+        fsbar:set_color(theme.fg_normal)
+      else
+        fsbar:set_color("#EB8F8F")
+      end
+      fsbar:set_value(fs_now["/"].percentage / 100)
     end
-}
+  }
 local fsbg = wibox.container.background(fsbar, "#474747", gears.shape.rectangle)
 local fswidget = wibox.container.margin(fsbg, dpi(2), dpi(7), dpi(4), dpi(4))
 --]]
@@ -89,78 +102,78 @@ local first = wibox.widget.textbox(markup.font("Overpass Mono 3", " "))
 local spr = wibox.widget.textbox(" ")
 local small_spr = wibox.widget.textbox(markup.font("Overpass Mono 4", " "))
 local bar_spr =
-    wibox.widget.textbox(
+  wibox.widget.textbox(
     markup.font("Overpass Mono 3", " ") ..
-        markup.fontfg(theme.font, "#777777", "|") .. markup.font("Overpass Mono 5", " ")
-)
+    markup.fontfg(theme.font, "#777777", "|") .. markup.font("Overpass Mono 5", " ")
+  )
 
 -- Eminent-like task filtering
 local orig_filter = awful.widget.taglist.filter.all
 
 -- Taglist label functions
 awful.widget.taglist.filter.all = function(t, args)
-    if t.selected or #t:clients() > 0 then
-        return orig_filter(t, args)
-    end
+  if t.selected or #t:clients() > 0 then
+    return orig_filter(t, args)
+  end
 end
 
 function theme.at_screen_connect(s)
-    -- If wallpaper is a function, call it with the screen
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-        wallpaper = wallpaper(s)
-    end
-    gears.wallpaper.maximized(wallpaper, s, true)
+  -- If wallpaper is a function, call it with the screen
+  local wallpaper = theme.wallpaper
+  if type(wallpaper) == "function" then
+    wallpaper = wallpaper()
+  end
+  gears.wallpaper.maximized(wallpaper, s, true)
 
-    -- Tags
-    for i, tag in pairs(awful.util.tagnames_1) do
-        awful.tag.add(
-            tag,
-            {
-                -- icon = tag.icon,
-                -- icon_only = true,
-                layout = awful.layout.layouts[1],
-                screen = s,
-                selected = i == 1
-            }
-        )
-    end
+  -- Tags
+  for i, tag in pairs(awful.util.tagnames_1) do
+    awful.tag.add(
+      tag,
+      {
+        -- icon = tag.icon,
+        -- icon_only = true,
+        layout = awful.layout.layouts[1],
+        screen = s,
+        selected = i == 1
+      }
+    )
+  end
 
-    -- Create a taglist widget
-    s.mytaglist = awful.widget.taglist{screen=s, filter=awful.widget.taglist.filter.all, buttons=awful.util.taglist_buttons, style={font=theme.taglist_font}}
+  -- Create a taglist widget
+  s.mytaglist = awful.widget.taglist{screen=s, filter=awful.widget.taglist.filter.all, buttons=awful.util.taglist_buttons, style={font=theme.taglist_font}}
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist{screen=s, filter=awful.widget.tasklist.filter.currenttags, buttons=awful.util.tasklist_buttons, style={font=theme.font}}
+  -- Create a tasklist widget
+  s.mytasklist = awful.widget.tasklist{screen=s, filter=awful.widget.tasklist.filter.currenttags, buttons=awful.util.tasklist_buttons, style={font=theme.font}}
 
-    -- Create the wibox
-    s.mywibox =
-        awful.wibar({position = "top", screen = s, height = theme.menu_height, bg = theme.bg_normal, fg = theme.fg_normal})
+  -- Create the wibox
+  s.mywibox =
+    awful.wibar({position = "top", screen = s, height = theme.menu_height, bg = theme.bg_normal, fg = theme.fg_normal})
 
-    -- Add widgets to the wibox
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        {
-            -- Left widgets
-            layout = wibox.layout.fixed.horizontal,
-            small_spr,
-            s.mylayoutbox,
-            first,
-            bar_spr,
-            s.mytaglist,
-            first,
-        },
-        s.mytasklist, -- Middle widget
-        {
-            -- Right widgets
-            layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(),
-            bar_spr,
-            fsicon,
-            fswidget,
-            bar_spr,
-            mytextclock
-        }
+  -- Add widgets to the wibox
+  s.mywibox:setup {
+    layout = wibox.layout.align.horizontal,
+    {
+      -- Left widgets
+      layout = wibox.layout.fixed.horizontal,
+      small_spr,
+      s.mylayoutbox,
+      first,
+      bar_spr,
+      s.mytaglist,
+      first,
+    },
+    s.mytasklist, -- Middle widget
+    {
+      -- Right widgets
+      layout = wibox.layout.fixed.horizontal,
+      wibox.widget.systray(),
+      bar_spr,
+      fsicon,
+      fswidget,
+      bar_spr,
+      mytextclock
     }
+  }
 end
 
 return theme
