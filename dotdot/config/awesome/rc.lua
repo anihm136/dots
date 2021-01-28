@@ -105,7 +105,9 @@ end)
 
 -- Change focused window when client is switched
 client.connect_signal("focus", function(c)
-    awful.screen.focus(c.screen)
+    if awful.screen.focused() ~= c.screen then
+        awful.screen.focus(c.screen)
+    end
 end)
 
 -- ===================================================================
