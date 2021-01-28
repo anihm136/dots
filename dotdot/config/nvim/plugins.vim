@@ -1,15 +1,11 @@
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'airblade/vim-rooter'
-" Plug 'tyru/caw.vim'
-Plug 'tpope/vim-commentary'
-Plug 'lambdalisue/suda.vim'
-Plug 'anihm136/context_filetype.vim'
+Plug 'tomtom/tcomment_vim'
 Plug 'anihm136/vim-unimpaired'
 Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
 Plug 'SirVer/ultisnips'
 Plug 'junegunn/vim-easy-align'
-Plug 'mhinz/vim-grepper', {'on': 'Grepper'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 Plug 'sbdchd/neoformat'
@@ -66,6 +62,8 @@ Plug 'justinmk/vim-sneak'
 Plug 'haya14busa/vim-asterisk'
 Plug 'haya14busa/is.vim'
 Plug 'machakann/vim-sandwich'
+Plug 'romainl/vim-cool'
+Plug 'andymass/vim-matchup'
 " Themes
 Plug 'AlessandroYorba/Despacio'
 Plug 'ajh17/Spacegray.vim'
@@ -88,10 +86,14 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'tjdevries/express_line.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-fzy-native.nvim'
+Plug 'tami5/sql.nvim'
+Plug 'nvim-telescope/telescope-frecency.nvim'
+Plug 'nvim-telescope/telescope-cheat.nvim'
+Plug 'nvim-telescope/telescope-project.nvim'
+Plug 'nvim-telescope/telescope-symbols.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 call plug#end()
  
-runtime macros/matchit.vim
 runtime macros/sandwich/keymap/surround.vim
 
 " Buftabline
