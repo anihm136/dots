@@ -31,6 +31,9 @@ super + shift + x
 super + d
   eval $LAUNCHER
 
+super + r
+  eval $RUNNER
+
 alt + Tab
   rofiwindow
 
