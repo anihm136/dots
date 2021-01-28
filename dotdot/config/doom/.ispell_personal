@@ -1,10 +1,12 @@
-personal_ws-1.1 en 22
+personal_ws-1.1 en 29
 PaaS
 Scoreboarding
 backend
 backends
 checkpointing
 conformant
+deallocate
+deallocation
 dereferenced
 dereferencing
 frontend
@@ -15,9 +17,14 @@ lookahead
 microarchitecture
 microservice
 middleware
+mispredicted
+misprediction
 multicore
+multithreading
 mutices
 redeclared
 regexes
+structs
+superscalar
 tokenization
 transpiler
