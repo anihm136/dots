@@ -10,6 +10,12 @@ let g:neoformat_cpp_clangformat = {
             \ 'stdin': 1
             \ }
 
+let g:neoformat_lua_prettier = {
+            \ 'exe': 'prettier',
+            \ 'args': ['--parser=lua'],
+            \ 'stdin': 0
+            \ }
+
 let g:neoformat_run_all_formatters = 1
 let g:neoformat_enabled_python = ['black', 'isort']
 let g:neoformat_enabled_javascript = ['prettier']
@@ -22,5 +28,5 @@ let g:neoformat_enabled_c = ['clangformat']
 let g:neoformat_enabled_cpp = ['clangformat']
 let g:neoformat_enabled_sql = ['sqlformat']
 let g:neoformat_enabled_go = ['gofmt']
-let g:neoformat_enabled_lua = ['luafmt']
+let g:neoformat_enabled_lua = ['prettier']
 nnoremap <silent> <leader>cf :undojoin <bar> Neoformat<CR>
