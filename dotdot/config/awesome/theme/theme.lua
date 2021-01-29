@@ -10,18 +10,18 @@ local my_table = gears.table
 local theme = {}
 theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
 theme.wallpaper = function(s)
-  local wall_dir = "~/Pictures/wallpapers/"
-  local walls = io.popen("fd . "..wall_dir):lines()
-  local iter_to_arr = function()
-    local res = {}
-    for line in walls do
-      table.insert(res,line)
-    end
-    return res
-  end
-  walls = iter_to_arr(walls)
-  math.randomseed(io.popen('od -vAn -N2 -d < /dev/urandom'):read('*a'))
-  return walls[math.random(1,#walls)]
+	local wall_dir = "~/Pictures/wallpapers/"
+	local walls = io.popen("fd . " .. wall_dir):lines()
+	local iter_to_arr = function()
+		local res = {}
+		for line in walls do
+			table.insert(res, line)
+		end
+		return res
+	end
+	walls = iter_to_arr(walls)
+	math.randomseed(io.popen("od -vAn -N2 -d < /dev/urandom"):read("*a"))
+	return walls[math.random(1, #walls)]
 end
 theme.font = "Overpass 13"
 theme.fg_normal = "#BBBBBB"
@@ -64,38 +64,30 @@ theme.useless_gap = 6
 theme.tasklist_disable_icon = true
 
 function theme.at_screen_connect(s)
-    -- We need one layoutbox per screen.
-    local wallpaper = theme.wallpaper
-    if type(wallpaper) == "function" then
-      wallpaper = wallpaper(s)
-    end
-    gears.wallpaper.maximized(wallpaper, s, true)
+	-- We need one layoutbox per screen.
+	local wallpaper = theme.wallpaper
+	if type(wallpaper) == "function" then
+		wallpaper = wallpaper(s)
+	end
+	gears.wallpaper.maximized(wallpaper, s, true)
 
-    s.mylayoutbox = awful.widget.layoutbox(s)
-    s.mylayoutbox:buttons(
-        my_table.join(
-            awful.button(
-                {},
-                1,
-                function()
-                    awful.layout.inc(1)
-                end
-            ),
-            awful.button(
-                {},
-                3,
-                function()
-                    awful.layout.inc(-1)
-                end
-            )
-        )
-    )
+	s.mylayoutbox = awful.widget.layoutbox(s)
+	s.mylayoutbox:buttons(
+		my_table.join(
+			awful.button({}, 1, function()
+				awful.layout.inc(1)
+			end),
+			awful.button({}, 3, function()
+				awful.layout.inc(-1)
+			end)
+		)
+	)
 
-    if s.index==1 then
-        require('theme/screen_1').at_screen_connect(s)
-    elseif s.index==2 then
-        require('theme/screen_2').at_screen_connect(s)
-    end
+	if s.index == 1 then
+		require("theme/screen_1").at_screen_connect(s)
+	elseif s.index == 2 then
+		require("theme/screen_2").at_screen_connect(s)
+	end
 end
 
 return theme
