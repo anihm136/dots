@@ -80,10 +80,14 @@
   :defer t
   :config
   (setq org-default-notes-file (concat org-directory "inbox.org")
+        global-org-pretty-table-mode t
+        org-ellipsis " ▾ "
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm
-        org-catch-invisible-edits 'show
+        org-catch-invisible-edits 'smart
+        org-export-in-background t
+        org-list-demote-modify-bullet '(("+" . "*") ("-" . "+") ("*" . "-") ("1." . "a."))
         org-startup-folded 'content
         org-log-done 'time
         org-log-into-drawer t
@@ -95,27 +99,30 @@
           ("a" "Task" entry (file+headline org-default-notes-file "Tasks")
            "* [ ] %?\n")
           ("l" "org-protocol-capture" entry (file+headline org-default-notes-file "Reading")
-           "* TODO [[%:link][%:description]]\n\n %i"
+           "* [[%:link][%:description]]\n %i"
            :immediate-finish t)
           ("k" "Cliplink capture task" entry (file+headline org-default-notes-file "Reading")
-           "* TODO %(org-cliplink-capture)\n" :immediate-finish t))
+           "* %(org-cliplink-capture)\n" :immediate-finish t))
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
   (org-wild-notifier-mode)
+  (org-pretty-tags-global-mode)
   )
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
 (map! :map org-mode-map
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
       :i "C-c i" (lambda () (interactive) (org-emphasize ?/))
-      :i "C-c m" (lambda () (interactive) (org-emphasize ?$)))
+      :i "C-c m" (lambda () (interactive) (progn (insert "\(\)") (backward-char 2))))
 
 (use-package! org-agenda
   :defer t
   :config
   (org-super-agenda-mode)
   (setq org-agenda-files (directory-files-recursively org-directory "\.org$")
-        org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)"
+        org-agenda-block-separator nil
+        org-agenda-tags-column 100
+        org-agenda-compact-blocks t
         org-agenda-skip-scheduled-if-done t
         org-agenda-skip-deadline-if-done t)
   (setq org-refile-targets '((nil :maxlevel . 3)
@@ -178,7 +185,7 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
-(use-package auto-activating-snippets
+(use-package! auto-activating-snippets
   :hook (LaTeX-mode . auto-activating-snippets-mode)
   :hook (org-mode . auto-activating-snippets-mode))
 
@@ -248,7 +255,12 @@
   (setq org-wild-notifier-alert-time '(60 30 15 5))
   (org-wild-notifier-mode))
 
-(after! latex-mode (auto-latex-snippets-mode t))
+(use-package! engrave-faces-latex
+  :after ox-latex)
+
+(load! "+org-latex")
+
+(load! "+engrave-faces")
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
