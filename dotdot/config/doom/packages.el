@@ -61,3 +61,7 @@
 (package! org-projectile)
 (package! org-ql)
 (package! org-super-agenda)
+(package! org-pretty-table-mode
+  :recipe (:host github :repo "Fuco1/org-pretty-table") :pin "474ad84a8f...")
+(package! org-pretty-tags :pin "5c7521651b...")
+(package! engrave-faces :recipe (:local-repo "lisp/engrave-faces"))
