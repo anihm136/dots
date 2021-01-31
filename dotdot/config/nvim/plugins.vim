@@ -22,6 +22,7 @@ Plug 'kkoomen/vim-doge'
 Plug 'romgrk/searchReplace.vim'
 " Git
 Plug 'rhysd/git-messenger.vim'
+Plug 'whiteinge/diffconflicts'
 " Syntax
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'tpope/vim-git'
@@ -36,13 +37,10 @@ Plug 'chrisbra/csv.vim'
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
-Plug 'tweekmonster/django-plus.vim', {'for': ['python','html','htmldjango']}
 Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-completion'
 " Textobjects
-Plug 'kana/vim-operator-user'
-Plug 'kana/vim-textobj-user'
-Plug 'kana/vim-textobj-indent'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim'
 Plug 'chaoren/vim-wordmotion'
 " UI
@@ -130,9 +128,6 @@ call sign_define("LspDiagnosticsSignError", {"text" : "◉", "texthl" : "LspDiag
 call sign_define("LspDiagnosticsSignWarning", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
 call sign_define("LspDiagnosticsSignInformation", {"text" : "", "texthl" : "LspDiagnosticsInformation"})
 call sign_define("LspDiagnosticsSignHint", {"text" : "💡", "texthl" : "LspDiagnosticHint"})
-
-" Slime
-let g:slime_no_mappings = 1
 
 " Quickrun
 let g:quickrun_no_default_key_mappings = 1

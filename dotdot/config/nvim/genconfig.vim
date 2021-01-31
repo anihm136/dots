@@ -75,7 +75,7 @@ autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
 
-command -nargs=0 Reload call helpers#vim_reload()
+command! -nargs=0 Reload call helpers#vim_reload()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -157,6 +157,7 @@ map <Down> gj
 map <Up> gk
 vnoremap <S-Up> <Up>
 vnoremap <S-Down> <Down>
+nnoremap . :<C-u>execute "norm! " . repeat(".", v:count1)<CR>
 
 nnoremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
 nnoremap <silent><leader>wd :call helpers#bufcloseCloseIt() \| q<cr>
@@ -226,6 +227,17 @@ xnoremap <silent> il g_o^
 onoremap <silent> il :<C-u>normal vil<CR>
 xnoremap <silent> al $o0
 onoremap <silent> al :<C-u>normal val<CR>
+
+for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
+	execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
+	execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
+	execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
+	execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
+endfor
+
+xnoremap ik `]o`[
+onoremap ik :<C-u>normal vik<CR>
+onoremap ak :<C-u>normal vikV<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking

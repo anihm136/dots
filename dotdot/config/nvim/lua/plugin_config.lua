@@ -11,6 +11,16 @@ require"nvim-treesitter.configs".setup{
 			swap_next = { ["g>"] = "@parameter.inner" },
 			swap_previous = { ["g<"] = "@parameter.inner" },
 		},
+		select = {
+			enable = true,
+			keymaps = {
+				-- You can use the capture groups defined in textobjects.scm
+				af = "@function.outer",
+				["if"] = "@function.inner",
+				ac = "@class.outer",
+				ic = "@class.inner",
+			},
+		},
 	},
 	indent = { enable = true },
 }
