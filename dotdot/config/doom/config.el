@@ -36,27 +36,27 @@
   :defer t
   :config
   (setq org-super-agenda-groups `((:name "Today"
-                                         :scheduled today)
+                                   :scheduled today)
                                   (:name "Upcoming"
-                                         :deadline future
-                                         :scheduled (before ,(ts-format "%F %T" (ts-inc 'day 7 (ts-now)))))
+                                   :deadline future
+                                   :scheduled (before ,(ts-format "%F %T" (ts-inc 'day 7 (ts-now)))))
                                   (:discard (:scheduled t))
                                   (:name "Refile"
-                                         :category "refile")
+                                   :category "refile")
                                   (:name "Waiting"
-                                         :todo "WAIT"
-                                         :todo "HOLD"
-                                         :todo "[?]"
-                                         :order 9)
+                                   :todo "WAIT"
+                                   :todo "HOLD"
+                                   :todo "[?]"
+                                   :order 9)
                                   (:name "Started/Next"
-                                         :todo "STRT"
-                                         :todo "[-]")
+                                   :todo "STRT"
+                                   :todo "[-]")
                                   (:name "Overdue"
-                                         :deadline past)
+                                   :deadline past)
                                   (:name "Projects"
-                                         :file-path "projects.org")
+                                   :file-path "projects.org")
                                   (:name "Tasks"
-                                         :todo "[ ]")
+                                   :todo "[ ]")
                                   )))
 
 (use-package! evil-escape
@@ -75,11 +75,20 @@
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
 ;; Deferred loading
+(defun ox-mrkup-filter-link (text backend info)
+  (if (and (equal backend 'latex) (string-match-p "\.attach" text))
+      (progn
+        (setq text (replace-regexp-in-string "\\\\" "" text))
+        (string-match "\{file:\\/\\/\\(.+?\\)\}\{\\(.+\\)\}" text)
+        (format "\\textattachfile{%s}{%s}" (match-string 1 text) (match-string 2 text))
+        )
+    text))
 
 (use-package! org
   :defer t
   :config
   (setq org-default-notes-file (concat org-directory "inbox.org")
+        org-export-filter-link-functions '(ox-mrkup-filter-link)
         global-org-pretty-table-mode t
         org-ellipsis " ▾ "
         org-refile-use-outline-path 'file
@@ -93,6 +102,8 @@
         org-log-into-drawer t
         org-log-state-notes-insert-after-drawers nil
         org-export-preserve-breaks t
+        org-attach-id-dir ".attach/"
+        org-attach-dir-relative t
         org-capture-templates
         '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
            "* TODO %?\n")
