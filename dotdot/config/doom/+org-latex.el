@@ -2,7 +2,9 @@
 
 (defvar org-latex-universal-preamble "
 \\usepackage[main,include]{embedall}
-\\IfFileExists{./\\jobname.org}{\\embedfile[desc=The original file]{\\jobname.org}}{}"
+\\IfFileExists{./\\jobname.org}{\\embedfile[desc=The original file]{\\jobname.org}}{}
+\\usepackage[]{attachfile}
+\\attachfilesetup{color=0.1 0.6 0.1}"
   "Preamble to be included in every export.")
 
 (defvar org-latex-conditional-preambles
@@ -46,7 +48,7 @@ The cdr may be a:
 (after! ox-latex
   (setq
    org-latex-default-class "notes"
-   org-latex-pdf-process '("latexmk -%latex -shell-escape -interaction=nonstopmode -f -pdf -output-directory=%o %f")
+   org-latex-pdf-process '("latexmk -%latex -shell-escape -interaction=nonstopmode -f -pdf -output-directory=%o %f" "latexmk -c")
    org-latex-listings 'engraved)
   (add-to-list 'org-latex-classes
                '("notes"
