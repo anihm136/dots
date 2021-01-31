@@ -29,4 +29,4 @@ let g:neoformat_enabled_cpp = ['clangformat']
 let g:neoformat_enabled_sql = ['sqlformat']
 let g:neoformat_enabled_go = ['gofmt']
 let g:neoformat_enabled_lua = ['prettier']
-nnoremap <silent> <leader>cf :undojoin <bar> Neoformat<CR>
+nnoremap <silent> <leader>cf :undojoin <bar> Neoformat <bar> DetectIndent<CR>
