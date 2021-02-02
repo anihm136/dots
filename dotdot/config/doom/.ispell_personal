@@ -1,4 +1,4 @@
-personal_ws-1.1 en 29
+personal_ws-1.1 en 33
 PaaS
 Scoreboarding
 backend
@@ -9,6 +9,7 @@ deallocate
 deallocation
 dereferenced
 dereferencing
+emulatable
 frontend
 frontends
 lifecycle
@@ -19,9 +20,12 @@ microservice
 middleware
 mispredicted
 misprediction
+mispredictions
+mispredicts
 multicore
 multithreading
 mutices
+paravirtualization
 redeclared
 regexes
 structs

@@ -14,7 +14,7 @@
 ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
-(setq fancy-splash-image "/home/anirudh/.config/doom/splash.png")
+(setq fancy-splash-image "/home/anihm136/.config/doom/splash.svg")
 
 (doom! :input
        ;;chinese

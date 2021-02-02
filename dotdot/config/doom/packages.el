@@ -56,6 +56,8 @@
   :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! org-fragtog
   :recipe (:host github :repo "io12/org-fragtog"))
+(package! org-appear
+  :recipe (:host github :repo "awth13/org-appear"))
 (package! org-wild-notifier)
 (package! aggressive-indent)
 (package! org-projectile)
