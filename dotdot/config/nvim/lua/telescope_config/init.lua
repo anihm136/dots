@@ -31,6 +31,17 @@ telescope.setup{
 		},
 		file_sorter = sorters.get_fzy_sorter,
 	},
+	extensions = {
+		frecency = {
+			show_scores = false,
+			show_unindexed = true,
+			ignore_patterns = { "*.git/*", "*/tmp/*" },
+			workspaces = {
+				conf = vim.fn.expand("~") .. "/.config",
+				scripts = vim.fn.expand("~") .. "/.local/bin/scripts",
+			},
+		},
+	},
 }
 telescope.load_extension("fzy_native")
 telescope.load_extension("frecency")

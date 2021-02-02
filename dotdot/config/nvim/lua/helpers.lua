@@ -26,4 +26,12 @@ helpers.term = function()
 	end
 end
 
+helpers.formatting = function()
+	vim.cmd[[undojoin]]
+	vim.lsp.buf.formatting(
+		vim.g[string.format("format_options_%s", vim.bo.filetype)] or {}
+	)
+	vim.cmd[[DetectIndent]]
+end
+
 return helpers

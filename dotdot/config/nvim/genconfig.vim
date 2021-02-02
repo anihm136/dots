@@ -184,6 +184,13 @@ vnoremap o $
 
 nnoremap B :<C-u>call helpers#breakLine()<CR>
 
+if &wildoptions =~ "pum"
+	cnoremap <expr> <up>   pumvisible() ? "<C-p>" : "\<up>"
+	cnoremap <expr> <down> pumvisible() ? "<C-n>" : "\<down>"
+	cnoremap <expr> <left> pumvisible() ? "<up>" : "<left>"
+	cnoremap <expr> <right> pumvisible() ? "<down>" : "<right>"
+endif
+
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go let g:nav_mode = 1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = -1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
