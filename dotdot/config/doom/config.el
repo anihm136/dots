@@ -75,7 +75,7 @@
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
 ;; Deferred loading
-(defun ox-mrkup-filter-link (text backend info)
+(defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
       (progn
         (setq text (replace-regexp-in-string "\\\\" "" text))
@@ -88,8 +88,7 @@
   :defer t
   :config
   (setq org-default-notes-file (concat org-directory "inbox.org")
-        org-export-filter-link-functions '(ox-mrkup-filter-link)
-        global-org-pretty-table-mode t
+        org-export-filter-link-functions '(ox-markup-filter-attach)
         org-ellipsis " ▾ "
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
@@ -119,12 +118,15 @@
     (flycheck-add-mode 'proselint 'org-mode))
   (org-wild-notifier-mode)
   (org-pretty-tags-global-mode)
+  (org-pretty-table-mode)
+  (+org-pretty-mode)
   )
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
+(add-hook! 'org-mode-hook 'org-appear-mode)
 (map! :map org-mode-map
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
       :i "C-c i" (lambda () (interactive) (org-emphasize ?/))
-      :i "C-c m" (lambda () (interactive) (progn (insert "\(\)") (backward-char 2))))
+      :i "C-c m" (lambda () (interactive) (progn (insert "\\(\\)") (backward-char 2))))
 
 (use-package! org-agenda
   :defer t
@@ -223,11 +225,13 @@
 (use-package! ivy-posframe
   :defer t
   :config
-  (setq ivy-posframe-display-functions-alist '((counsel-M-x . nil)
-                                               (swiper . nil)
+  (setq ivy-posframe-display-functions-alist '((counsel-M-x . ivy-display-function-fallback)
+                                               (swiper . ivy-display-function-fallback)
                                                (t . ivy-posframe-display-at-frame-center))
         ivy-posframe-height-alist '((t . 10))
-        ivy-posframe-parameters '((internal-border-width . 6))
+        ivy-posframe-parameters '((internal-border-width . 6)
+                                  (left-fringe . 8)
+                                  (right-fringe . 8))
         ivy-posframe-width 100))
 
 (use-package! org-download
