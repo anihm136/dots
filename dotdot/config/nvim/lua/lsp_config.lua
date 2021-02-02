@@ -6,13 +6,25 @@ if vim.env.SNIPPETS then
 	vim.snippet = require"snippet"
 end
 
-vim.lsp.set_log_level("debug")
+vim.lsp.set_log_level("trace")
 
 local mapper = function(mode, key, result)
 	vim.api.nvim_buf_set_keymap(0, mode, key, result, {
 		noremap = true,
 		silent = true,
 	})
+end
+
+vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
+	if err ~= nil or result == nil then return end
+	if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+		local view = vim.fn.winsaveview()
+		vim.lsp.util.apply_text_edits(result, bufnr)
+		vim.fn.winrestview(view)
+		if bufnr == vim.api.nvim_get_current_buf() then
+			vim.cmd[[noautocmd :update]]
+		end
+	end
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -37,7 +49,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	}
 )
 
-local on_attach = function(client, bufnr)
+local on_attach = function(client)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	mapper("n", "<leader>cd", "<cmd>lua vim.lsp.buf.definition()<CR>")
 	mapper("n", "<leader>cD", "<cmd>lua vim.lsp.buf.implementation()<CR>")
@@ -47,6 +59,7 @@ local on_attach = function(client, bufnr)
 	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
 	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
 	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>")
+	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<CR>")
 	mapper(
 		"n",
 		"<space>sl",
@@ -56,7 +69,10 @@ end
 
 local servers = { "tsserver", "cssls", "jsonls", "html", "gopls" }
 for _, lsp_srv in ipairs(servers) do
-	lsp[lsp_srv].setup{ on_attach = on_attach }
+	lsp[lsp_srv].setup{ on_attach = function(client)
+		client.resolved_capabilities.document_formatting = false
+		on_attach(client)
+	end }
 end
 
 lsp.bashls.setup{
@@ -68,7 +84,10 @@ lsp.bashls.setup{
 }
 
 lsp.pyright.setup{
-	on_attach = on_attach,
+	on_attach = function(client)
+		client.resolved_capabilities.document_formatting = false
+		on_attach(client)
+	end,
 	root_dir = function(fname)
 		local filename =
 			util.path.is_absolute(fname) and fname or util.path.join(
@@ -91,7 +110,10 @@ lsp.pyright.setup{
 }
 
 lsp.gopls.setup{
-	on_attach = on_attach,
+	on_attach = function(client)
+		client.resolved_capabilities.document_formatting = false
+		on_attach(client)
+	end,
 	root_dir = function(fname)
 		local filename =
 			util.path.is_absolute(fname) and fname or util.path.join(
@@ -104,7 +126,10 @@ lsp.gopls.setup{
 }
 
 lsp.clangd.setup{
-	on_attach = on_attach,
+	on_attach = function(client)
+		client.resolved_capabilities.document_formatting = false
+		on_attach(client)
+	end,
 	capabilities = {
 		textDocument = {
 			completion = {
@@ -119,7 +144,10 @@ lsp.clangd.setup{
 }
 
 lsp.intelephense.setup{
-	on_attach = on_attach,
+	on_attach = function(client)
+		client.resolved_capabilities.document_formatting = false
+		on_attach(client)
+	end,
 	capabilities = {
 		textDocument = {
 			completion = {
@@ -133,146 +161,80 @@ lsp.intelephense.setup{
 	},
 }
 
--- lsp.diagnosticls.setup {
---     on_attach = on_attach,
---     filetypes = {
---         "javascript",
---         "javascript.jsx",
---         "javascriptreact",
---         "typescript",
---         "typescript.tsx",
---         "typescriptreact",
---         "python"
---     },
---     init_options = {
---         filetypes = {
---             ["javascript.jsx"] = "eslint",
---             ["typescript.tsx"] = "eslint",
---             javascript = "eslint",
---             javascriptreact = "eslint",
---             typescript = "eslint",
---             typescriptreact = "eslint",
---             python = {"pylint", "flake8"}
---         },
---         linters = {
---             eslint = {
---                 sourceName = "eslint",
---                 command = "eslint_d",
---                 rootPatterns = {
---                     ".eslintrc",
---                     ".eslintrc.json",
---                     ".eslintrc.cjs",
---                     ".eslintrc.js",
---                     ".eslintrc.yml",
---                     ".eslintrc.yaml",
---                     "package.json"
---                 },
---                 debounce = 100,
---                 args = {
---                     "--stdin",
---                     "--stdin-filename",
---                     "%filepath",
---                     "--format",
---                     "json"
---                 },
---                 parseJson = {
---                     errorsRoot = "[0].messages",
---                     line = "line",
---                     column = "column",
---                     endLine = "endLine",
---                     endColumn = "endColumn",
---                     message = "[${ruleId}] ${message}",
---                     security = "severity"
---                 },
---                 securities = {
---                     [2] = "error",
---                     [1] = "warning"
---                 },
---                 requiredFiles = {
---                     ".eslintrc",
---                     ".eslintrc.json",
---                     ".eslintrc.cjs",
---                     ".eslintrc.js",
---                     ".eslintrc.yml",
---                     ".eslintrc.yaml",
---                     "package.json"
---                 }
---             },
---             pylint = {
---                 sourceName = "pylint",
---                 command = "pylint",
---                 rootPatterns = {
---                     ".pylintrc",
---                     ".venv",
---                     "Pipfile",
---                     "requirements.txt",
---                     "pyproject.toml"
---                 },
---                 debounce = 100,
---                 args = {
---                     "-f",
---                     "json",
---                     "%filepath"
---                 },
---                 parseJson = {
---                     line = "line",
---                     column = "column",
---                     message = "[${message-id}] ${message}",
---                     security = "type"
---                 },
---                 securities = {
---                     error = "error",
---                     convention = "warning"
---                 },
---                 requiredFiles = {
---                     ".pylintrc",
---                     ".venv",
---                     "Pipfile",
---                     "requirements.txt",
---                     "pyproject.toml"
---                 }
---             },
---             flake8 = {
---                 sourceName = "flake8",
---                 command = "flake8",
---                 rootPatterns = {
---                     ".flake8",
---                     ".venv",
---                     "Pipfile",
---                     "requirements.txt",
---                     "pyproject.toml"
---                 },
---                 debounce = 100,
---                 args = {
---                     "--format",
---                     "%(row)d:%(col)d:%(code)s:%(code)s: %(text)s",
---                     "%filepath"
---                 },
---                 formatLines = 1,
---                 formatPattern = {
---                     "^(\\d+):(\\d+):(\\w+):(\\w).+: (.*)$",
---                     {
---                         line = 1,
---                         column = 2,
---                         message = {"[", 3, "] ", 5},
---                         security = 4
---                     }
---                 },
---                 securities = {
---                     error = {"E", "F"},
---                     warning = "W"
---                 },
---                 requiredFiles = {
---                     ".flake8",
---                     ".venv",
---                     "Pipfile",
---                     "requirements.txt",
---                     "pyproject.toml"
---                 }
---             }
---         }
---     }
--- }
+local clangformat = require"efm/clangformat"
+local golint = require"efm/golint"
+local gofmt = require"efm/gofmt"
+local goimports = require"efm/goimports"
+local black = require"efm/black"
+local isort = require"efm/isort"
+local flake8 = require"efm/flake8"
+local pylint = require"efm/pylint"
+local prettier = require"efm/prettier"
+local eslint = require"efm/eslint"
+local shellcheck = require"efm/shellcheck"
+local format_options_prettier = {
+	tabWidth = 4,
+	singleQuote = true,
+	trailingComma = "all",
+	configPrecedence = "prefer-file",
+}
+vim.g.format_options_typescript = format_options_prettier
+vim.g.format_options_javascript = format_options_prettier
+vim.g.format_options_typescriptreact = format_options_prettier
+vim.g.format_options_javascriptreact = format_options_prettier
+vim.g.format_options_json = format_options_prettier
+vim.g.format_options_css = format_options_prettier
+vim.g.format_options_scss = format_options_prettier
+vim.g.format_options_html = format_options_prettier
+vim.g.format_options_yaml = format_options_prettier
+vim.g.format_options_markdown = format_options_prettier
+vim.g.format_options_lua = format_options_prettier
+
+lsp.efm.setup{
+	on_attach = on_attach,
+	init_options = { documentFormatting = true },
+	root_dir = function(fname)
+		local filename =
+			util.path.is_absolute(fname) and fname or util.path.join(
+				vim.loop.cwd(),
+				fname
+			)
+		local root_pattern =
+			util.root_pattern(
+				"setup.py",
+				"setup.cfg",
+				"requirements.txt",
+				"mypy.ini",
+				".pylintrc",
+				".flake8rc",
+				"go.mod",
+				"package.json",
+				".git",
+				".gitignore"
+			)
+		return root_pattern(filename) or util.path.dirname(filename)
+	end,
+	settings = {
+		languages = {
+			lua = { prettier },
+			c = { clangformat },
+			cpp = { clangformat },
+			go = { golint, goimports, gofmt },
+			python = { black, isort, flake8, pylint },
+			typescript = { prettier, eslint },
+			javascript = { prettier, eslint },
+			typescriptreact = { prettier, eslint },
+			javascriptreact = { prettier, eslint },
+			yaml = { prettier },
+			json = { prettier },
+			html = { prettier },
+			scss = { prettier },
+			css = { prettier },
+			markdown = { prettier },
+			sh = { shellcheck },
+		},
+	},
+}
 
 function LspRenameFloat()
 	local current_word = vim.fn.expand("<cword>")
