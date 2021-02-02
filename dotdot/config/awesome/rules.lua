@@ -26,7 +26,7 @@ function rules.create(clientkeys, clientbuttons)
 			buttons = clientbuttons,
 			screen = awful.screen.preferred,
 			placement = awful.placement.no_overlap + awful.placement.no_offscreen,
-			size_hints_honor = true,
+			size_hints_honor = false,
 			callback = function(c)
 				c.maximized, c.maximized_vertical, c.maximized_horizontal =
 					false,
@@ -37,6 +37,7 @@ function rules.create(clientkeys, clientbuttons)
 				end
 				if c.floating then
 					awful.placement.centered(c)
+					c.size_hints_honor = true
 				end
 			end,
 		},
