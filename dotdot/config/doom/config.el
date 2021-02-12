@@ -116,7 +116,6 @@
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
-  (org-wild-notifier-mode)
   (org-pretty-tags-global-mode)
   (org-pretty-table-mode)
   (+org-pretty-mode)
@@ -265,10 +264,20 @@
       ad-do-it))
   )
 
-(use-package! org-wild-notifier
+(use-package! org-timed-alerts
+  :after org
+  :custom
+  (org-timed-alerts-alert-function #'alert)
+  (org-timed-alerts-tag-exclusions nil)
+  (org-timed-alerts-default-alert-props nil)
+  (org-timed-alerts-warning-times '(-60 -30 -10 -5))
+  (org-timed-alerts-agenda-hook-p t)
+  (org-timed-alert-final-alert-string "IT IS %alert-time\n\n%todo %headline")
+  (org-timed-alert-warning-string (concat "%todo %headline\n at %alert-time\n "
+                                          "it is now %current-time\n "
+                                          "*THIS IS YOUR %warning-time MINUTE WARNING*"))
   :config
-  (setq org-wild-notifier-alert-time '(60 30 15 5))
-  (org-wild-notifier-mode))
+  (add-hook 'org-mode-hook #'org-timed-alerts-mode))
 
 (use-package! engrave-faces-latex
   :after ox-latex)
