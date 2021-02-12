@@ -51,13 +51,16 @@ telescope.load_extension("cheat")
 local M = {}
 
 function M.edit_dotfiles()
+	local find_command = { "fd", "--hidden", "--follow", "--type", "f", "." }
+	local search_dirs = { "nvim", "zsh", "sxhkd", "nnn", "rofi", "kitty", "beets" }
+	for _, v in pairs(search_dirs) do
+	  table.insert(find_command, v)
+	end
 	require("telescope.builtin").find_files{
 		prompt_title = "~ dotfiles ~",
 		shorten_path = false,
 		cwd = "~/.config",
-		find_command = { "fd", "--hidden", "--follow", "--type", "f" },
-		file_ignore_patterns = { "nvim/plugged/.*" },
-		search_dirs = { "nvim", "zsh", "antibody", "vifm", "sxhkd" },
+		find_command = find_command,
 		width = .25,
 	}
 end

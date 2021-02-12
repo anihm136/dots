@@ -4,10 +4,12 @@ Plug 'tomtom/tcomment_vim'
 Plug 'anihm136/vim-unimpaired'
 Plug 'fedorenchik/gtags.vim'
 Plug 'honza/vim-snippets'
-Plug 'SirVer/ultisnips'
+Plug 'norcalli/snippets.nvim'
 Plug 'junegunn/vim-easy-align'
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
+Plug 'glepnir/lspsaga.nvim'
+Plug 'hrsh7th/nvim-compe'
+Plug 'hrsh7th/vim-vsnip'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'roryokane/detectindent'
@@ -17,7 +19,7 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}
 Plug 'justinmk/vim-dirvish'
 Plug 'antonk52/dirvish-fs.vim'
-Plug 'kkoomen/vim-doge'
+Plug 'kkoomen/vim-doge', { 'do': { -> doge#install() } }
 Plug 'romgrk/searchReplace.vim'
 " Git
 Plug 'rhysd/git-messenger.vim'
@@ -106,21 +108,6 @@ let g:unimpaired_mapping = {
 			\		'keys' : ['>p', '<p', '>P', '<P', '=P', '[P', ']P']
 			\	}
 			\ }
-
-" Ultisnips
-let g:UltiSnipsEditSplit="vertical"
-let g:ultisnips_python_style="google"
-let g:UltiSnipsExpandTrigger="<nop>"
-let g:UltiSnipsJumpForwardTrigger="<nop>"
-let g:UltiSnipsJumpBackwardTrigger="<nop>"
-
-let g:ulti_expand_or_jump_res = 0
-function! UltiSnipFunc()
-	call UltiSnips#ExpandSnippetOrJump()
-	return g:ulti_expand_or_jump_res
-endfunction
-smap <silent> <TAB>   <Esc><cmd>call UltiSnips#JumpForwards()<CR>
-smap <silent> <S-TAB> <Esc><cmd>call UltiSnips#JumpBackwards()<CR>
 
 " Diagnostic nvim
 call sign_define("LspDiagnosticsSignError", {"text" : "◉", "texthl" : "LspDiagnosticsError"})

@@ -1,4 +1,4 @@
 return {
-	formatCommand = "gofmt -sw ${INPUT}",
-	formatStdin = false,
+	formatCommand = "gofmt -s",
+	formatStdin = true,
 }
