@@ -52,6 +52,7 @@ set fillchars+=vert:│
 set listchars=eol:↲,tab:»\ ,trail:𝁢,extends:…,precedes:…,conceal:┊
 set list
 set cursorline
+set completeopt=menu,menuone,noselect
 
 
 nnoremap <silent> <leader>fs :wa!<cr>
@@ -60,6 +61,26 @@ inoremap <silent> fd <Esc>
 inoremap <silent> <C-v> <C-r>+
 nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
+inoremap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
+inoremap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
+xnoremap <silent> <Tab> v:lua.helpers.x_tab()
+
+function! s:show_documentation()
+	if (index(['vim','help', 'lua'], &filetype) >= 0)
+		try
+			execute 'h '.expand('<cword>')
+			return
+		catch
+		endtry
+	endif
+	try
+		execute 'lua vim.lsp.buf.hover()'
+	catch
+		echoerr "No help available for " . expand('<cword>')
+	endtry
+endfunction
+
+nnoremap <silent> K <cmd>call <SID>show_documentation()<CR>
 
 augroup custom_commands
 	autocmd!
@@ -195,12 +216,11 @@ autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = -1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
-nnoremap <silent> <Leader>rn *:%s///g<Left><Left>
-nnoremap <silent> <Leader>rc *:%s///gc<Left><Left><Left>
-xnoremap <Leader>rn :s///g<Left><Left>
-xnoremap <Leader>rc :s///gc<Left><Left><Left>
+nnoremap <silent> <Leader>rn :%s///g<Left><Left>
+nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
+xnoremap <silent> <Leader>rn :s///g<Left><Left>
+xnoremap <silent> <Leader>rc :s///gc<Left><Left><Left>
 
-" \ :exe "Grep " . expand('<cword>')<CR>
 nnoremap <F2>
 			\ :let @s='\<'.expand('<cword>').'\>'<CR>
 			\ :Grepper -cword -noprompt<CR>
