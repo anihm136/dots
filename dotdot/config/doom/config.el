@@ -116,8 +116,6 @@
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
-  (org-pretty-tags-global-mode)
-  (org-pretty-table-mode)
   (+org-pretty-mode)
   )
 (add-hook! 'org-mode-hook 'org-fragtog-mode)

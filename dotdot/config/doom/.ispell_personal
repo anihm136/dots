@@ -1,6 +1,9 @@
-personal_ws-1.1 en 33
+personal_ws-1.1 en 47
+Bitwise
+Filesystem
 PaaS
 Scoreboarding
+async
 backend
 backends
 checkpointing
@@ -12,11 +15,15 @@ dereferencing
 emulatable
 frontend
 frontends
+hyperthreaded
+hyperthreading
 lifecycle
 lifecycles
 lookahead
+microarchitectural
 microarchitecture
 microservice
+microservices
 middleware
 mispredicted
 misprediction
@@ -25,10 +32,17 @@ mispredicts
 multicore
 multithreading
 mutices
+namespace
+namespaces
+parallelizable
 paravirtualization
+paravirtualized
 redeclared
 regexes
+serverless
 structs
 superscalar
 tokenization
 transpiler
+virtualizable
+virtualized
