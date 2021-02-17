@@ -15,7 +15,11 @@
   spacing: 0;
   background-color: transparent;
   lines:5;
+  {%@@ if profile == "sorcery" @@%}
   font: "Kimberley Bl 15";
+  {%@@ elif profile == "apex" @@%}
+  font: "Kimberley Bl 35";
+  {%@@ endif @@%}
   text-color: @text-alt;
 }
 
