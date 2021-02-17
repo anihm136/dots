@@ -1,0 +1,8 @@
+export CALIBRE_USE_DARK_PALETTE=1
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+xrandr --output DP-5 --primary --auto --output HDMI-0 --auto --left-of DP-5
+xautolock -detectsleep -time 10 -notify 20 -notifier '/usr/lib/xsecurelock/until_nonidle /usr/lib/xsecurelock/dimmer' -locker xsecurelock &
+picom --experimental-backends &
+sxhkd &
+lxsession &

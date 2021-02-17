@@ -68,6 +68,16 @@ dotfiles:
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json
+  f_zshenv:
+    src: zshenv
+    dst: ~/.zshenv
+  f_xprofile:
+    src: xprofile
+    dst: ~/.xprofile
+    chmod: '744'
+  f_aliases:
+    src: aliases
+    dst: ~/.aliases
 profiles:
   sorcery:
     dotfiles:
@@ -85,6 +95,9 @@ profiles:
     - d_config_tilda
     - d_config_zsh
     - f_config_screenkey.json
+    - f_zshenv
+    - f_xprofile
+    - f_aliases
   apex:
     dotfiles:
     - d_config_nvim
