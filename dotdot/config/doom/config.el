@@ -3,8 +3,13 @@
 (setq user-full-name "Anirudh H M"
       user-mail-address "anihm136@gmail.com")
 
+{%@@ if profile == "sorcery" @@%}
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16)
       doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 16))
+{%@@ elif profile == "apex" @@%}
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 32)
+      doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 32))
+{%@@ endif @@%}
 
 (setq display-line-numbers-type 'relative)
 
