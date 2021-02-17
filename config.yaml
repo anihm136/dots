@@ -85,3 +85,10 @@ profiles:
     - d_config_tilda
     - d_config_zsh
     - f_config_screenkey.json
+  apex:
+    dotfiles:
+    - d_config_nvim
+    - d_config_doom
+    - f_config_picom.conf
+    - d_config_rofi
+    - d_config_tilda
