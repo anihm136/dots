@@ -57,8 +57,7 @@ set completeopt=menu,menuone,noselect
 
 nnoremap <silent> <leader>fs :wa!<cr>
 xnoremap <silent> y ygv<Esc>
-inoremap <silent> fd <Esc>
-inoremap <silent> <C-v> <C-r>+
+inoremap <silent> <C-v> <C-o>P
 nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
 inoremap <silent><expr> <Tab>   v:lua.helpers.tab_complete()

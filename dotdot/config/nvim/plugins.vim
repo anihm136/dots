@@ -3,7 +3,6 @@ Plug 'airblade/vim-rooter'
 Plug 'tomtom/tcomment_vim'
 Plug 'anihm136/vim-unimpaired'
 Plug 'fedorenchik/gtags.vim'
-Plug 'honza/vim-snippets'
 Plug 'norcalli/snippets.nvim'
 Plug 'junegunn/vim-easy-align'
 Plug 'neovim/nvim-lspconfig'
@@ -61,6 +60,7 @@ Plug 'haya14busa/vim-asterisk'
 Plug 'machakann/vim-sandwich'
 Plug 'romainl/vim-cool'
 Plug 'andymass/vim-matchup'
+Plug 'jdhao/better-escape.vim'
 " Themes
 Plug 'AlessandroYorba/Despacio'
 Plug 'ajh17/Spacegray.vim'
@@ -117,3 +117,9 @@ call sign_define("LspDiagnosticsSignHint", {"text" : "💡", "texthl" : "LspDiag
 
 " Quickrun
 let g:quickrun_no_default_key_mappings = 1
+
+" Better-escape
+let g:better_escape_interval = 300
+let g:better_escape_shortcut = 'fd'
+
+

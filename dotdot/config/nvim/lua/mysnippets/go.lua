@@ -67,7 +67,7 @@ for ${1}{
 }
   ]],
 	fori = indent[[
-for ${1:i} := 0; $1 < ${2:count}; ${3:++${1}} {
+for ${1:i} := 0; $1 < ${2:count}; ${3:${1}++} {
   ${=helpers.insert_saved_visual()}$0
 }
   ]],
