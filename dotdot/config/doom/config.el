@@ -7,8 +7,8 @@
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16)
       doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 16))
 {%@@ elif profile == "apex" @@%}
-(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 32)
-      doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 32))
+(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 36)
+      doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 36))
 {%@@ endif @@%}
 
 (setq display-line-numbers-type 'relative)
@@ -200,14 +200,14 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
-(use-package! auto-activating-snippets
-  :hook (LaTeX-mode . auto-activating-snippets-mode)
-  :hook (org-mode . auto-activating-snippets-mode))
+(use-package! aas
+  :hook (LaTeX-mode . ass-activate-for-major-mode)
+  :hook (org-mode . ass-activate-for-major-mode))
 
-(use-package! latex-auto-activating-snippets
-  :after latex ; auctex's LaTeX package
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
   :config ; do whatever here
-  (aas-set-snippets 'latex-mode
+  (aas-set-snippets 'laas-mode
                     ;; set condition!
                     :cond #'texmathp ; expand only while in math
                     "supp" "\\supp"

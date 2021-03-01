@@ -26,8 +26,12 @@ require("notifications")
 -- Set Up Screen & Connect Signals
 -- ===================================================================
 
+{%@@ if profile == "sorcery" @@%}
 awful.util.tagnames_1 = { "WS1_1", "WS1_2", "WWW", "MEDIA", "EMACS", "E1" }
 awful.util.tagnames_2 = { "WS2_1", "WS2_2", "SOCIAL", "READ", "E2" }
+{%@@ elif profile == "apex" @@%}
+awful.util.tagnames = {"WS1", "WS2", "WS3", "WWW", "SOCIAL", "MEDIA", "EMACS", "READ", "9"}
+{%@@ endif @@%}
 -- Define tag layouts
 awful.layout.layouts =
 	{
