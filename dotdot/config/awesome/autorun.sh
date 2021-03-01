@@ -22,11 +22,12 @@ if (command -v start-pulseaudio-x11 && ! pgrep pulseaudio); then
     start-pulseaudio-x11 &
 fi
 
-run blueberry-tray
-run nm-applet
 run tilda
 run mocp -S
+run nm-applet
 
+{%@@ if profile == "sorcery" @@%}
+run blueberry-tray
 run thunderbird
 run slack
 run teams
@@ -35,3 +36,4 @@ run2 telegram-desktop telegram-deskto
 run2 "discord" "Discord"
 run2 "whatsapp-nativefier" "WhatsApp"
 run2 "instagram-nativefier" "Instagram"
+{%@@ endif @@%}
