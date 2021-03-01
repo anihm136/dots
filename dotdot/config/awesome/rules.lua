@@ -1,5 +1,5 @@
-local awful = require("awful")
-local beautiful = require("beautiful")
+local awful = require('awful')
+local beautiful = require('beautiful')
 
 -- define screen height and width
 local screen_height = awful.screen.focused().geometry.height
@@ -41,16 +41,14 @@ function rules.create(clientkeys, clientbuttons)
 				end
 			end,
 		},
-	}, -- Titlebars
-	{
+	}, { -- Titlebars
 		rule_any = {
-			type = { "dialog", "normal" },
+			type = { 'dialog', 'normal' },
 		},
 		properties = { titlebars_enabled = false },
-	}, -- Set Firefox to always map on the first tag on screen 1.
-	{
+	}, { -- Set Firefox to always map on the first tag on screen 1.
 		rule_any = {
-			class = { "firefox", "Brave-browser" },
+			class = { 'firefox', 'Brave-browser' },
 		},
 		properties = {
 			screen = 1,
@@ -59,14 +57,15 @@ function rules.create(clientkeys, clientbuttons)
 	}, {
 		rule_any = {
 			class = {
-				"Thunderbird",
-				"discord",
-				"Slack",
-				"Element",
-				"whatsapp-nativefier-d40211",
-				"instagram-nativefier-51e18f",
-				"Microsoft Teams - Preview",
-				"TelegramDesktop",
+				'Thunderbird',
+				'discord',
+				'Slack',
+				'Element',
+				'whatsapp-nativefier-d40211',
+				'instagram-nativefier-51e18f',
+				'Microsoft Teams - Preview',
+				'TelegramDesktop',
+				'Signal',
 			},
 		},
 		properties = {
@@ -74,48 +73,44 @@ function rules.create(clientkeys, clientbuttons)
 			tag = awful.util.tagnames_2[3],
 		},
 	}, {
-		rule = { class = "Emacs" },
+		rule = { class = 'Emacs' },
 		properties = {
 			screen = 1,
 			tag = awful.util.tagnames_1[5],
 		},
-	}, -- Floating clients.
-	{
+	}, { -- Floating clients.
 		rule_any = {
-			instance = { "DTA", "copyq" },
-			class = { "Nm-connection-editor", "Galculator", "Blueberry.py" },
+			instance = { 'DTA', 'copyq' },
+			class = { 'Nm-connection-editor', 'Galculator', 'Blueberry.py' },
 			name = {
-				"Event Tester",
-				"Steam Guard - Computer Authorization Required",
+				'Event Tester',
+				'Steam Guard - Computer Authorization Required',
 			},
-			role = { "pop-up", "GtkFileChooserDialog" },
-			type = { "dialog" },
+			role = { 'pop-up', 'GtkFileChooserDialog' },
+			type = { 'dialog' },
 		},
 		properties = { floating = true },
-	}, -- Rofi
-	{
+	}, { -- Rofi
 		rule_any = {
-			name = { "rofi" },
+			name = { 'rofi' },
 		},
 		properties = {
 			maximized = true,
 			ontop = true,
 		},
-	}, -- File chooser dialog
-	{
+	}, { -- File chooser dialog
 		rule_any = {
-			role = { "GtkFileChooserDialog" },
+			role = { 'GtkFileChooserDialog' },
 		},
 		properties = {
 			floating = true,
 			width = screen_width * 0.55,
 			height = screen_height * 0.65,
 		},
-	}, -- Pavucontrol & Bluetooth Devices
-	{
+	}, { -- Pavucontrol & Bluetooth Devices
 		rule_any = {
-			class = { "Pavucontrol" },
-			name = { "Bluetooth Devices" },
+			class = { 'Pavucontrol' },
+			name = { 'Bluetooth Devices' },
 		},
 		properties = {
 			floating = true,

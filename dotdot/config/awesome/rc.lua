@@ -135,4 +135,4 @@ awful.rules.rules = create_rules(keys.clientkeys, keys.clientbuttons)
 collectgarbage("setpause", 110)
 collectgarbage("setstepmul", 1000)
 
-awful.spawn.with_shell("~/.config/awesome/autorun.sh")
+awful.spawn.easy_async_with_shell("~/.config/awesome/autorun.sh")
