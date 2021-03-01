@@ -7,7 +7,11 @@
     background-color:      #222222;
     border-color:          White;
     text-color:           White;
+    {%@@ if profile == "sorcery" @@%}
     font:            "Overpass 12";
+    {%@@ elif profile == "apex" @@%}
+    font:            "Overpass 30";
+    {%@@ endif @@%}
 }
 
 #window {
@@ -29,7 +33,12 @@
 
 #listview {
     layout:     horizontal;
-    spacing:    5px;
+    {%@@ if profile == "sorcery" @@%}
+    spacing:    40px;
+    {%@@ elif profile == "apex" @@%}
+    spacing:    100px;
+    {%@@ endif @@%}
+    spacing:    100px;
     lines:      100;
 }
 

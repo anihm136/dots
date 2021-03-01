@@ -648,7 +648,11 @@ keys.clientkeys = gears.table.join(
 )
 
 -- Bind all key numbers to tags
+{%@@ if profile == "sorcery" @@%}
 for i = 1, 6 do
+{%@@ elif profile == "apex" @@%}
+for i = 1, 9 do
+{%@@ endif @@%}
 	keys.globalkeys = gears.table.join(
 		keys.globalkeys,
 		-- Switch to tag

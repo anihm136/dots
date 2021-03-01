@@ -35,7 +35,7 @@ local markup = lain.util.markup
 -- Textclock
 local mytextclock = wibox.widget.textclock("<span> %I:%M:%S </span>", 1)
 mytextclock.font = "Kimberley Bl 12"
-mytextclock.forced_width = 78
+mytextclock.forced_width = dpi(78)
 
 -- Calendar
 theme.cal = lain.widget.cal({
@@ -107,7 +107,12 @@ end
 
 function theme.at_screen_connect(s)
 	-- Tags
-	for i, tag in pairs(awful.util.tagnames_1) do
+	{%@@ if profile == "sorcery" @@%}
+	local tagnames = awful.util.tagnames_1
+	{%@@ elif profile == "apex" @@%}
+	local tagnames = awful.util.tagnames
+	{%@@ endif @@%}
+	for i, tag in pairs(tagnames) do
 		awful.tag.add(tag, {
 			-- icon = tag.icon,
 			-- icon_only = true,

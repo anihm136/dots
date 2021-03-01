@@ -51,8 +51,13 @@ function rules.create(clientkeys, clientbuttons)
 			class = { 'firefox', 'Brave-browser' },
 		},
 		properties = {
+			{%@@ if profile == "sorcery" @@%}
 			screen = 1,
 			tag = awful.util.tagnames_1[3],
+			{%@@ elif profile == "apex" @@%}
+			screen = 1,
+			tag = awful.util.tagnames[4],
+			{%@@ endif @@%}
 		},
 	}, {
 		rule_any = {
@@ -69,14 +74,24 @@ function rules.create(clientkeys, clientbuttons)
 			},
 		},
 		properties = {
+			{%@@ if profile == "sorcery" @@%}
 			screen = 2,
 			tag = awful.util.tagnames_2[3],
+			{%@@ elif profile == "apex" @@%}
+			screen = 1,
+			tag = awful.util.tagnames[5],
+			{%@@ endif @@%}
 		},
 	}, {
 		rule = { class = 'Emacs' },
 		properties = {
+			{%@@ if profile == "sorcery" @@%}
 			screen = 1,
 			tag = awful.util.tagnames_1[5],
+			{%@@ elif profile == "apex" @@%}
+			screen = 1,
+			tag = awful.util.tagnames[7],
+			{%@@ endif @@%}
 		},
 	}, { -- Floating clients.
 		rule_any = {
