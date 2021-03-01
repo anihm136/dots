@@ -11,6 +11,5 @@ export PATH
 
 # Settings
 export SUDO_ASKPASS="/home/anihm136/.local/bin/scripts/scripts_personal/askpass"
-export LC_ALL=en_IN.utf8
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export MSSQL_CLI_TELEMETRY_OPTOUT=1
