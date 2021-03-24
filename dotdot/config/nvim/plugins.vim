@@ -45,7 +45,6 @@ Plug 'wellle/targets.vim'
 Plug 'chaoren/vim-wordmotion'
 " UI
 Plug 'anihm136/statusline-themer'
-Plug 'ap/vim-buftabline'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'norcalli/nvim-colorizer.lua'
@@ -63,12 +62,10 @@ Plug 'andymass/vim-matchup'
 Plug 'jdhao/better-escape.vim'
 " Themes
 Plug 'AlessandroYorba/Despacio'
-Plug 'ajh17/Spacegray.vim'
 Plug 'chuling/equinusocio-material.vim'
 Plug 'habamax/vim-gruvbit'
 Plug 'https://gitlab.com/protesilaos/tempus-themes-vim.git'
-Plug 'https://gitlab.com/yorickpeterse/happy_hacking.vim.git'
-Plug 'jacoborus/tender.vim'
+Plug 'franbach/miramare'
 Plug 'lifepillar/vim-solarized8'
 Plug 'wadackel/vim-dogrun'
 " Experimental
@@ -93,13 +90,6 @@ call plug#end()
  
 runtime macros/sandwich/keymap/surround.vim
 
-" Buftabline
-hi! link BufTabLineFill Normal
-hi! link BufTabLineActive Pmenu
-hi! link BufTabLineCurrent PmenuSel
-hi! link BufTabLineHidden Pmenu
-let g:buftabline_indicators = 1
-
 " Unimpaired
 let g:unimpaired_mapping = {
 			\	"toggles" : 0,
@@ -121,5 +111,3 @@ let g:quickrun_no_default_key_mappings = 1
 " Better-escape
 let g:better_escape_interval = 300
 let g:better_escape_shortcut = 'fd'
-
-

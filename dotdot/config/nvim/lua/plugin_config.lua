@@ -64,13 +64,13 @@ vim.api.nvim_set_keymap(
 )
 vim.api.nvim_set_keymap(
 	'n',
-	'<leader>fb',
+	'<leader>,',
 	"<cmd>lua require('telescope_config').buffers()<CR>",
 	{ noremap = true }
 )
 vim.api.nvim_set_keymap(
 	'n',
-	'<leader>bl',
+	'<leader>sb',
 	"<cmd>lua require('telescope_config').curbuf()<CR>",
 	{ noremap = true }
 )
@@ -171,7 +171,7 @@ local git_changes = subscribe.buf_autocmd(
 
 require('el').setup{ generator = function(_, _)
 	return {
-		' // ',
+		'  ',
 		extensions.gen_mode{ format_string = ' %s ' },
 		' ',
 		-- sections.split,
