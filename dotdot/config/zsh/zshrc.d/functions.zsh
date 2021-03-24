@@ -136,7 +136,9 @@ mmv() {
 }
 
 dlm() {
-  youtube-dl -f ${2:-"m4a"} $1 --add-metadata
+  for url in $@; do
+    youtube-dl -f "m4a" $url --add-metadata
+  done
 }
 
 codi() {
