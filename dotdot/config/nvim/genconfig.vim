@@ -189,11 +189,7 @@ nnoremap <silent><leader>wd :call helpers#bufcloseCloseIt() \| q<cr>
 nnoremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
 nnoremap <leader>pd :cd %:p:h <bar> pwd<cr>
 
-try
-	set switchbuf=useopen,usetab
-	set stal=2
-catch
-endtry
+set switchbuf=useopen,usetab
 
 autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 

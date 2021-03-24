@@ -130,7 +130,7 @@ function! helpers#setColorscheme(...) abort
     let l:color = a:1
   endif
 
-  let l:dark_themes = ["spacegray", "tender", "gruvbit", "equinusocio_material", "solarized8_flat", "despacio", "dogrun", "happy_hacking"]
+  let l:dark_themes = ["gruvbit", "equinusocio_material", "solarized8_flat", "despacio", "dogrun", "miramare"]
 
   let l:light_themes = ["solarized8_flat", "tempus_totus", "tempus_day"]
 
@@ -160,6 +160,9 @@ function! helpers#setColorscheme(...) abort
   highlight FoldColumn ctermbg=NONE guibg=NONE
   " lua helpers.makeColorChanges()
   highlight Comment gui=italic
+  highlight! link TabLineFill Normal
+  highlight! link TabLineSel PmenuSel
+  lua helpers.set_sl_colors()
 endfunction
 
 function! helpers#vim_reload() abort

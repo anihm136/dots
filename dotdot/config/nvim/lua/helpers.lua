@@ -186,4 +186,38 @@ helpers.get_visual_selection = function()
 	return table.concat(lines, '\n')
 end
 
+helpers.set_sl_colors = function()
+	local colors = require('slthemer').getSlColors()
+	hlGroups = {
+		ElCommand = {colors.Cmdline, colors.Background},
+		ElCommandCV = {colors.Cmdline, colors.Background},
+		ElCommandEx = {colors.Cmdline, colors.Background},
+		ElConfirm = {colors.Cmdline, colors.Background},
+		ElInsertCompletion = {colors.Insert, colors.Background},
+		ElInsert = {colors.Insert, colors.Background},
+		ElMore = {colors.Insert, colors.Background},
+		ElNormal = {colors.Normal, colors.Background},
+		ElNormalOperatorPending = {colors.Normal, colors.Background},
+		ElPrompt = {colors.Cmdline, colors.Background},
+		ElReplace = {colors.Replace, colors.Background},
+		ElSBlock = {colors.Visual, colors.Background},
+		ElSelect = {colors.Visual, colors.Background},
+		ElShell = {colors.Cmdline, colors.Background},
+		ElSLine = {colors.Visual, colors.Background},
+		ElTerm = {colors.Cmdline, colors.Background},
+		ElVirtualReplace = {colors.Replace, colors.Background},
+		ElVisualBlock = {colors.Visual, colors.Background},
+		ElVisualLine = {colors.Visual, colors.Background},
+		ElVisual = {colors.Visual, colors.Background},
+	}
+	for k, v in pairs(hlGroups) do
+		if v[1] then
+			vim.cmd('hi! '..k..' guifg='..v[1])
+		end
+		if v[2] then
+			vim.cmd('hi! '..k..' guibg='..v[2])
+		end
+	end
+end
+
 return helpers
