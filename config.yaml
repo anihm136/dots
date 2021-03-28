@@ -1,3 +1,5 @@
+actions:
+  antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
 config:
   backup: true
   create: true
@@ -33,6 +35,12 @@ dotfiles:
     src: config/doom
     dst: ~/.config/doom
     link: link_children
+    upignore:
+    - 'lisp'
+    - 'custom.el'
+    cmpignore:
+    - 'lisp'
+    - 'custom.el'
   d_config_kitty:
     src: config/kitty
     dst: ~/.config/kitty
@@ -65,6 +73,14 @@ dotfiles:
     src: config/zsh
     dst: ~/.config/zsh
     link: link_children
+    actions:
+    - antibody
+    upignore:
+    - 'zsh_plugins.sh'
+    - '.zcompdump'
+    cmpignore:
+    - 'zsh_plugins.sh'
+    - '.zcompdump'
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json
