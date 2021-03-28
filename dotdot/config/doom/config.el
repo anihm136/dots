@@ -371,13 +371,14 @@
                 x-stretch-cursor t)
   (setq lsp-signature-doc-lines 1
         company-idle-delay nil
-        evil-want-fine-undo t
         inhibit-compacting-font-caches t
+        evil-want-fine-undo t
         evil-vsplit-window-right t
         evil-split-window-below t
+        +evil-want-o/O-to-continue-comments nil
+        evil-respect-visual-line-mode nil
         doom-fallback-buffer-name "► Doom"
         +doom-dashboard-name "► Doom"
-        +evil-want-o/O-to-continue-comments nil
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
         :nv "C-S-x" 'evil-numbers/dec-at-pt
