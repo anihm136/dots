@@ -163,7 +163,13 @@ local bat_tooltip = awful.tooltip{
 bat_tooltip:add_to_object(batwidget)
 
 batwidget:connect_signal("mouse::enter", function()
-	bat_tooltip.text = "Battery left: " .. bat_now.perc .. "%"
+	local text
+	if bat_now.status == "Charging" then
+	  text = "Charging: "
+	else
+		text = "Battery left: "
+	end
+	bat_tooltip.text = text .. bat_now.perc .. "%"
 end)
 
 -- ALSA volume bar
