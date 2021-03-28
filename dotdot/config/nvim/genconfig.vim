@@ -64,8 +64,8 @@ xnoremap <silent> y ygv<Esc>
 inoremap <silent> <C-v> <C-o>P
 nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
-inoremap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
-inoremap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
+imap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
+imap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
 xnoremap <silent> <Tab> v:lua.helpers.x_tab()
 
 function! s:show_documentation()

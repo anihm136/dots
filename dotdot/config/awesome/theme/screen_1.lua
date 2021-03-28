@@ -46,7 +46,7 @@ local markup = lain.util.markup
 -- Textclock
 local mytextclock = wibox.widget.textclock("<span> %I:%M:%S </span>", 1)
 mytextclock.font = "Kimberley Bl 12"
-mytextclock.forced_width = dpi(78)
+mytextclock.forced_width = dpi(84)
 
 -- Calendar
 theme.cal = lain.widget.cal({
