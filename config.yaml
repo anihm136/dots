@@ -1,5 +1,7 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
+dynvariables:
+  home: "echo $HOME" 
 config:
   backup: true
   create: true
@@ -75,6 +77,9 @@ dotfiles:
     link: link_children
     actions:
     - antibody
+    instignore:
+    - 'zsh_plugins.sh'
+    - '.zcompdump'
     upignore:
     - 'zsh_plugins.sh'
     - '.zcompdump'
