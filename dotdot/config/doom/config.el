@@ -99,7 +99,6 @@
         org-outline-path-complete-in-steps nil
         org-refile-allow-creating-parent-nodes 'confirm
         org-catch-invisible-edits 'smart
-        org-export-in-background t
         org-list-demote-modify-bullet '(("+" . "*") ("-" . "+") ("*" . "-") ("1." . "a."))
         org-startup-folded 'content
         org-log-done 'time

@@ -1,25 +1,32 @@
-personal_ws-1.1 en 48
+personal_ws-1.1 en 55
 Bitwise
 Filesystem
+Linearizability
 PaaS
 Scoreboarding
+Virtualizes
 arity
 async
 backend
 backends
 checkpointing
 conformant
+datacentre
+datacentres
 deallocate
 deallocation
 dereferenced
 dereferencing
 emulatable
+failover
+filesystems
 frontend
 frontends
 hyperthreaded
 hyperthreading
 lifecycle
 lifecycles
+linearizable
 lookahead
 microarchitectural
 microarchitecture
