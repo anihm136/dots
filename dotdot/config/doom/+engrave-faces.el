@@ -7,6 +7,21 @@
       (org-latex-scr-block--engraved src-block contents info)
     (funcall orig-fn src-block contents info)))
 
+(defadvice! org-latex-inline-src-block-engraved (orig-fn inline-src-block contents info)
+  "Like `org-latex-inline-src-block', but supporting an engraved backend"
+  :around #'org-latex-inline-src-block
+  (if (eq 'engraved (plist-get info :latex-listings))
+      (org-latex-inline-scr-block--engraved inline-src-block contents info)
+    (funcall orig-fn src-block contents info)))
+
+(defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
+  "Like `org-latex-example-block', but supporting an engraved backend"
+  :around #'org-latex-example-block
+  (let ((output-block (funcall orig-fn example-block contents info)))
+    (if (eq 'engraved (plist-get info :latex-listings))
+        (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
+      output-block)))
+
 (setq org-latex-engraved-code-preamble "
 \\usepackage{fvextra}
 \\fvset{
@@ -104,5 +119,21 @@
     ;; Return value.
     (format float-env body)))
 
-
+(defun org-latex-inline-scr-block--engraved (inline-src-block _contents info)
+  (let ((options (org-latex--make-option-string
+                  (plist-get info :latex-minted-options)))
+        code-buffer code)
+    (setq code-buffer
+          (with-temp-buffer
+            (insert (org-element-property :value inline-src-block))
+            (funcall (org-src-get-lang-mode
+                      (org-element-property :language inline-src-block)))
+            (engrave-faces-latex-buffer)))
+    (setq code (with-current-buffer code-buffer
+                 (buffer-string)))
+    (kill-buffer code-buffer)
+    (format "\\Verb%s{%s}"
+            (if (string= options "") ""
+              (format "[%s]" options))
+            code)))
 ;;; +engrave-faces.el ends here
