@@ -26,11 +26,7 @@ vnoremap <buffer><silent> <leader>se :DB<cr>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-{%@@ if profile == "sorcery" @@%}
-let g:python3_host_prog = "/home/anihm136/dev/python/tool-env/bin/python"
-{%@@ elif profile == "apex" @@%}
-let g:python3_host_prog = "/home/anirudh/dev/python/tool-env/bin/python"
-{%@@ endif @@%}
+let g:python3_host_prog = "{{@@ home @@}}/dev/python/tool-env/bin/python"
 
 set splitbelow splitright
 set confirm
