@@ -1,3 +1,4 @@
+esc/conda-zsh-completion
 robbyrussell/oh-my-zsh
 robbyrussell/oh-my-zsh path:lib
 robbyrussell/oh-my-zsh path:plugins/command-not-found
@@ -13,7 +14,6 @@ robbyrussell/oh-my-zsh path:plugins/pip kind:fpath
 robbyrussell/oh-my-zsh path:plugins/ripgrep kind:fpath
 robbyrussell/oh-my-zsh path:plugins/cargo kind:fpath
 zdharma/fast-syntax-highlighting
-esc/conda-zsh-completion
 sinetoami/antibody-completion
 zsh-users/zsh-completions
 romkatv/powerlevel10k
