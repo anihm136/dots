@@ -24,7 +24,7 @@ end
 naughty.config.padding = dpi(3)
 naughty.config.spacing = dpi(3)
 naughty.config.icon_dirs =
-	{ "/home/anirudh/.local/share/icons/candy-icons", "/usr/share/pixmaps/" }
+	{ "{{@@ home @@}}/.local/share/icons/candy-icons", "/usr/share/pixmaps/" }
 naughty.config.icon_formats = { "png", "svg" }
 
 -- Timeouts
