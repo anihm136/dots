@@ -1,3 +1,4 @@
+robbyrussell/oh-my-zsh
 robbyrussell/oh-my-zsh path:lib
 robbyrussell/oh-my-zsh path:plugins/command-not-found
 robbyrussell/oh-my-zsh path:plugins/npm
@@ -17,4 +18,3 @@ sinetoami/antibody-completion
 zsh-users/zsh-completions
 romkatv/powerlevel10k
 wfxr/forgit
-robbyrussell/oh-my-zsh
