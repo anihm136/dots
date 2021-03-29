@@ -1,4 +1,7 @@
 #!/usr/env zsh
+
+alias help=run-help
+
 # Git aliases
 function current_branch() {
 	git_current_branch

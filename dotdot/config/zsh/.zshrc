@@ -12,6 +12,10 @@ HISTFILE="$XDG_CACHE_HOME/zsh/history"
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 DISABLE_MAGIC_FUNCTIONS="true"
 
+autoload -Uz run-help
+autoload -Uz run-help-git run-help-ip run-help-openssl run-help-p4 run-help-sudo run-help-svk run-help-svn
+(( ${+aliases[run-help]} )) && unalias run-help
+
 for f in $ZDOTDIR/zshrc.d/**/*.zsh(N); do [ -r "$f" ] && source "$f"; done
 [[ -f ${ASDF_DIR}/asdf.sh ]] && source ${ASDF_DIR}/asdf.sh
 [[ -f $HOME/.aliases ]] && source $HOME/.aliases
@@ -61,6 +65,10 @@ catch_signal_usr1() {
   nvim -c "SLoad reload"
 }
 trap catch_signal_usr1 USR1
+
+TRAPUSR2() {
+  rehash
+}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh
