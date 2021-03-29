@@ -1,7 +1,7 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
 dynvariables:
-  home: "echo $HOME" 
+  home: echo $HOME
 config:
   backup: true
   create: true
@@ -38,11 +38,11 @@ dotfiles:
     dst: ~/.config/doom
     link: link_children
     upignore:
-    - 'lisp'
-    - 'custom.el'
+    - lisp
+    - custom.el
     cmpignore:
-    - 'lisp'
-    - 'custom.el'
+    - lisp
+    - custom.el
   d_config_kitty:
     src: config/kitty
     dst: ~/.config/kitty
@@ -78,14 +78,14 @@ dotfiles:
     actions:
     - antibody
     instignore:
-    - 'zsh_plugins.sh'
-    - '.zcompdump'
+    - zsh_plugins.sh
+    - .zcompdump
     upignore:
-    - 'zsh_plugins.sh'
-    - '.zcompdump'
+    - zsh_plugins.sh
+    - .zcompdump
     cmpignore:
-    - 'zsh_plugins.sh'
-    - '.zcompdump'
+    - zsh_plugins.sh
+    - .zcompdump
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json
@@ -99,6 +99,10 @@ dotfiles:
   f_aliases:
     src: aliases
     dst: ~/.aliases
+  d_config_interception:
+    src: config/interception
+    dst: ~/.config/interception
+    link: link_children
 profiles:
   sorcery:
     dotfiles:
@@ -119,6 +123,7 @@ profiles:
     - f_zshenv
     - f_xprofile
     - f_aliases
+    - d_config_interception
   apex:
     dotfiles:
     - d_config_awesome
@@ -133,3 +138,4 @@ profiles:
     - f_zshenv
     - f_xprofile
     - f_aliases
+    - d_config_interception
