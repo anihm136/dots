@@ -40,6 +40,7 @@ theme.vol_no = theme.dir .. "/icons/vol_no.png"
 theme.vol_mute = theme.dir .. "/icons/vol_mute.png"
 
 local red = "#EB8F8F"
+local green = "#87ed87"
 {%@@ endif @@%}
 local markup = lain.util.markup
 
