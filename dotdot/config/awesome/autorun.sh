@@ -37,4 +37,6 @@ run2 telegram-desktop telegram-deskto
 run2 "discord" "Discord"
 run2 "whatsapp-nativefier" "WhatsApp"
 run2 "instagram-nativefier" "Instagram"
+{%@@ elif profile == "apex" @@%}
+run blueman-tray
 {%@@ endif @@%}
