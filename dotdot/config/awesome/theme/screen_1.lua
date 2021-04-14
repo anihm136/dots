@@ -80,7 +80,9 @@ theme.fs = lain.widget.fs{
 		fg = theme.fg_normal,
 		bg = theme.bg_normal,
 		font = "Overpass Mono 10.5",
+		title = "Storage overview"
 	},
+	showpopup = "off",
 	settings = function()
 		if fs_now["/"].percentage < 90 then
 			fsbar:set_color(theme.fg_normal)
@@ -93,16 +95,11 @@ theme.fs = lain.widget.fs{
 local fsbg = wibox.container.background(fsbar, "#474747", gears.shape.rectangle)
 local fswidget = wibox.container.margin(fsbg, dpi(2), dpi(7), dpi(4), dpi(4))
 
-local fs_tooltip = awful.tooltip{
-	bg = theme.tooltip_bg,
-	fg = theme.tooltip_fg,
-	font = theme.tooltip_font,
-}
-
-fs_tooltip:add_to_object(fswidget)
-
 fswidget:connect_signal("mouse::enter", function()
-	fs_tooltip.text = "Storage used: " .. fs_now["/"].percentage .. "%"
+	theme.fs.show(0)
+end)
+fswidget:connect_signal("mouse::leave", function()
+	theme.fs.hide()
 end)
 --]]
 
@@ -121,6 +118,7 @@ local batbar = wibox.widget {
   widget           = wibox.widget.progressbar,
 }
 local batupd = lain.widget.bat({
+		timeout = 10,
     settings = function()
       if (not bat_now.status) or bat_now.status == "N/A" or type(bat_now.perc) ~= "number" then return end
 
@@ -159,9 +157,8 @@ local bat_tooltip = awful.tooltip{
 	bg = theme.tooltip_bg,
 	fg = theme.tooltip_fg,
 	font = theme.tooltip_font,
+	objects = { batwidget }
 }
-
-bat_tooltip:add_to_object(batwidget)
 
 batwidget:connect_signal("mouse::enter", function()
 	local text
@@ -170,7 +167,7 @@ batwidget:connect_signal("mouse::enter", function()
 	else
 		text = "Battery left: "
 	end
-	bat_tooltip.text = text .. bat_now.perc .. "%"
+	bat_tooltip.text = text .. bat_now.perc .. "% [" .. bat_now.time .. "]"
 end)
 
 -- ALSA volume bar
