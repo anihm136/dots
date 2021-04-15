@@ -1,5 +1,6 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
+  awesome: "[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull origin master || gh repo clone lcpz/lain ~/.config/awesome/lain"
 dynvariables:
   home: echo $HOME
 config:
@@ -25,6 +26,12 @@ dotfiles:
     src: config/awesome
     dst: ~/.config/awesome
     link: link_children
+    actions:
+    - awesome
+    upignore:
+    - lain
+    cmpignore:
+    - lain
   d_config_beets:
     src: config/beets
     dst: ~/.config/beets
