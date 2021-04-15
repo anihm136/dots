@@ -67,7 +67,7 @@ function rules.create(clientkeys, clientbuttons)
 				'Slack',
 				'Element',
 				'whatsapp-nativefier-d40211',
-				'instagram-nativefier-51e18f',
+				'instagram-nativefier-9dcf0f',
 				'Microsoft Teams - Preview',
 				'TelegramDesktop',
 				'Signal',

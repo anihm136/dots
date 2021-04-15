@@ -6,6 +6,7 @@ Plug 'fedorenchik/gtags.vim'
 Plug 'norcalli/snippets.nvim'
 Plug 'junegunn/vim-easy-align'
 Plug 'neovim/nvim-lspconfig'
+Plug 'kabouzeid/nvim-lspinstall'
 Plug 'glepnir/lspsaga.nvim'
 Plug 'hrsh7th/nvim-compe'
 Plug 'hrsh7th/vim-vsnip'
@@ -37,8 +38,6 @@ Plug 'chrisbra/csv.vim'
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
 Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
-Plug 'tpope/vim-dadbod'
-Plug 'kristijanhusak/vim-dadbod-completion'
 " Textobjects
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'wellle/targets.vim'

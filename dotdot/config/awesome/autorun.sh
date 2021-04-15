@@ -33,8 +33,8 @@ run slack
 run teams
 run element-desktop
 run signal-desktop
+run whatsapp
+run instagram
 run2 telegram-desktop telegram-deskto
 run2 "discord" "Discord"
-run2 "whatsapp-nativefier" "WhatsApp"
-run2 "instagram-nativefier" "Instagram"
 {%@@ endif @@%}
