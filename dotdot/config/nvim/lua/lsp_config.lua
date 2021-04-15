@@ -1,12 +1,13 @@
-local lsp = require('lspconfig')
-local configs = require('lspconfig/configs')
-local util = require('lspconfig/util')
+local lsp = require("lspconfig")
+require"lspinstall".setup()
+local configs = require("lspconfig/configs")
+local util = require("lspconfig/util")
 
 if vim.env.SNIPPETS then
-	vim.snippet = require'snippet'
+	vim.snippet = require"snippet"
 end
 
-vim.lsp.set_log_level('trace')
+vim.lsp.set_log_level("trace")
 
 local mapper = function(mode, key, result)
 	vim.api.nvim_buf_set_keymap(0, mode, key, result, {
@@ -15,9 +16,9 @@ local mapper = function(mode, key, result)
 	})
 end
 
-vim.lsp.handlers['textDocument/formatting'] = function(err, _, result, _, bufnr)
+vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
 	if err ~= nil or result == nil then return end
-	if not vim.api.nvim_buf_get_option(bufnr, 'modified') then
+	if not vim.api.nvim_buf_get_option(bufnr, "modified") then
 		local view = vim.fn.winsaveview()
 		vim.lsp.util.apply_text_edits(result, bufnr)
 		vim.fn.winrestview(view)
@@ -27,17 +28,17 @@ vim.lsp.handlers['textDocument/formatting'] = function(err, _, result, _, bufnr)
 	end
 end
 
-vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics,
 	{
 		underline = true,
 		virtual_text = {
 			spacing = 5,
-			prefix = ' ',
+			prefix = " ",
 		},
 		signs = function(bufnr, client_id)
 			local ok, result =
-				pcall(vim.api.nvim_buf_get_var, bufnr, 'show_signs')
+				pcall(vim.api.nvim_buf_get_var, bufnr, "show_signs")
 			-- No buffer local variable set, so just enable by default
 			if not ok then
 				return true
@@ -50,133 +51,135 @@ vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
 )
 
 local on_attach = function(client)
-	vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-	mapper('n', '<leader>cd', '<cmd>lua vim.lsp.buf.definition()<CR>')
-	mapper('n', '<leader>cD', '<cmd>lua vim.lsp.buf.implementation()<CR>')
-	mapper('n', '<leader>cr', '<cmd>lua vim.lsp.buf.references()<CR>')
-	mapper('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-	mapper('i', '<c-s>', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
-	mapper('n', '[e', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
-	mapper('n', ']e', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
-	mapper('n', '<leader>ce', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>')
-	mapper('n', '<leader>cf', '<cmd>lua helpers.formatting()<CR>')
+	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+	mapper("n", "<leader>cd", "<cmd>lua vim.lsp.buf.definition()<CR>")
+	mapper("n", "<leader>cD", "<cmd>lua vim.lsp.buf.implementation()<CR>")
+	mapper("n", "<leader>cr", "<cmd>lua vim.lsp.buf.references()<CR>")
+	mapper("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>")
+	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
+	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
+	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
+	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>")
+	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<CR>")
 	mapper(
-		'n',
-		'<space>sl',
-		'<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>'
+		"n",
+		"<space>sl",
+		"<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>"
 	)
+	client.resolved_capabilities.document_formatting = false
 end
 
-local servers = { 'tsserver', 'cssls', 'jsonls', 'html', 'gopls' }
-for _, lsp_srv in ipairs(servers) do
-	lsp[lsp_srv].setup{ on_attach = function(client)
-		client.resolved_capabilities.document_formatting = false
-		on_attach(client)
-	end }
+local function make_config()
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	return {
+		-- enable snippet support
+		capabilities = capabilities,
+		-- map buffer local keybindings when the language server attaches
+		on_attach = on_attach,
+	}
 end
 
-lsp.bashls.setup{
-	on_attach = on_attach,
-	filetypes = { 'sh', 'bash', 'zsh' },
-	root_dir = function(filename, bufnr)
-		return '/tmp'
-	end,
-}
+-- lsp-install
+local function setup_servers()
+	require"lspinstall".setup()
 
-lsp.pyright.setup{
-	on_attach = function(client)
-		client.resolved_capabilities.document_formatting = false
-		on_attach(client)
-	end,
-	root_dir = function(fname)
-		local filename =
-			util.path.is_absolute(fname) and fname or util.path.join(
-				vim.loop.cwd(),
-				fname
-			)
-		local root_pattern =
-			util.root_pattern(
-				'setup.py',
-				'setup.cfg',
-				'requirements.txt',
-				'mypy.ini',
-				'.pylintrc',
-				'.flake8rc',
-				'.git',
-				'.gitignore'
-			)
-		return root_pattern(filename) or util.path.dirname(filename)
-	end,
-}
+	-- get all installed servers
+	local servers = require"lspinstall".installed_servers()
 
-lsp.gopls.setup{
-	on_attach = function(client)
-		client.resolved_capabilities.document_formatting = false
-		on_attach(client)
-	end,
-	root_dir = function(fname)
-		local filename =
-			util.path.is_absolute(fname) and fname or util.path.join(
-				vim.loop.cwd(),
-				fname
-			)
-		local root_pattern = util.root_pattern('go.mod', '.git')
-		return root_pattern(filename) or util.path.dirname(filename)
-	end,
-}
+	for _, server in pairs(servers) do
+		if server ~= "efm" then
+			local config = make_config()
 
-lsp.clangd.setup{
-	on_attach = function(client)
-		client.resolved_capabilities.document_formatting = false
-		on_attach(client)
-	end,
-	capabilities = {
-		textDocument = {
-			completion = {
-				completionItem = { snippetSupport = true },
-			},
-		},
-	},
-	init_options = {
-		usePlaceholders = true,
-		completeUnimported = true,
-	},
-}
---
-lsp.intelephense.setup{
-	on_attach = function(client)
-		client.resolved_capabilities.document_formatting = false
-		on_attach(client)
-	end,
-	capabilities = {
-		textDocument = {
-			completion = {
-				completionItem = { snippetSupport = true },
-			},
-		},
-	},
-	init_options = {
-		usePlaceholders = true,
-		completeUnimported = true,
-	},
-}
+			if server == "cpp" then
+				config.filetypes = { "c", "cpp" }
 
-local clangformat = require'efm/clangformat'
-local golint = require'efm/golint'
-local gofmt = require'efm/gofmt'
-local goimports = require'efm/goimports'
-local black = require'efm/black'
-local isort = require'efm/isort'
-local flake8 = require'efm/flake8'
-local pylint = require'efm/pylint'
-local prettier = require'efm/prettier'
-local eslint = require'efm/eslint'
-local shellcheck = require'efm/shellcheck'
+				config.init_options = {
+					usePlaceholders = true,
+					completeUnimported = true,
+				}
+			end
+			if server == "bash" then
+				config.filetypes = { "sh", "bash", "zsh" }
+				config.root_dir = function(filename, bufnr)
+					return "/tmp"
+				end
+			end
+			if server == "python" then
+				config.root_dir = function(fname)
+					local filename =
+						util.path.is_absolute(
+							fname
+						) and fname or util.path.join(vim.loop.cwd(), fname)
+					local root_pattern =
+						util.root_pattern(
+							"setup.py",
+							"setup.cfg",
+							"requirements.txt",
+							"mypy.ini",
+							".pylintrc",
+							".flake8rc",
+							".git",
+							".gitignore"
+						)
+					return root_pattern(filename) or util.path.dirname(filename)
+				end
+			end
+			if server == "go" then
+				config.root_dir = function(fname)
+					local filename =
+						util.path.is_absolute(
+							fname
+						) and fname or util.path.join(vim.loop.cwd(), fname)
+					local root_pattern = util.root_pattern("go.mod", ".git")
+					return root_pattern(filename) or util.path.dirname(filename)
+				end
+			end
+
+			require"lspconfig"[server].setup(config)
+		end
+	end
+end
+
+-- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
+require"lspinstall".post_install_hook = function()
+	setup_servers() -- reload installed servers
+end
+
+-- lsp.intelephense.setup{
+-- 	on_attach = function(client)
+-- 		client.resolved_capabilities.document_formatting = false
+-- 		on_attach(client)
+-- 	end,
+-- 	capabilities = {
+-- 		textDocument = {
+-- 			completion = {
+-- 				completionItem = { snippetSupport = true },
+-- 			},
+-- 		},
+-- 	},
+-- 	init_options = {
+-- 		usePlaceholders = true,
+-- 		completeUnimported = true,
+-- 	},
+-- }
+
+local clangformat = require"efm/clangformat"
+local golint = require"efm/golint"
+local gofmt = require"efm/gofmt"
+local goimports = require"efm/goimports"
+local black = require"efm/black"
+local isort = require"efm/isort"
+local flake8 = require"efm/flake8"
+local pylint = require"efm/pylint"
+local prettier = require"efm/prettier"
+local eslint = require"efm/eslint"
+local shellcheck = require"efm/shellcheck"
 local format_options_prettier = {
 	tabWidth = 4,
 	singleQuote = true,
-	trailingComma = 'all',
-	configPrecedence = 'prefer-file',
+	trailingComma = "all",
+	configPrecedence = "prefer-file",
 }
 vim.g.format_options_typescript = format_options_prettier
 vim.g.format_options_javascript = format_options_prettier
@@ -193,6 +196,24 @@ vim.g.format_options_lua = format_options_prettier
 lsp.efm.setup{
 	on_attach = on_attach,
 	init_options = { documentFormatting = true },
+	filetypes = {
+		"lua",
+		"c",
+		"cpp",
+		"go",
+		"python",
+		"typescript",
+		"javascript",
+		"typescriptreact",
+		"javascriptreact",
+		"yaml",
+		"json",
+		"html",
+		"scss",
+		"css",
+		"markdown",
+		"sh",
+	},
 	root_dir = function(fname)
 		local filename =
 			util.path.is_absolute(fname) and fname or util.path.join(
@@ -201,31 +222,31 @@ lsp.efm.setup{
 			)
 		local root_pattern =
 			util.root_pattern(
-				'setup.py',
-				'setup.cfg',
-				'requirements.txt',
-				'mypy.ini',
-				'.pylintrc',
-				'.flake8rc',
-				'go.mod',
-				'package.json',
-				'.git',
-				'.gitignore'
+				"setup.py",
+				"setup.cfg",
+				"requirements.txt",
+				"mypy.ini",
+				".pylintrc",
+				".flake8rc",
+				"go.mod",
+				"package.json",
+				".git",
+				".gitignore"
 			)
 		return root_pattern(filename) or util.path.dirname(filename)
 	end,
 	settings = {
 		rootMarkers = {
-			'setup.py',
-			'setup.cfg',
-			'requirements.txt',
-			'mypy.ini',
-			'.pylintrc',
-			'.flake8rc',
-			'go.mod',
-			'package.json',
-			'.git',
-			'.gitignore',
+			"setup.py",
+			"setup.cfg",
+			"requirements.txt",
+			"mypy.ini",
+			".pylintrc",
+			".flake8rc",
+			"go.mod",
+			"package.json",
+			".git",
+			".gitignore",
 		},
 		languages = {
 			lua = { prettier },
@@ -248,28 +269,4 @@ lsp.efm.setup{
 	},
 }
 
-function LspRenameFloat()
-	local current_word = vim.fn.expand('<cword>')
-	local plenary_window =
-		require('plenary.window.float').percentage_range_window(0.5, 0.2)
-	vim.api.nvim_buf_set_option(plenary_window.bufnr, 'buftype', 'prompt')
-	vim.fn.prompt_setprompt(
-		plenary_window.bufnr,
-		string.format('Rename "%s" to > ', current_word)
-	)
-	vim.fn.prompt_setcallback(plenary_window.bufnr, function(text)
-		vim.api.nvim_win_close(plenary_window.win_id, true)
-
-		if text ~= '' then
-			vim.schedule(function()
-				vim.api.nvim_buf_delete(plenary_window.bufnr, { force = true })
-
-				vim.lsp.buf.rename(text)
-			end)
-		else
-			print('Nothing to rename!')
-		end
-	end)
-
-	vim.cmd[[startinsert]]
-end
+setup_servers()
