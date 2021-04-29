@@ -1,4 +1,4 @@
-personal_ws-1.1 en 55
+personal_ws-1.1 en 60
 Bitwise
 Filesystem
 Linearizability
@@ -9,8 +9,12 @@ arity
 async
 backend
 backends
+callee
+callee's
 checkpointing
 conformant
+customizable
+cyber
 datacentre
 datacentres
 deallocate
@@ -50,6 +54,7 @@ regexes
 serverless
 structs
 superscalar
+systems's
 tokenization
 transpiler
 virtualizable

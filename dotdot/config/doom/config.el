@@ -254,7 +254,8 @@
   (defun ani/org-archive-done-tasks ()
     (interactive)
     (org-map-entries 'org-archive-subtree "/DONE" 'file)
-    (org-map-entries 'org-archive-subtree "/CANCEL" 'file))
+    (org-map-entries 'org-archive-subtree "/\[X\]" 'file)
+    (org-map-entries 'org-archive-subtree "/KILL" 'file))
   (defadvice org-archive-subtree (around my-org-archive-subtree activate)
     (let ((org-archive-location
            (if (save-excursion (org-back-to-heading)
