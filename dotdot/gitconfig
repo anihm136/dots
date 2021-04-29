@@ -1,0 +1,20 @@
+[user]
+	email = anihm136@gmail.com
+	name = Anirudh H M
+[pull]
+	ff = only
+[credential]
+	helper = /usr/share/git/credential/libsecret/git-credential-libsecret
+[init]
+	defaultBranch = main
+[merge]
+	tool = diffconflicts
+[mergetool "diffconflicts"]
+	cmd = nvim -c DiffConflicts \"$MERGED\" \"$BASE\" \"$LOCAL\" \"$REMOTE\"
+	trustExitCode = true
+[mergetool]
+	keepBackup = false
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[url "git@gitlab.com:"]
+	insteadOf = https://gitlab.com/

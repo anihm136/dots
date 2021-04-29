@@ -1,6 +1,7 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
-  awesome: "[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull origin master || gh repo clone lcpz/lain ~/.config/awesome/lain"
+  awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
+    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain'
 dynvariables:
   home: echo $HOME
 config:
@@ -110,6 +111,9 @@ dotfiles:
     src: config/interception
     dst: ~/.config/interception
     link: link_children
+  f_gitconfig:
+    src: gitconfig
+    dst: ~/.gitconfig
 profiles:
   sorcery:
     dotfiles:
@@ -131,6 +135,7 @@ profiles:
     - f_xprofile
     - f_aliases
     - d_config_interception
+    - f_gitconfig
   apex:
     dotfiles:
     - d_config_awesome
@@ -138,6 +143,7 @@ profiles:
     - d_config_doom
     - d_config_kitty
     - f_config_picom.conf
+    - d_config_ripgrep
     - d_config_rofi
     - d_config_tilda
     - d_config_sxhkd
@@ -146,3 +152,4 @@ profiles:
     - f_xprofile
     - f_aliases
     - d_config_interception
+    - f_gitconfig
