@@ -8,7 +8,7 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 
 local modkey = "Mod4"
 local altkey = "Mod1"
-
+local ctrl = "Control"
 local keys = {}
 
 -- ===================================================================
@@ -182,11 +182,30 @@ keys.globalkeys = my_table.join(
 		description = "reload awesome",
 		group = "awesome",
 	}),
+	-- Toggle notifications
 	awful.key(
-		{ modkey, "Shift" },
+		{ modkey, ctrl },
+		"n",
+		function()
+			if not naughty.is_suspended() then
+				naughty.notify({ text = "Suspending notifications" })
+			end
+			naughty.toggle()
+			if not naughty.is_suspended() then
+				naughty.notify({ text = "Resuming notifications" })
+			end
+		end,
+		{
+			description = "reload awesome",
+			group = "awesome",
+		}
+	),
+	-- Terminal (emergency)
+	awful.key(
+		{ ctrl, altkey },
 		"t",
 		function()
-			awful.spawn("alacritty")
+			awful.spawn("urxvt")
 		end,
 		{
 			description = "terminal",
@@ -388,16 +407,16 @@ keys.globalkeys = my_table.join(
 	-- CLIENT RESIZING
 	-- =========================================
 
-	awful.key({ modkey, "Control" }, "Down", function(c)
+	awful.key({ modkey, ctrl }, "Down", function(c)
 		resize_client(client.focus, "down")
 	end),
-	awful.key({ modkey, "Control" }, "Up", function(c)
+	awful.key({ modkey, ctrl }, "Up", function(c)
 		resize_client(client.focus, "up")
 	end),
-	awful.key({ modkey, "Control" }, "Left", function(c)
+	awful.key({ modkey, ctrl }, "Left", function(c)
 		resize_client(client.focus, "left")
 	end),
-	awful.key({ modkey, "Control" }, "Right", function(c)
+	awful.key({ modkey, ctrl }, "Right", function(c)
 		resize_client(client.focus, "right")
 	end),
 	-- =========================================
@@ -557,7 +576,7 @@ keys.globalkeys = my_table.join(
 -- ===================================================================
 
 keys.clientkeys = gears.table.join(
--- Maximize
+	-- Maximize
 	-- Move to edge or swap by direction
 	awful.key({ modkey, "Shift" }, "o", function(c)
 		c:move_to_screen()
@@ -574,7 +593,7 @@ keys.clientkeys = gears.table.join(
 	awful.key({ modkey, "Shift" }, "Right", function(c)
 		move_client(c, "right")
 	end),
-	awful.key({ modkey, "Control" }, "space", awful.client.floating.toggle, {
+	awful.key({ modkey, ctrl }, "space", awful.client.floating.toggle, {
 		description = "toggle floating",
 		group = "client",
 	}),
@@ -587,7 +606,7 @@ keys.clientkeys = gears.table.join(
 		group = "client",
 	}),
 	awful.key(
-		{ modkey, "Control" },
+		{ modkey, ctrl },
 		"Return",
 		function(c)
 			c:swap(awful.client.getmaster())
@@ -599,7 +618,7 @@ keys.clientkeys = gears.table.join(
 	),
 	-- toggle fullscreen
 	awful.key(
-		{ modkey },
+		{ modkey, "Shift" },
 		"f",
 		function(c)
 			c.fullscreen = not c.fullscreen
