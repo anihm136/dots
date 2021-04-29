@@ -55,7 +55,9 @@ set cursorline
 set completeopt=menu,menuone,noselect
 
 
-nnoremap <silent> <leader>fs :wa!<cr>
+nnoremap <silent> <leader>fs :w<cr>
+nnoremap <silent> <leader>fS :wa!<cr>
+nnoremap <silent> <leader>fU :Write<cr>
 xnoremap <silent> y ygv<Esc>
 inoremap <silent> <C-v> <C-o>P
 nnoremap <silent> <leader>tw :set wrap!<cr>
@@ -73,7 +75,7 @@ function! s:show_documentation()
 		endtry
 	endif
 	try
-		execute 'lua vim.lsp.buf.hover()'
+		execute "lua require('lspsaga.hover').render_hover_doc()"
 	catch
 		echoerr "No help available for " . expand('<cword>')
 	endtry
@@ -96,6 +98,7 @@ autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_ya
 autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
 
 command! -nargs=0 Reload call helpers#vim_reload()
+command! -nargs=0 Write silent! SudoWrite | edit!
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -207,8 +210,8 @@ if &wildoptions =~ "pum"
 	cnoremap <expr> <right> pumvisible() ? "<down>" : "<right>"
 endif
 
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go let g:nav_mode = 1
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.java,*.lua let g:nav_mode = -1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go,*.lua let g:nav_mode = 1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.java let g:nav_mode = -1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
 
 nnoremap <silent> <Leader>rn :%s///g<Left><Left>
