@@ -35,8 +35,7 @@ helpers.formatting = function()
 	vim.lsp.buf.formatting(
 		vim.g[string.format('format_options_%s', vim.bo.filetype)] or {}
 	)
-	print'Formatted buffer'
-	vim.cmd[[DetectIndent]]
+	vim.defer_fn(function() vim.cmd[[DetectIndent]] end, 5000)
 end
 
 -- Smart tab completion:

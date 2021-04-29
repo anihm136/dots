@@ -23,17 +23,17 @@ fun! helpers#navMap(mode) abort
   silent! nunmap <buffer> <leader>cD
   silent! nunmap <buffer> <leader>cr
   silent! nunmap <buffer> <leader>cn
+  silent! nunmap <buffer> <leader>ch
   silent! nunmap <buffer> <leader>ca
-  silent! nunmap <buffer> g0
-  silent! nunmap <buffer> gW
+  silent! vunmap <buffer> <leader>ca
   if a:mode == 1
-    nnoremap <silent><buffer> <leader>cd <cmd>lua vim.lsp.buf.definition()<CR>
+    nnoremap <silent><buffer> <leader>cd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
     nnoremap <silent><buffer> <leader>cD <cmd>lua vim.lsp.buf.implementation()<CR>
     nnoremap <silent><buffer> <leader>cr <cmd>lua vim.lsp.buf.references()<CR>
-    nnoremap <silent><buffer> <leader>cn <cmd>lua LspRenameFloat()<CR>
-    nnoremap <silent><buffer> <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
-    nnoremap <silent><buffer> g0 <cmd>lua vim.lsp.buf.document_symbol()<CR>
-    nnoremap <silent><buffer> gW <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+    nnoremap <silent><buffer> <leader>cn <cmd>lua require('lspsaga.rename').rename()<CR>
+    nnoremap <silent><buffer> <leader>ch <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+    nnoremap <silent><buffer> <leader>ca <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+    vnoremap <silent><buffer> <leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
   elseif a:mode == 2
     nnoremap <silent><buffer><expr> <leader>cd ':cs find g ' . expand('<cword>') . '<CR>'
     nnoremap <silent><buffer><expr> <leader>cD ':cs find c ' . expand('<cword>') . '<CR>'
@@ -42,7 +42,6 @@ fun! helpers#navMap(mode) abort
     nnoremap <silent><buffer> <leader>cd :Gtags<CR>
     nnoremap <silent><buffer> <leader>cD :GtagsCursor<CR>
     nnoremap <silent><buffer> <leader>cs :Gtags -g<CR>
-    nnoremap <silent><buffer> g0 :Gtags -f %<CR>
   endif
 endfunction
 
@@ -175,4 +174,10 @@ endfunction
 function! helpers#breakLine() abort
   s/^\(\s*\)\(.\{-}\)\(\s*\)\(\%#\)\(\s*\)\(.*\)/\1\2\r\1\4\6
   call histdel("/", -1)
+endfunction
+
+function helpers#installLsp() abort
+  for server in ['cpp', 'go', 'lua', 'python', 'bash', 'css', 'html', 'json', 'typescript', 'vue', 'efm']
+    execute 'LspInstall ' .. server
+  endfor
 endfunction

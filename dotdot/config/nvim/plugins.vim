@@ -36,7 +36,7 @@ Plug 'kevinoid/vim-jsonc', {'for': 'jsonc'}
 Plug 'chrisbra/csv.vim'
 " Language-specific
 Plug 'captbaritone/better-indent-support-for-php-with-html', {'for': 'php'}
-Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango']}
+Plug 'mattn/emmet-vim', {'for': ['html', 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'php', 'htmljinja', 'htmldjango', 'vue']}
 Plug 'mitsuhiko/vim-jinja', {'for': ['html','htmldjango']}
 " Textobjects
 Plug 'michaeljsmith/vim-indent-object'
@@ -83,7 +83,6 @@ Plug 'tami5/sql.nvim'
 Plug 'nvim-telescope/telescope-frecency.nvim'
 Plug 'nvim-telescope/telescope-cheat.nvim'
 Plug 'nvim-telescope/telescope-project.nvim'
-Plug 'nvim-telescope/telescope-symbols.nvim'
 Plug 'lewis6991/gitsigns.nvim'
 call plug#end()
  
@@ -98,7 +97,7 @@ let g:unimpaired_mapping = {
 			\	}
 			\ }
 
-" Diagnostic nvim
+" LSP Diagnostics
 call sign_define("LspDiagnosticsSignError", {"text" : "◉", "texthl" : "LspDiagnosticsError"})
 call sign_define("LspDiagnosticsSignWarning", {"text" : "⚠", "texthl" : "LspDiagnosticsWarning"})
 call sign_define("LspDiagnosticsSignInformation", {"text" : "", "texthl" : "LspDiagnosticsInformation"})
@@ -110,3 +109,6 @@ let g:quickrun_no_default_key_mappings = 1
 " Better-escape
 let g:better_escape_interval = 300
 let g:better_escape_shortcut = 'fd'
+
+" Matchup
+let g:matchup_matchparen_offscreen = {}
