@@ -1,2 +1,3 @@
 .venv/
 zsh_plugins.sh
+**/*.orig
