@@ -2,6 +2,8 @@ actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
   awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
     origin master || gh repo clone lcpz/lain ~/.config/awesome/lain'
+  tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
+    || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
 dynvariables:
   home: echo $HOME
 config:
@@ -114,6 +116,11 @@ dotfiles:
   f_gitconfig:
     src: gitconfig
     dst: ~/.gitconfig
+  f_tmux.conf:
+    src: tmux.conf
+    dst: ~/.tmux.conf
+    actions:
+    - tmux
 profiles:
   sorcery:
     dotfiles:
@@ -136,6 +143,7 @@ profiles:
     - f_aliases
     - d_config_interception
     - f_gitconfig
+    - f_tmux.conf
   apex:
     dotfiles:
     - d_config_awesome
@@ -153,3 +161,4 @@ profiles:
     - f_aliases
     - d_config_interception
     - f_gitconfig
+    - f_tmux.conf
