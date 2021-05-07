@@ -1,5 +1,5 @@
 return {
-	lintCommand = "golint",
+	lintCommand = "golangci-lint run --fast",
 	lintIgnoreExitCode = true,
 	lintFormats = { "%f:%l:%c: %m" },
 }

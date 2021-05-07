@@ -1,4 +1,3 @@
 return {
-	formatCommand = "gofmt -s",
-	formatStdin = true,
+	formatCommand = "gofumpt -s",
 }
