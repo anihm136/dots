@@ -22,7 +22,7 @@ if $1 then
 end]],
   ife = indent [[
 if $1 then
-  ${2=helpers.insert_saved_visual()}
+  ${2=helpers.insert_saved_visual()}$0
 else
   $0
 end]],
@@ -31,7 +31,7 @@ elseif $1 then
   $0]],
   ["repeat"] = indent [[
 repeat
-  ${1=helpers.insert_saved_visual()}
+  ${1=helpers.insert_saved_visual()}$0
 until $0]],
   ["while"] = indent [[
 while $1 do

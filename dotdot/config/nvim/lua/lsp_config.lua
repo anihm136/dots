@@ -141,6 +141,7 @@ local function setup_servers()
 				{
 					"clangd",
 					"--background-index",
+					"--clang-tidy",
 					"--suggest-missing-includes",
 					"--header-insertion=iwyu",
 				}
@@ -229,7 +230,6 @@ local function setup_servers()
 			local clangformat = require"efm/clangformat"
 			local golint = require"efm/golint"
 			local gofmt = require"efm/gofmt"
-			local goimports = require"efm/goimports"
 			local black = require"efm/black"
 			local isort = require"efm/isort"
 			local flake8 = require"efm/flake8"
@@ -298,7 +298,7 @@ local function setup_servers()
 					lua = { prettier },
 					c = { clangformat },
 					cpp = { clangformat },
-					go = { golint, goimports, gofmt },
+					go = { golint, gofmt },
 					python = { black, isort, flake8, pylint },
 					typescript = { prettier, eslint },
 					javascript = { prettier, eslint },

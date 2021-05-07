@@ -11,19 +11,6 @@
 "
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugin mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Goyo
-nmap <silent> <leader>gy :Goyo<cr>
-
-" Dirvish
-
-" DB
-nnoremap <buffer> <leader>sd :DB b:db =<Space>
-vnoremap <buffer><silent> <leader>se :DB<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python3_host_prog = "{{@@ home @@}}/dev/python/tool-env/bin/python"
@@ -48,7 +35,7 @@ set updatetime=200
 set inccommand=nosplit
 set scrolloff=3
 set shortmess=actI
-set fillchars+=vert:│
+set fillchars+=vert:│,eob:\ ,msgsep:‾
 set listchars=eol:↲,tab:»\ ,trail:𝁢,extends:…,precedes:…,conceal:┊
 set list
 set cursorline
@@ -64,7 +51,7 @@ nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
 imap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
 imap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
-xnoremap <silent> <Tab> v:lua.helpers.x_tab()
+xnoremap <silent> <Tab> <cmd>lua helpers.x_tab()<CR>
 
 function! s:show_documentation()
 	if (index(['vim','help', 'lua'], &filetype) >= 0)
@@ -90,12 +77,11 @@ augroup END
 autocmd custom_commands FileType * set formatoptions=lcqnrj
 autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
-autocmd custom_commands FileType help,plugins,fugitive nnoremap <silent><buffer> q :q<cr>
-autocmd custom_commands FileType qf call helpers#mapQf()
-autocmd custom_commands BufWritePost init.vim,plugins.vim,genconfig.vim nested silent source %
+autocmd custom_commands FileType help,plugins nnoremap <silent><buffer> q :q<cr>
 autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
+autocmd custom_commands ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup{}; require('colorizer').attach_to_buffer(0)
 
 command! -nargs=0 Reload call helpers#vim_reload()
 command! -nargs=0 Write silent! SudoWrite | edit!
@@ -210,9 +196,9 @@ if &wildoptions =~ "pum"
 	cnoremap <expr> <right> pumvisible() ? "<down>" : "<right>"
 endif
 
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.go,*.lua let g:nav_mode = 1
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.hpp,*.go,*.lua let g:nav_mode = 1
 autocmd custom_commands BufRead,BufNewFile,VimEnter *.java let g:nav_mode = -1
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.java,*.go,*.lua silent call ProgFunc()
+autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.hpp,*.java,*.go,*.lua silent call ProgFunc()
 
 nnoremap <silent> <Leader>rn :%s///g<Left><Left>
 nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
@@ -253,13 +239,7 @@ onoremap <silent> il :<C-u>normal vil<CR>
 xnoremap <silent> al $o0
 onoremap <silent> al :<C-u>normal val<CR>
 
-for char in [ '_', '.', ':', ',', ';', '<bar>', '/', '<bslash>', '*', '+', '-', '#' ]
-	execute 'xnoremap i' . char . ' :<C-u>normal! T' . char . 'vt' . char . '<CR>'
-	execute 'onoremap i' . char . ' :normal vi' . char . '<CR>'
-	execute 'xnoremap a' . char . ' :<C-u>normal! F' . char . 'vf' . char . '<CR>'
-	execute 'onoremap a' . char . ' :normal va' . char . '<CR>'
-endfor
-
+" Range of last action
 xnoremap ik `]o`[
 onoremap ik :<C-u>normal vik<CR>
 onoremap ak :<C-u>normal vikV<CR>

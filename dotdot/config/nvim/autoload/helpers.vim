@@ -100,28 +100,6 @@ fun! helpers#toggleTags() abort
   return -1
 endfunction
 
-function! helpers#toggleFileExplorer() abort
-  let l:flag = 1
-  for i in range(1, winnr("$"))
-    if getwinvar(i, '&filetype') == "dirvish"
-      silent exe 'bwipeout ' . winbufnr(i)
-      let flag = 0
-      break
-    endif
-  endfor
-  if flag == 1
-    silent exe 'Vexplore'
-    nmap <buffer> <CR> :call dirvish#open("edit",1)<CR>
-    nmap <buffer><silent> q gq:q<CR>
-  endif
-endfunction
-
-function! helpers#mapQf() abort
-  let b:qf_isLoc = !empty(getloclist(0))
-  " lua helpers.mapQf()
-endfunction
-
-
 function! helpers#setColorscheme(...) abort
   if a:0 == 0
     let l:color = 'dark'

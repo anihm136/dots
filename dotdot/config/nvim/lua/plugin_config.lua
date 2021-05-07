@@ -22,7 +22,8 @@ require'nvim-treesitter.configs'.setup{
 			},
 		},
 	},
-	indent = { enable = true },
+	indent = { enable = false },
+	context_commentstring = { enable = true },
 }
 
 -- telescope
@@ -150,68 +151,96 @@ require('gitsigns').setup{
 	status_formatter = nil, -- Use default
 }
 
--- express_line
-local builtin = require('el.builtin')
-local extensions = require('el.extensions')
-local sections = require('el.sections')
-local subscribe = require('el.subscribe')
-local lsp_statusline = require('el.plugins.lsp_status')
+-- lualine
+local function min_width()
+	return vim.api.nvim_win_get_width(0) > 120
+end
 
-local git_icon = subscribe.buf_autocmd('el_file_icon', 'BufRead', function(
-_,
-	bufnr
-)
-	local icon = extensions.file_icon(_, bufnr)
-	if icon then
-		return icon .. ' '
-	end
-
-	return ''
-end)
-
-local git_branch = subscribe.buf_autocmd('el_git_branch', 'BufEnter', function(
-window,
-	buffer
-)
-	local branch = extensions.git_branch(window, buffer)
-	if branch then
-		return ' ' .. extensions.git_icon() .. ' ' .. branch
-	end
-end)
-
-local git_changes = subscribe.buf_autocmd(
-	'el_git_changes',
-	'BufWritePost',
-	function(window, buffer)
-		return extensions.git_changes(window, buffer)
-	end
-)
-
-require('el').setup{ generator = function(_, _)
-	return {
-		'  ',
-		extensions.gen_mode{ format_string = ' %s ' },
-		' ',
-		-- sections.split,
-		git_icon,
-		sections.maximum_width(builtin.responsive_file(140, 90), 0.30),
-		sections.collapse_builtin{ ' ', builtin.modified_flag },
-		git_branch,
-		sections.split,
-		-- lsp_statusline.current_function,
-		git_changes,
-		'[',
-		builtin.line_number,
-		':',
-		builtin.column_number,
-		' ',
-		builtin.percentage_through_file,
-		'%%',
-		']',
-		sections.collapse_builtin{ '[', builtin.readonly_list, ']' },
-		builtin.filetype,
-	}
-end }
+require('lualine').setup{
+	options = {
+		theme = 'gruvbox',
+		section_separators = { '', '' },
+		component_separators = { '', '' },
+		icons_enabled = true,
+	},
+	sections = {
+		lualine_a = { {
+			'mode',
+			upper = true,
+		} },
+		lualine_b = { {
+			'branch',
+			icon = '',
+		} },
+		lualine_c = { {
+			'filename',
+			file_status = true,
+			full_path = true,
+			shorten = true,
+			separator = '',
+			condition = min_width,
+		}, {
+			'filename',
+			file_status = true,
+			separator = '',
+			condition = function()
+				return not min_width()
+			end,
+		}, {
+			function()
+				return '%='
+			end,
+			separator = '',
+		}, {
+			function()
+				local msg = 'No Active Lsp'
+				local buf_ft = vim.api.nvim_buf_get_option(0, 'filetype')
+				local clients = vim.lsp.get_active_clients()
+				if next(clients) == nil then
+					return msg
+				end
+				for _, client in ipairs(clients) do
+					local filetypes = client.config.filetypes
+					if client.name ~= 'efm' or #clients == 1 then
+						if filetypes and vim.fn.index(
+							filetypes,
+							buf_ft
+						) ~= -1 then
+							return client.name
+						end
+					end
+				end
+				return msg
+			end,
+			icon = '  LSP:',
+		} },
+		lualine_x = { {
+			'encoding',
+			condition = min_width,
+		}, {
+			'fileformat',
+			condition = min_width,
+		}, { 'filetype' } },
+		lualine_y = { 'diff' },
+		lualine_z = { {
+			'progress',
+			color = 'lualine_z',
+		}, {
+			'location',
+			color = 'lualine_z',
+			condition = min_width,
+		} },
+	},
+	inactive_sections = {
+		lualine_a = {},
+		lualine_b = {},
+		lualine_c = { 'filename' },
+		lualine_x = { 'location' },
+		lualine_y = {},
+		lualine_z = {},
+	},
+	extensions = { 'nvim-tree' },
+}
 
 -- Compe
 require'compe'.setup{
@@ -240,3 +269,118 @@ require'compe'.setup{
 		vim_dadbod_completion = true,
 	},
 }
+
+-- Kommentary
+local kconfig = require('kommentary.config')
+kconfig.configure_language('default', { prefer_single_line_comments = true })
+function comment_and_duplicate(...)
+	local args = { ... }
+	local configuration = config.get_config(0)
+	local start_line = args[1]
+	local end_line = args[2]
+	local content =
+		vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+	vim.api.nvim_buf_set_lines(0, end_line, end_line, false, content)
+	vim.api.nvim_feedkeys(
+		vim.api.nvim_replace_termcodes('<Esc>', true, false, true),
+		'n',
+		true
+	)
+	require('kommentary').toggle_comment_singles(...)
+end
+function comment_and_yank(...)
+	local args = { ... }
+	local configuration = config.get_config(0)
+	local start_line = args[1]
+	local end_line = args[2]
+	vim.api.nvim_command(
+		tostring(start_line) .. ',' .. tostring(end_line) .. 'y'
+	)
+	require('kommentary').toggle_comment_singles(...)
+end
+
+kconfig.add_keymap(
+	'v',
+	'kommentary_comment_and_yank_visual',
+	kconfig.context.visual,
+	{},
+	'comment_and_yank'
+)
+kconfig.add_keymap(
+	'n',
+	'kommentary_comment_and_yank_motion',
+	kconfig.context.init,
+	{ expr = true },
+	'comment_and_yank'
+)
+kconfig.add_keymap(
+	'n',
+	'kommentary_comment_and_yank',
+	kconfig.context.line,
+	{},
+	'comment_and_yank'
+)
+kconfig.add_keymap(
+	'v',
+	'kommentary_comment_and_duplicate_visual',
+	kconfig.context.visual,
+	{},
+	'comment_and_duplicate'
+)
+kconfig.add_keymap(
+	'n',
+	'kommentary_comment_and_duplicate_motion',
+	kconfig.context.init,
+	{ expr = true },
+	'comment_and_duplicate'
+)
+kconfig.add_keymap(
+	'n',
+	'kommentary_comment_and_duplicate',
+	kconfig.context.line,
+	{},
+	'comment_and_duplicate'
+)
+-- Set up a regular keymapping to the new <Plug> mapping
+vim.api.nvim_set_keymap('n', 'gcc', '<Plug>kommentary_line_default', {})
+vim.api.nvim_set_keymap('n', 'gc', '<Plug>kommentary_motion_default', {})
+vim.api.nvim_set_keymap('v', 'gc', '<Plug>kommentary_visual_default<Esc>', {})
+vim.api.nvim_set_keymap(
+	'n',
+	'gcyy',
+	'<Plug>kommentary_comment_and_yank',
+	{ silent = true }
+)
+vim.api.nvim_set_keymap(
+	'n',
+	'gcy',
+	'<Plug>kommentary_comment_and_yank_motion',
+	{ silent = true }
+)
+vim.api.nvim_set_keymap(
+	'v',
+	'gcy',
+	'<Plug>kommentary_comment_and_yank_visual',
+	{ silent = true }
+)
+vim.api.nvim_set_keymap(
+	'n',
+	'gcdd',
+	'<Plug>kommentary_comment_and_duplicate',
+	{ silent = true }
+)
+vim.api.nvim_set_keymap(
+	'n',
+	'gcd',
+	'<Plug>kommentary_comment_and_duplicate_motion',
+	{ silent = true }
+)
+vim.api.nvim_set_keymap(
+	'v',
+	'gcd',
+	'<Plug>kommentary_comment_and_duplicate_visual',
+	{ silent = true }
+)
+
+-- LspSaga
+require 'lspsaga'.init_lsp_saga()
