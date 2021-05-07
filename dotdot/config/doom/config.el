@@ -40,7 +40,11 @@
 (use-package! org-super-agenda
   :defer t
   :config
-  (setq org-super-agenda-groups `((:name "Today"
+  (setq org-super-agenda-groups `((:discard
+                                   (
+                                    :file-path "ideas.org"
+                                    ))
+                                  (:name "Today"
                                    :scheduled today)
                                   (:name "Upcoming"
                                    :deadline future
@@ -58,6 +62,8 @@
                                    :todo "[-]")
                                   (:name "Overdue"
                                    :deadline past)
+                                  (:name "Caldav Todos"
+                                   :file-path "caldav-inbox.org")
                                   (:name "Projects"
                                    :file-path "projects.org")
                                   (:name "Tasks"
@@ -108,20 +114,21 @@
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
         org-capture-templates
-        '(("t" "Todo" entry (file+headline org-default-notes-file "Tasks")
+        '(("t" "Todo" entry (file org-default-notes-file)
            "* TODO %?\n")
-          ("a" "Task" entry (file+headline org-default-notes-file "Tasks")
+          ("a" "Task" entry (file org-default-notes-file)
            "* [ ] %?\n")
-          ("l" "org-protocol-capture" entry (file+headline org-default-notes-file "Reading")
+          ("l" "org-protocol-capture" entry (file "~/Documents/org/reading.org")
            "* [[%:link][%:description]]\n %i"
            :immediate-finish t)
-          ("k" "Cliplink capture task" entry (file+headline org-default-notes-file "Reading")
+          ("k" "Cliplink capture task" entry (file "~/Documents/org/reading.org")
            "* %(org-cliplink-capture)\n" :immediate-finish t))
         )
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
   (+org-pretty-mode)
   )
+(add-hook! 'org-mode-hook 'org-diagrams-init)
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
 (add-hook! 'org-mode-hook 'org-appear-mode)
 (map! :map org-mode-map
@@ -133,7 +140,7 @@
   :defer t
   :config
   (org-super-agenda-mode)
-  (setq org-agenda-files (directory-files-recursively org-directory "\.org$")
+  (setq org-agenda-files (append (directory-files-recursively org-directory "\.org$") '("~/Documents/org/calendars/caldav-inbox.org"))
         org-agenda-block-separator nil
         org-agenda-tags-column 100
         org-agenda-compact-blocks t
@@ -223,18 +230,6 @@
                              :desc "Goto reference" "r" 'counsel-gtags-find-reference))
   :commands (counsel-gtags-dwim counsel-gtags-find-definition counsel-gtags-find-reference))
 
-(use-package! ivy-posframe
-  :defer t
-  :config
-  (setq ivy-posframe-display-functions-alist '((counsel-M-x . ivy-display-function-fallback)
-                                               (swiper . ivy-display-function-fallback)
-                                               (t . ivy-posframe-display-at-frame-center))
-        ivy-posframe-height-alist '((t . 10))
-        ivy-posframe-parameters '((internal-border-width . 6)
-                                  (left-fringe . 8)
-                                  (right-fringe . 8))
-        ivy-posframe-width 100))
-
 (use-package! org-download
   :config
   (setq
@@ -249,6 +244,9 @@
                      org-download-link-format)
              (org-link-escape (file-relative-name filename))))
    org-image-actual-width 400))
+
+(use-package! org-diagrams
+  :after org)
 
 (after! org-archive
   (defun ani/org-archive-done-tasks ()
@@ -267,20 +265,46 @@
       ad-do-it))
   )
 
-(use-package! org-timed-alerts
-  :after org
-  :custom
-  (org-timed-alerts-alert-function #'alert)
-  (org-timed-alerts-tag-exclusions nil)
-  (org-timed-alerts-default-alert-props nil)
-  (org-timed-alerts-warning-times '(-60 -30 -10 -5))
-  (org-timed-alerts-agenda-hook-p t)
-  (org-timed-alert-final-alert-string "IT IS %alert-time\n\n%todo %headline")
-  (org-timed-alert-warning-string (concat "%todo %headline\n at %alert-time\n "
-                                          "it is now %current-time\n "
-                                          "*THIS IS YOUR %warning-time MINUTE WARNING*"))
+(use-package org-caldav
+  :init
+  ;; This is the delayed sync function; it waits until emacs has been idle for
+  ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
+  ;; can take five or ten seconds, which would be painful if it did that right at save.
+  ;; This way it just waits until you've been idle for a while to avoid disturbing
+  ;; the user.
+  (defvar org-caldav-sync-timer nil
+    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
+  (defun org-caldav-sync-with-delay (secs)
+    (when org-caldav-sync-timer
+      (cancel-timer org-caldav-sync-timer))
+    (setq org-caldav-sync-timer
+          (run-with-idle-timer
+           (* 1 secs) nil 'org-caldav-sync)))
+
+  ;; Actual calendar configuration edit this to meet your specific needs
+  (setq org-caldav-url "https://caldav.grayideas.org/anirudh")
+  (setq org-caldav-calendar-id "b9934bea-291b-6ee9-ac4f-a64f9d829b6e")
+  (setq org-caldav-files '("~/Documents/org/GTD/projects.org" "~/Documents/org/GTD/tasks.org"))
+  (setq org-caldav-inbox "~/Documents/org/calendars/caldav-inbox.org")
+  (setq org-caldav-backup-file nil)
+  (setq org-caldav-save-directory "~/.config/emacs/.local/etc/caldav")
+  ;; (setq org-caldav-skip-conditions '('nottodo '("TODO" "STRT")))
+
   :config
-  (add-hook 'org-mode-hook #'org-timed-alerts-mode))
+  (setq org-icalendar-timezone "Asia/Kolkata")
+  (setq org-icalendar-alarm-time 30)
+  ;; This makes sure to-do items as a category can show up on the calendar
+  ;; (setq org-icalendar-include-todo t)
+  ;; This ensures all org "deadlines" show up, and show up as due dates
+  (setq org-icalendar-use-deadline '(event-if-todo-not-done todo-due))
+  ;; This ensures "scheduled" org items show up, and show up as start times
+  (setq org-icalendar-use-scheduled '(todo-start event-if-todo-not-done))
+  ;; Add the delayed save hook with a five minute idle timer
+  (add-hook 'after-save-hook
+            (lambda ()
+              (when (eq major-mode 'org-mode)
+                (org-caldav-sync-with-delay 300))))
+  )
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -353,20 +377,30 @@
       (goto-char (+ b (length ws-first)
                     (- pt-original (+ pt 1 (length ws-second))))))))
 
-(defun unimpaired-paste-above ()
+(defun +ani/evil-unimpaired-paste-above ()
   (interactive)
-  (evil-insert-newline-above)
-  (evil-paste-after 1 evil-this-register))
+  (let ((register (if evil-this-register
+                      evil-this-register
+                    ?\")))
+    (when (not (member 'evil-yank-line-handler (get-text-property 0 'yank-handler (evil-get-register register))))
+      (evil-insert-newline-above))
+    (evil-paste-before 1 register)
+    ))
 
-(defun unimpaired-paste-below ()
+(defun +ani/evil-unimpaired-paste-below ()
   (interactive)
-  (evil-insert-newline-below)
-  (evil-paste-after 1 evil-this-register))
+  (let ((register (if evil-this-register
+                      evil-this-register
+                    ?\")))
+    (when (not (member 'evil-yank-line-handler (get-text-property 0 'yank-handler (evil-get-register register))))
+      (evil-insert-newline-below))
+    (evil-paste-after 1 register)
+    ))
 
 (defun +ani/my-init-func ()
   "Function to run on init"
   (global-subword-mode t)
-  (ani/set-random-theme)
+  (+ani/set-random-theme)
   (setq-default uniquify-buffer-name-style 'forward
                 window-combination-resize t
                 x-stretch-cursor t)
@@ -392,17 +426,17 @@
         :n "g>" '(lambda () (interactive) (transpose-args-direction t))
         :desc "Transpose function argument to the left"
         :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
-        :n "]p" 'unimpaired-paste-below
-        :n "[p" 'unimpaired-paste-above
+        :n "]p" '+ani/evil-unimpaired-paste-below
+        :n "[p" '+ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
         :i "C-v" "C-o P"
         :desc "Set random theme"
-        :n "<f12>" 'ani/set-random-theme
+        :n "<f12>" '+ani/set-random-theme
         :n "S-<f12>" (λ! () (ani/set-random-theme 't))
         ))
 
 
-(defun ani/set-random-theme (&optional light)
+(defun +ani/set-random-theme (&optional light)
   "Set the theme to a random dark theme.
 If LIGHT is non-nil, use a random light theme instead."
   (interactive)
