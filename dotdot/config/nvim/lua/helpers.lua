@@ -17,19 +17,6 @@ helpers.open_window = function(val, checkvar)
 	return -1
 end
 
--- toogle popup terminal
-helpers.term = function()
-	local term_win = helpers.open_window('terminal', 'buftype')
-	if term_win ~= -1 then
-		api.nvim_buf_delete(
-			api.nvim_win_get_buf(term_win),
-			{ force = true }
-		)
-	else
-		vim.cmd[[ below 10sp term://$SHELL ]]
-	end
-end
-
 -- lsp formatting
 helpers.formatting = function()
 	vim.cmd[[undojoin]]
@@ -259,6 +246,46 @@ helpers.set_sl_colors = function()
 		lualine_b_command_to_lualine_a_command = {
 			colors.Background,
 			colors.Background2,
+		},
+		lualine_a_normal_to_lualine_c_normal = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_a_insert_to_lualine_c_insert = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_a_visual_to_lualine_c_visual = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_a_replace_to_lualine_c_replace = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_a_command_to_lualine_c_command = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_c_normal_to_lualine_z = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_c_insert_to_lualine_z = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_c_visual_to_lualine_z = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_c_replace_to_lualine_z = {
+			colors.Background,
+			colors.LineBackground,
+		},
+		lualine_c_command_to_lualine_z = {
+			colors.Background,
+			colors.LineBackground,
 		},
 		lualine_y_diff_added_normal_to_lualine_z = {
 			colors.Background,
