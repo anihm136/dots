@@ -80,18 +80,6 @@ local on_attach = function(client, bufnr)
 		"<space>sl",
 		"<cmd>lua require('lspsaga.diagnostic').show_line_diagnostics()<CR>"
 	)
-	if client.resolved_capabilities.document_highlight then
-		vim.api.nvim_exec(
-			[[
-				augroup lsp_document_highlight
-					autocmd! * <buffer>
-					autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-					autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-				augroup END
-			]],
-			false
-		)
-	end
 end
 
 local function make_config()
