@@ -48,10 +48,11 @@ fif() {
     return 1
   fi
   IFS=$'\n' out=("$(rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}" --expect='ctrl-e' --header='edit:ctrl-e')")
-  key=$(head -1 <<< "$out")
-  file=$(head -2 <<< "$out" | tail -1)
+  local key=$(head -1 <<< "$out")
+  local file=$(head -2 <<< "$out" | tail -1)
   if [ -n "$file" ]; then
-    [ "$key" = ctrl-e ] && ${EDITOR:-nvim} "$file"
+    local filewithnum=$(rg --max-count 1 --vimgrep "$1" "$file" | awk -F : '{ printf "%s:%d\n", $1,$2 }') 
+    [ "$key" = ctrl-e ] && echo "${EDITOR:-nvim} ${filewithnum%%:*} +${filewithnum##*:}" && "${EDITOR:-nvim}" "${filewithnum%%:*}" "+${filewithnum##*:}" 
   fi
 }
 

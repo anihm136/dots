@@ -4,7 +4,7 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 {%@@ if profile == "sorcery" @@%}
 xrandr --output DP-5 --primary --auto --output HDMI-0 --auto --left-of DP-5
 {%@@ endif @@%}
-xautolock -detectsleep -time 10 -notify 20 -notifier '/usr/lib/xsecurelock/until_nonidle /usr/lib/xsecurelock/dimmer' -locker xsecurelock &
+xss-lock -n /usr/lib/xsecurelock/dimmer -l -- xsecurelock
 picom --experimental-backends &
 sxhkd &
 lxsession &

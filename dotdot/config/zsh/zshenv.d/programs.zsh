@@ -7,4 +7,4 @@ export SETTINGS="lxqt-config-session"
 export LAUNCHER='rofi -modi drun -show drun -show-icons'
 export RUNNER='rofi -run-list-command "showaliases" -run-command "/bin/bash -i -c {cmd}" -modi run -show run'
 export CALC="galculator"
-export LOCKER="xautolock -locknow"
+export LOCKER="xset s activate"
