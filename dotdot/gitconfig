@@ -1,6 +1,10 @@
 [user]
 	email = anihm136@gmail.com
 	name = Anirudh H M
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
 [pull]
 	ff = only
 [credential]
@@ -18,3 +22,26 @@
 	insteadOf = https://github.com/
 [url "git@gitlab.com:"]
 	insteadOf = https://gitlab.com/
+[delta]
+	features = side-by-side line-numbers collared-trogon-adapted
+	whitespace-error-style = 22 reverse
+[delta "collared-trogon-adapted"]
+    commit-decoration-style = bold box ul
+    dark = true
+    file-decoration-style = none
+    file-style = omit
+    hunk-header-decoration-style = "#022b45" box ul
+    hunk-header-file-style = "#999999"
+    hunk-header-line-number-style = bold "#003300"
+    hunk-header-style = file line-number syntax
+    line-numbers = true
+    line-numbers-left-style = "#022b45"
+    line-numbers-minus-style = "#90002a"
+    line-numbers-plus-style = "#004300"
+    line-numbers-right-style = "#022b45"
+    line-numbers-zero-style = "#999999"
+    minus-emph-style = syntax "#90002a"
+    minus-style = syntax "#430011"
+    plus-emph-style = syntax "#004300"
+    plus-style = syntax "#002a00"
+    syntax-theme = Vibrant Sunburst
