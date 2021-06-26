@@ -192,6 +192,7 @@ keys.globalkeys = my_table.join(
 			end
 			naughty.toggle()
 			if not naughty.is_suspended() then
+				naughty.destroy_all_notifications()
 				naughty.notify({ text = "Resuming notifications" })
 			end
 		end,

@@ -3,6 +3,8 @@ export QT_QPA_PLATFORMTHEME=qt5ct
 
 {%@@ if profile == "sorcery" @@%}
 xrandr --output DP-5 --primary --auto --output HDMI-0 --auto --left-of DP-5
+{%@@ elif profile == "apex" @@%}
+xrandr --output eDP1 --primary --mode 3200x1800
 {%@@ endif @@%}
 xss-lock -n /usr/lib/xsecurelock/dimmer -l -- xsecurelock
 picom --experimental-backends &

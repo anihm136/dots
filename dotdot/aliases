@@ -33,8 +33,7 @@ alias mv='mv -iv'
 alias unlock="sudo rm /var/lib/pacman/db.lck"
 alias free="free -mt"
 alias merge="xrdb -merge ~/.Xresources"
-alias update='sudo pacman -Syyu'
-alias upall="trizen -Syu --noconfirm"
+alias upall='paru -Syu'
 alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias update-fc='sudo fc-cache -fv'
 alias mirror="sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist"
@@ -58,11 +57,12 @@ alias ytv-best="youtube-dl -f bestvideo+bestaudio "
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 alias riplong="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -3000 | nl"
 
-#Cleanup orphaned packages
-alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
-
 #get the error messages from journalctl
 alias jctl="journalctl -p 3 -xb"
 alias ssn="sudo shutdown now"
 alias sr="sudo reboot"
 alias hiber="systemctl hibernate"
+
+# Trizen aliases
+alias prrem='paru -Rnsu'
+alias prback='paru -Qqne | rg -vU "linux" > ~/.local/share/packages/repo-packages.txt && paru -Qqme | rg -v "mkinitcpio" > ~/.local/share/packages/aur-packages.txt'
