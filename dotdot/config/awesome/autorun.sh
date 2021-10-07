@@ -22,8 +22,10 @@ fi
 run tilda
 run mocp -S
 run nm-applet
+run flameshot
 
 {%@@ if profile == "sorcery" @@%}
+jack_control start
 run thunderbird
 run slack
 run teams
