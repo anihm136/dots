@@ -5,10 +5,8 @@ robbyrussell/oh-my-zsh path:plugins/command-not-found
 robbyrussell/oh-my-zsh path:plugins/npm
 robbyrussell/oh-my-zsh path:plugins/yarn
 robbyrussell/oh-my-zsh path:plugins/rust
-robbyrussell/oh-my-zsh path:plugins/django
 robbyrussell/oh-my-zsh path:plugins/web-search
 robbyrussell/oh-my-zsh path:plugins/sudo
-robbyrussell/oh-my-zsh path:plugins/z
 robbyrussell/oh-my-zsh path:plugins/cpanm kind:fpath
 robbyrussell/oh-my-zsh path:plugins/pip kind:fpath
 robbyrussell/oh-my-zsh path:plugins/ripgrep kind:fpath

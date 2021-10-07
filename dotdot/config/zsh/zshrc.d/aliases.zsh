@@ -28,16 +28,12 @@ alias gc='git commit -v'
 alias gc!='git commit -v --amend'
 alias gcn!='git commit -v --no-edit --amend'
 alias gcam='git commit -a -m'
-alias gcb='git checkout -b'
-alias gcf='git config --list'
 alias gcmsg='git commit -m'
-alias gco='git checkout'
 alias gsw='git switch'
 alias gcount='git shortlog -sn'
 
 alias gfetch='git fetch'
 alias gfetcha='git fetch --all --prune'
-alias gfetcho='git fetch origin'
 
 function ggf() {
 	[[ "$#" != 1 ]] && local b="$(git_current_branch)"
