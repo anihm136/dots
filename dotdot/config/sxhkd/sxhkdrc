@@ -28,7 +28,7 @@ super + c
 super + shift + x
   eval $LOCKER
 
-super + d
+Menu
   eval $LAUNCHER
 
 super + r
