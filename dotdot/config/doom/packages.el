@@ -58,12 +58,8 @@
   :recipe (:host github :repo "io12/org-fragtog"))
 (package! org-appear
   :recipe (:host github :repo "awth13/org-appear"))
-(package! org-caldav
-  :recipe (:host github :repo "dengste/org-caldav"))
 (package! org-diagrams
   :recipe (:local-repo "lisp/org-diagrams"))
 (package! aggressive-indent)
-(package! org-projectile)
 (package! org-ql)
-(package! org-super-agenda)
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
