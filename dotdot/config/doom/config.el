@@ -13,7 +13,7 @@
 
 (setq display-line-numbers-type 'relative)
 
-(setq org-directory "~/Documents/org/GTD/")
+(setq org-directory nil)
 
 ;; Utility variables
 
@@ -32,43 +32,9 @@
               org-download-image-dir "./images"
               org-download-heading-lvl 'nil
               ispell-dictionary "en-custom"
-              ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir)
-              )
+              ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 
 (custom-set-faces! '(font-lock-comment-face :slant italic))
-
-(use-package! org-super-agenda
-  :defer t
-  :config
-  (setq org-super-agenda-groups `((:discard
-                                   (
-                                    :file-path "ideas.org"
-                                    ))
-                                  (:name "Today"
-                                   :scheduled today)
-                                  (:name "Upcoming"
-                                   :deadline future
-                                   :scheduled (before ,(ts-format "%F %T" (ts-inc 'day 7 (ts-now)))))
-                                  (:discard (:scheduled t))
-                                  (:name "Refile"
-                                   :category "refile")
-                                  (:name "Waiting"
-                                   :todo "WAIT"
-                                   :todo "HOLD"
-                                   :todo "[?]"
-                                   :order 9)
-                                  (:name "Started/Next"
-                                   :todo "STRT"
-                                   :todo "[-]")
-                                  (:name "Overdue"
-                                   :deadline past)
-                                  (:name "Caldav Todos"
-                                   :file-path "caldav-inbox.org")
-                                  (:name "Projects"
-                                   :file-path "projects.org")
-                                  (:name "Tasks"
-                                   :todo "[ ]")
-                                  )))
 
 (use-package! evil-escape
   :config
@@ -98,8 +64,7 @@
 (use-package! org
   :defer t
   :config
-  (setq org-default-notes-file (concat org-directory "inbox.org")
-        org-export-filter-link-functions '(ox-markup-filter-attach)
+  (setq org-export-filter-link-functions '(ox-markup-filter-attach)
         org-ellipsis " ▾ "
         org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
@@ -114,20 +79,15 @@
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
         org-capture-templates
-        '(("t" "Todo" entry (file org-default-notes-file)
-           "* TODO %?\n")
-          ("a" "Task" entry (file org-default-notes-file)
-           "* [ ] %?\n")
-          ("l" "org-protocol-capture" entry (file "~/Documents/org/reading.org")
+        '(("l" "org-protocol-capture" entry (file "~/Documents/org/reading.org")
            "* [[%:link][%:description]]\n %i"
            :immediate-finish t)
           ("k" "Cliplink capture task" entry (file "~/Documents/org/reading.org")
-           "* %(org-cliplink-capture)\n" :immediate-finish t))
-        )
+           "* %(org-cliplink-capture)\n" :immediate-finish t)))
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
-  (+org-pretty-mode)
-  )
+  (+org-pretty-mode))
+
 (add-hook! 'org-mode-hook 'org-diagrams-init)
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
 (add-hook! 'org-mode-hook 'org-appear-mode)
@@ -135,36 +95,6 @@
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
       :i "C-c i" (lambda () (interactive) (org-emphasize ?/))
       :i "C-c m" (lambda () (interactive) (progn (insert "\\(\\)") (backward-char 2))))
-
-(use-package! org-agenda
-  :defer t
-  :config
-  (org-super-agenda-mode)
-  (setq org-agenda-files (append (directory-files-recursively org-directory "\.org$") '("~/Documents/org/calendars/caldav-inbox.org"))
-        org-agenda-block-separator nil
-        org-agenda-tags-column 100
-        org-agenda-compact-blocks t
-        org-agenda-skip-scheduled-if-done t
-        org-agenda-skip-deadline-if-done t)
-  (setq org-refile-targets '((nil :maxlevel . 3)
-                             (org-agenda-files :maxlevel . 3))))
-
-(use-package! org-projectile
-  :after org
-  :config
-  (progn
-    (defun org-projectile-build-heading (heading)
-      (when org-projectile-force-linked
-        (setq heading (concat "PROJ " (org-projectile-linked-heading heading))))
-      (if org-projectile-counts-in-heading (concat heading " [/]")
-        heading))
-    (setq
-     org-projectile-capture-template "* TODO %?"
-     org-projectile-projects-file (concat org-directory "projects.org"))
-    (add-to-list 'org-capture-templates
-                 (org-projectile-project-todo-entry
-                  :capture-character "p"))
-    (setq org-link-elisp-confirm-function nil)))
 
 (use-package! org-protocol
   :defer t
@@ -186,12 +116,6 @@
            :head "#+TITLE: ${title}\n"
            :unnarrowed t))
         org-roam-buffer-width 0.25))
-
-(use-package! projectile
-  :defer t
-  :init
-  (setq projectile-project-search-path '("~/vcs"))
-  )
 
 (use-package! magit
   :defer t
@@ -222,14 +146,6 @@
                     "Olog" "O(\\log n)"
                     "Olon" "O(n \\log n)"))
 
-(use-package! counsel-gtags
-  :init
-  (map! :leader :prefix "c" (:prefix ("g" . "gtags")
-                             :desc "Goto definition" "d" 'counsel-gtags-find-definition
-                             :desc "Find symbol" "s" 'counsel-gtags-dwim
-                             :desc "Goto reference" "r" 'counsel-gtags-find-reference))
-  :commands (counsel-gtags-dwim counsel-gtags-find-definition counsel-gtags-find-reference))
-
 (use-package! org-download
   :config
   (setq
@@ -247,64 +163,6 @@
 
 (use-package! org-diagrams
   :after org)
-
-(after! org-archive
-  (defun ani/org-archive-done-tasks ()
-    (interactive)
-    (org-map-entries 'org-archive-subtree "/DONE" 'file)
-    (org-map-entries 'org-archive-subtree "/\[X\]" 'file)
-    (org-map-entries 'org-archive-subtree "/KILL" 'file))
-  (defadvice org-archive-subtree (around my-org-archive-subtree activate)
-    (let ((org-archive-location
-           (if (save-excursion (org-back-to-heading)
-                               (> (org-outline-level) 1))
-               (concat (car (split-string org-archive-location "::"))
-                       "::* "
-                       (car (org-get-outline-path)))
-             org-archive-location)))
-      ad-do-it))
-  )
-
-(use-package org-caldav
-  :init
-  ;; This is the delayed sync function; it waits until emacs has been idle for
-  ;; "secs" seconds before syncing.  The delay is important because the caldav-sync
-  ;; can take five or ten seconds, which would be painful if it did that right at save.
-  ;; This way it just waits until you've been idle for a while to avoid disturbing
-  ;; the user.
-  (defvar org-caldav-sync-timer nil
-    "Timer that `org-caldav-push-timer' used to reschedule itself, or nil.")
-  (defun org-caldav-sync-with-delay (secs)
-    (when org-caldav-sync-timer
-      (cancel-timer org-caldav-sync-timer))
-    (setq org-caldav-sync-timer
-          (run-with-idle-timer
-           (* 1 secs) nil 'org-caldav-sync)))
-
-  ;; Actual calendar configuration edit this to meet your specific needs
-  (setq org-caldav-url "https://caldav.grayideas.org/anirudh")
-  (setq org-caldav-calendar-id "b9934bea-291b-6ee9-ac4f-a64f9d829b6e")
-  (setq org-caldav-files '("~/Documents/org/GTD/projects.org" "~/Documents/org/GTD/tasks.org"))
-  (setq org-caldav-inbox "~/Documents/org/calendars/caldav-inbox.org")
-  (setq org-caldav-backup-file nil)
-  (setq org-caldav-save-directory "~/.config/emacs/.local/etc/caldav")
-  ;; (setq org-caldav-skip-conditions '('nottodo '("TODO" "STRT")))
-
-  :config
-  (setq org-icalendar-timezone "Asia/Kolkata")
-  (setq org-icalendar-alarm-time 30)
-  ;; This makes sure to-do items as a category can show up on the calendar
-  ;; (setq org-icalendar-include-todo t)
-  ;; This ensures all org "deadlines" show up, and show up as due dates
-  (setq org-icalendar-use-deadline '(event-if-todo-not-done todo-due))
-  ;; This ensures "scheduled" org items show up, and show up as start times
-  (setq org-icalendar-use-scheduled '(todo-start event-if-todo-not-done))
-  ;; Add the delayed save hook with a five minute idle timer
-  (add-hook 'after-save-hook
-            (lambda ()
-              (when (eq major-mode 'org-mode)
-                (org-caldav-sync-with-delay 300))))
-  )
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -384,8 +242,7 @@
                     ?\")))
     (when (not (member 'evil-yank-line-handler (get-text-property 0 'yank-handler (evil-get-register register))))
       (evil-insert-newline-above))
-    (evil-paste-before 1 register)
-    ))
+    (evil-paste-before 1 register)))
 
 (defun +ani/evil-unimpaired-paste-below ()
   (interactive)
@@ -394,8 +251,7 @@
                     ?\")))
     (when (not (member 'evil-yank-line-handler (get-text-property 0 'yank-handler (evil-get-register register))))
       (evil-insert-newline-below))
-    (evil-paste-after 1 register)
-    ))
+    (evil-paste-after 1 register)))
 
 (defun +ani/my-init-func ()
   "Function to run on init"
@@ -429,11 +285,10 @@
         :n "]p" '+ani/evil-unimpaired-paste-below
         :n "[p" '+ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
-        :i "C-v" "C-o P"
+        :i "C-v" "C-r C-o +"
         :desc "Set random theme"
         :n "<f12>" '+ani/set-random-theme
-        :n "S-<f12>" (λ! () (ani/set-random-theme 't))
-        ))
+        :n "S-<f12>" (λ! () (ani/set-random-theme 't))))
 
 
 (defun +ani/set-random-theme (&optional light)
