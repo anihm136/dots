@@ -1,0 +1,1 @@
+return { formatCommand = "shfmt -s" }

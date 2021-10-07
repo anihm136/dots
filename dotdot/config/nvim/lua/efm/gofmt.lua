@@ -1,3 +1,1 @@
-return {
-	formatCommand = "gofumpt -s",
-}
+return { formatCommand = "gofumpt -s" }

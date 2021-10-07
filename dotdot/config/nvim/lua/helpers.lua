@@ -7,7 +7,9 @@ end
 
 -- check if window with buffer of given filetype is open
 helpers.open_window = function(val, checkvar)
-	if checkvar == nil then checkvar = 'filetype' end
+	if checkvar == nil then
+		checkvar = "filetype"
+	end
 	for _, win_id in pairs(api.nvim_list_wins()) do
 		local cur_val = vim.bo[api.nvim_win_get_buf(win_id)][checkvar]
 		if cur_val == val then
@@ -21,29 +23,49 @@ end
 helpers.formatting = function()
 	vim.cmd[[undojoin]]
 	vim.lsp.buf.formatting(
-		vim.g[string.format('format_options_%s', vim.bo.filetype)] or {}
+		vim.g[string.format("format_options_%s", vim.bo.filetype)] or {}
 	)
 	vim.defer_fn(function()
 		vim.cmd[[DetectIndent]]
 	end, 5000)
 end
 
+local has_words_before = function()
+	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+		return false
+	end
+	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	return col ~= 0 and vim.api.nvim_buf_get_lines(
+		0,
+		line - 1,
+		line,
+		true
+	)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+	vim.api.nvim_feedkeys(
+		vim.api.nvim_replace_termcodes(key, true, true, true),
+		mode,
+		true
+	)
+end
 -- smart tab completion:
 --	next completion is pum is open
 --	expand or next placeholder snippet from snippets.nvim if available
 --	expand or next placeholder snippet from vsnip if available
 --	insert <tab> otherwise
-helpers.tab_complete = function()
-	local snippets = require'snippets'
-	local _, expanded = snippets.lookup_snippet_at_cursor()
+helpers.smart_tab = function(fallback)
+	local snippy = require"snippy"
+	local cmp = require"cmp"
 	if vim.fn.pumvisible() == 1 then
-		return t'<c-n>'
-	elseif snippets.has_active_snippet() or expanded ~= nil then
-		return t'<cmd>lua require("snippets").expand_or_advance(1)<cr><cmd>lua helpers.snippet_callback()<cr>'
-	elseif vim.fn.call('vsnip#available', { 1 }) == 1 then
-		return t'<plug>(vsnip-expand-or-jump)'
+		feedkey("<c-n>", "n")
+	elseif snippy.can_expand_or_advance() then
+		feedkey('<cmd>lua require("snippy").expand_or_advance()<cr>', "")
+	elseif has_words_before() then
+		cmp.complete()
 	else
-		return t'<tab>'
+		fallback()
 	end
 end
 
@@ -53,34 +75,33 @@ end
 --	previous snippet placeholder from vsnip if available
 --	remove <tab> if present
 --	do nothing otherwise
-helpers.s_tab_complete = function()
+helpers.smart_backtab = function(fallback)
+	local snippy = require"snippy"
 	if vim.fn.pumvisible() == 1 then
-		return t'<c-p>'
-	elseif require('snippets').has_active_snippet() then
-		return t'<cmd>lua require("snippets").advance_snippet(-1)<cr><cmd>lua helpers.snippet_callback()<cr>'
-	elseif vim.fn.call('vsnip#jumpable', { -1 }) == 1 then
-		return t'<plug>(vsnip-jump-prev)'
-	elseif api.nvim_get_current_line()[api.nvim_win_get_cursor(
-		0
-	)[2]]:match('[' .. t'<tab>' .. ' ]') then
-		return t'<bs>'
+		feedkey("<c-p>", "n")
+	elseif snippy.can_jump(-1) then
+		feedkey('<cmd>lua require("snippy").previous()<cr>', "")
+	elseif api.nvim_get_current_line()[api.nvim_win_get_cursor(0)[2]]:match(
+		"[" .. t"<tab>" .. " ]"
+	) then
+		feedkey("<bs>", "i")
 	else
-		return t''
+		fallback()
 	end
 end
 
 -- helpers to enable ${visual} for snippets.nvim
 helpers.snippet_callback = function()
-	if not require('snippets').has_active_snippet() then
-		helpers.saved_visual = ''
+	if not require("snippets").has_active_snippet() then
+		helpers.saved_visual = ""
 	end
 end
 
 helpers.x_tab = function()
 	local selection = helpers.get_visual_selection()
-	if selection ~= '' then
+	if selection ~= "" then
 		helpers.saved_visual = helpers.get_visual_selection()
-		api.nvim_input('c')
+		api.nvim_input("c")
 	end
 end
 
@@ -90,13 +111,13 @@ end
 
 -- experimenting with get_visual_selection
 helpers.get_marked_region = function(mark1, mark2, options)
-	print('start region')
+	print("start region")
 	local bufnr = 0
 	local adjust = options.adjust or function(pos1, pos2)
 		return pos1, pos2
 	end
 	local regtype = options.regtype or vim.fn.visualmode()
-	local selection = options.selection or (vim.o.selection ~= 'exclusive')
+	local selection = options.selection or (vim.o.selection ~= "exclusive")
 
 	local pos1 = vim.fn.getpos(mark1)
 	local pos2 = vim.fn.getpos(mark2)
@@ -109,12 +130,12 @@ helpers.get_marked_region = function(mark1, mark2, options)
 	if start[2] < 0 or finish[1] < start[1] then return end
 
 	local region = vim.region(bufnr, start, finish, regtype, selection)
-	print('End region')
+	print("End region")
 	return region, start, finish
 end
 
 helpers.get_visual_selection = function()
-	print('Start selection')
+	print("Start selection")
 	local visual_modes = {
 		v = false,
 		V = true,
@@ -123,12 +144,12 @@ helpers.get_visual_selection = function()
 
 	-- Return if not in visual mode
 	if visual_modes[api.nvim_get_mode().mode] == nil or not visual_modes[api.nvim_get_mode().mode] then
-		return ''
+		return ""
 	end
 
 	local options = {}
 	options.adjust = function(pos1, pos2)
-		if vim.fn.visualmode() == 'V' then
+		if vim.fn.visualmode() == "V" then
 			pos1[3] = 1
 			pos2[3] = 2 ^ 31 - 1
 		end
@@ -144,7 +165,7 @@ helpers.get_visual_selection = function()
 		end
 	end
 
-	local region, start, finish = helpers.get_marked_region('v', '.', options)
+	local region, start, finish = helpers.get_marked_region("v", ".", options)
 
 	-- Compute the number of chars to get from the first line,
 	-- because vim.region returns -1 as the ending col if the
@@ -166,12 +187,12 @@ helpers.get_visual_selection = function()
 				region[finish[1]][2] - region[finish[1]][1]
 			)
 	end
-	print('End selection')
-	return table.concat(lines, '\n')
+	print("End selection")
+	return table.concat(lines, "\n")
 end
 
 helpers.set_sl_colors = function()
-	local colors = require('slthemer').getSlColors()
+	local colors = require("slthemer").getSlColors()
 	local hlGroups = {
 		lualine_a_normal = { colors.Normal, colors.Background },
 		lualine_a_insert = { colors.Insert, colors.Background },
@@ -450,11 +471,31 @@ helpers.set_sl_colors = function()
 	}
 	for k, v in pairs(hlGroups) do
 		if v[1] then
-			vim.cmd('hi! ' .. k .. ' guifg=' .. v[1])
+			vim.cmd("hi! " .. k .. " guifg=" .. v[1])
 		end
 		if v[2] then
-			vim.cmd('hi! ' .. k .. ' guibg=' .. v[2])
+			vim.cmd("hi! " .. k .. " guibg=" .. v[2])
 		end
+	end
+end
+
+helpers.install_servers = function()
+	local servers =
+		{
+			"cpp",
+			"go",
+			"lua",
+			"python",
+			"bash",
+			"css",
+			"html",
+			"json",
+			"typescript",
+			"vue",
+			"efm",
+		}
+	for _, server in pairs(servers) do
+		require"lspinstall".install_server(server)
 	end
 end
 

@@ -116,6 +116,10 @@ let s:TYPE = {
 let s:loaded = get(s:, 'loaded', {})
 let s:triggers = get(s:, 'triggers', {})
 
+function! s:is_powershell(shell)
+  return a:shell =~# 'powershell\(\.exe\)\?$' || a:shell =~# 'pwsh\(\.exe\)\?$'
+endfunction
+
 function! s:isabsolute(dir) abort
   return a:dir =~# '^/' || (has('win32') && a:dir =~? '^\%(\\\|[A-Z]:\)')
 endfunction
@@ -263,7 +267,7 @@ function! s:define_commands()
   endif
   if has('win32')
   \ && &shellslash
-  \ && (&shell =~# 'cmd\(\.exe\)\?$' || &shell =~# 'powershell\(\.exe\)\?$')
+  \ && (&shell =~# 'cmd\(\.exe\)\?$' || s:is_powershell(&shell))
     return s:err('vim-plug does not support shell, ' . &shell . ', when shellslash is set.')
   endif
   if !has('nvim')
@@ -503,7 +507,7 @@ if s:is_win
     let batchfile = s:plug_tempname().'.bat'
     call writefile(s:wrap_cmds(a:cmd), batchfile)
     let cmd = plug#shellescape(batchfile, {'shell': &shell, 'script': 0})
-    if &shell =~# 'powershell\(\.exe\)\?$'
+    if s:is_powershell(&shell)
       let cmd = '& ' . cmd
     endif
     return [batchfile, cmd]
@@ -905,13 +909,13 @@ function! s:switch_out(...)
 endfunction
 
 function! s:finish_bindings()
-  nnoremap <silent> <buffer> R  :call <SID>retry()<CR>
-  nnoremap <silent> <buffer> D  :PlugDiff<CR>
-  nnoremap <silent> <buffer> S  :PlugStatus<CR>
-  nnoremap <silent> <buffer> U  :call <SID>status_update()<CR>
-  xnoremap <silent> <buffer> U  :call <SID>status_update()<CR>
-  nnoremap <silent> <buffer> ]] :silent! call <SID>section('')<CR>
-  nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<CR>
+  nnoremap <silent> <buffer> R  :call <SID>retry()<cr>
+  nnoremap <silent> <buffer> D  :PlugDiff<cr>
+  nnoremap <silent> <buffer> S  :PlugStatus<cr>
+  nnoremap <silent> <buffer> U  :call <SID>status_update()<cr>
+  xnoremap <silent> <buffer> U  :call <SID>status_update()<cr>
+  nnoremap <silent> <buffer> ]] :silent! call <SID>section('')<cr>
+  nnoremap <silent> <buffer> [[ :silent! call <SID>section('b')<cr>
 endfunction
 
 function! s:prepare(...)
@@ -935,7 +939,7 @@ function! s:prepare(...)
     call s:new_window()
   endif
 
-  nnoremap <silent> <buffer> q  :if b:plug_preview==1<bar>pc<bar>endif<bar>bd<CR>
+  nnoremap <silent> <buffer> q :call <SID>close_pane()<cr>
   if a:0 == 0
     call s:finish_bindings()
   endif
@@ -944,7 +948,7 @@ function! s:prepare(...)
   let s:plug_buf = winbufnr(0)
   call s:assign_name()
 
-  for k in ['<CR>', 'L', 'o', 'X', 'd', 'dd']
+  for k in ['<cr>', 'L', 'o', 'X', 'd', 'dd']
     execute 'silent! unmap <buffer>' k
   endfor
   setlocal buftype=nofile bufhidden=wipe nobuflisted nolist noswapfile nowrap cursorline modifiable nospell
@@ -954,6 +958,15 @@ function! s:prepare(...)
   setf vim-plug
   if exists('g:syntax_on')
     call s:syntax()
+  endif
+endfunction
+
+function! s:close_pane()
+  if b:plug_preview == 1
+    pc
+    let b:plug_preview = -1
+  else
+    bd
   endif
 endfunction
 
@@ -975,7 +988,7 @@ function! s:chsh(swap)
     set shell=sh
   endif
   if a:swap
-    if &shell =~# 'powershell\(\.exe\)\?$' || &shell =~# 'pwsh$'
+    if s:is_powershell(&shell)
       let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s'
     elseif &shell =~# 'sh' || &shell =~# 'cmd\(\.exe\)\?$'
       set shellredir=>%s\ 2>&1
@@ -995,7 +1008,7 @@ function! s:bang(cmd, ...)
       let [batchfile, cmd] = s:batchfile(cmd)
     endif
     let g:_plug_bang = (s:is_win && has('gui_running') ? 'silent ' : '').'!'.escape(cmd, '#!%')
-    execute "normal! :execute g:_plug_bang\<CR>\<CR>"
+    execute "normal! :execute g:_plug_bang\<cr>\<cr>"
   finally
     unlet g:_plug_bang
     let [&shell, &shellcmdflag, &shellredir] = [sh, shellcmdflag, shrd]
@@ -1532,7 +1545,7 @@ while 1 " Without TCO, Vim stack is bound to explode
     let [error, _] = s:git_validate(spec, 0)
     if empty(error)
       if pull
-        let cmd = ['git', 'fetch']
+        let cmd = s:git_version_requirement(2) ? ['git', '-c', 'credential.helper=', 'fetch'] : ['git', 'fetch']
         if has_tag && !empty(globpath(spec.dir, '.git/shallow'))
           call extend(cmd, ['--depth', '99999999'])
         endif
@@ -2216,7 +2229,7 @@ function! plug#shellescape(arg, ...)
   let script = get(opts, 'script', 1)
   if shell =~# 'cmd\(\.exe\)\?$'
     return s:shellesc_cmd(a:arg, script)
-  elseif shell =~# 'powershell\(\.exe\)\?$' || shell =~# 'pwsh$'
+  elseif s:is_powershell(shell)
     return s:shellesc_ps1(a:arg)
   endif
   return s:shellesc_sh(a:arg)
@@ -2268,7 +2281,7 @@ function! s:system(cmd, ...)
         return system(a:cmd)
       endif
       let cmd = join(map(copy(a:cmd), 'plug#shellescape(v:val, {"shell": &shell, "script": 0})'))
-      if &shell =~# 'powershell\(\.exe\)\?$'
+      if s:is_powershell(&shell)
         let cmd = '& ' . cmd
       endif
     else
@@ -2424,9 +2437,9 @@ function! s:clean(force)
       call s:delete([6, line('$')], 1)
     else
       call setline(4, 'Cancelled.')
-      nnoremap <silent> <buffer> d :set opfunc=<sid>delete_op<CR>g@
+      nnoremap <silent> <buffer> d :set opfunc=<sid>delete_op<cr>g@
       nmap     <silent> <buffer> dd d_
-      xnoremap <silent> <buffer> d :<c-u>call <sid>delete_op(visualmode(), 1)<CR>
+      xnoremap <silent> <buffer> d :<c-u>call <sid>delete_op(visualmode(), 1)<cr>
       echo 'Delete the lines (d{motion}) to delete the corresponding directories'
     endif
   endif
@@ -2547,8 +2560,8 @@ function! s:status()
   setlocal nomodifiable
   if unloaded
     echo "Press 'L' on each line to load plugin, or 'U' to update"
-    nnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<CR>
-    xnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<CR>
+    nnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<cr>
+    xnoremap <silent> <buffer> L :call <SID>status_load(line('.'))<cr>
   end
 endfunction
 
@@ -2636,7 +2649,7 @@ function! s:preview_commit()
     endif
   endtry
   setlocal nomodifiable
-  nnoremap <silent> <buffer> q :q<CR>
+  nnoremap <silent> <buffer> q :q<cr>
   wincmd p
 endfunction
 
@@ -2705,16 +2718,16 @@ function! s:diff()
         \ . (cnts[1] ? printf(' %d plugin(s) have pending updates.', cnts[1]) : ''))
 
   if cnts[0] || cnts[1]
-    nnoremap <silent> <buffer> <plug>(plug-preview) :silent! call <SID>preview_commit()<CR>
-    if empty(maparg("\<CR>", 'n'))
-      nmap <buffer> <CR> <plug>(plug-preview)
+    nnoremap <silent> <buffer> <plug>(plug-preview) :silent! call <SID>preview_commit()<cr>
+    if empty(maparg("\<cr>", 'n'))
+      nmap <buffer> <cr> <plug>(plug-preview)
     endif
     if empty(maparg('o', 'n'))
       nmap <buffer> o <plug>(plug-preview)
     endif
   endif
   if cnts[0]
-    nnoremap <silent> <buffer> X :call <SID>revert()<CR>
+    nnoremap <silent> <buffer> X :call <SID>revert()<cr>
     echo "Press 'X' on each block to revert the update"
   endif
   normal! gg
