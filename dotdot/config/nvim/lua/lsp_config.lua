@@ -1,6 +1,7 @@
 local util = require("lspconfig/util")
+local cmp_lsp = require("cmp_nvim_lsp")
 
-vim.lsp.set_log_level("trace")
+vim.lsp.set_log_level("error")
 
 local mapper = function(mode, key, result)
 	vim.api.nvim_buf_set_keymap(0, mode, key, result, {
@@ -9,7 +10,7 @@ local mapper = function(mode, key, result)
 	})
 end
 
-vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
+vim.lsp.handlers["textDocument/formatting"] = function(err, result, ctx)
 	if err ~= nil then
 		vim.cmd[[ echohl Error ]]
 		vim.cmd([[ echomsg ']] .. tostring(err) .. [[']])
@@ -19,11 +20,11 @@ vim.lsp.handlers["textDocument/formatting"] = function(err, _, result, _, bufnr)
 	elseif result == nil then
 		return
 	end
-	if not vim.api.nvim_buf_get_option(bufnr, "modified") then
+	if not vim.api.nvim_buf_get_option(ctx.bufnr, "modified") then
 		local view = vim.fn.winsaveview()
-		vim.lsp.util.apply_text_edits(result, bufnr)
+		vim.lsp.util.apply_text_edits(result, ctx.bufnr)
 		vim.fn.winrestview(view)
-		if bufnr == vim.api.nvim_get_current_buf() then
+		if ctx.bufnr == vim.api.nvim_get_current_buf() then
 			vim.cmd[[noautocmd :update]]
 		end
 	end
@@ -33,9 +34,11 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 	vim.lsp.diagnostic.on_publish_diagnostics,
 	{
 		underline = true,
+		severity = vim.diagnostic.severity.ERROR,
 		virtual_text = {
 			spacing = 5,
 			prefix = " ",
+			source = "if_many",
 		},
 		signs = function(bufnr, _)
 			local ok, result =
@@ -48,38 +51,30 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
 			return result
 		end,
 		update_in_insert = false,
+		severity_sort = true,
 	}
 )
+
+vim.lsp.handlers["textDocument/hover"] =
+	vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
+
+vim.lsp.handlers["textDocument/signature_help"] =
+	vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
 
 local on_init = function(client)
 	client.config.flags = client.config.flags or {}
 	client.config.flags.allow_incremental_sync = true
 end
 
-local on_attach = function(client, bufnr)
+local on_attach = function(_, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	mapper(
-		"i",
-		"<c-s>",
-		"<cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>"
-	)
-	mapper(
-		"n",
-		"[e",
-		"<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_prev()<CR>"
-	)
-	mapper(
-		"n",
-		"]e",
-		"<cmd>lua require('lspsaga.diagnostic').lsp_jump_diagnostic_next()<CR>"
-	)
+	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
+	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
+	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
 	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>")
 	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<CR>")
-	mapper(
-		"n",
-		"<space>sl",
-		"<cmd>lua require('lspsaga.diagnostic').show_line_diagnostics()<CR>"
-	)
+	mapper("n", "<leader>cn", "<cmd>lua vim.lsp.buf.rename()<CR>")
+	mapper("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<CR>")
 end
 
 local function make_config()
@@ -140,14 +135,23 @@ local function setup_servers()
 				completeUnimported = true,
 				clangdFileStatus = true,
 			}
-		end
-		if server == "bash" then
+			local old_attach = config.on_attach
+			config.on_attach = function(client)
+				old_attach(client)
+				client.resolved_capabilities.document_formatting = false
+			end
+		elseif server == "typescript" then
+			local old_attach = config.on_attach
+			config.on_attach = function(client)
+				old_attach(client)
+				client.resolved_capabilities.document_formatting = false
+			end
+		elseif server == "bash" then
 			config.filetypes = { "sh", "bash", "zsh" }
 			config.root_dir = function(_, _)
 				return "/tmp"
 			end
-		end
-		if server == "python" then
+		elseif server == "python" then
 			config.root_dir = function(fname)
 				local filename =
 					util.path.is_absolute(fname) and fname or util.path.join(
@@ -167,8 +171,7 @@ local function setup_servers()
 					)
 				return root_pattern(filename) or util.path.dirname(filename)
 			end
-		end
-		if server == "go" then
+		elseif server == "go" then
 			config.root_dir = function(fname)
 				local filename =
 					util.path.is_absolute(fname) and fname or util.path.join(
@@ -183,8 +186,7 @@ local function setup_servers()
 				old_attach(client)
 				client.resolved_capabilities.document_formatting = false
 			end
-		end
-		if server == "lua" then
+		elseif server == "lua" then
 			config.root_dir = function(fname)
 				return util.find_git_ancestor(fname) or util.path.dirname(fname)
 			end
@@ -213,8 +215,7 @@ local function setup_servers()
 					},
 				},
 			}
-		end
-		if server == "efm" then
+		elseif server == "efm" then
 			local clangformat = require"efm/clangformat"
 			local golint = require"efm/golint"
 			local gofmt = require"efm/gofmt"
@@ -225,6 +226,7 @@ local function setup_servers()
 			local prettier = require"efm/prettier"
 			local eslint = require"efm/eslint"
 			local shellcheck = require"efm/shellcheck"
+			local shfmt = require"efm/shfmt"
 			config.init_options = { documentFormatting = true }
 			config.filetypes =
 				{
@@ -246,7 +248,7 @@ local function setup_servers()
 					"markdown",
 					"sh",
 					"bash",
-					"zsh"
+					"zsh",
 				}
 			config.root_dir = function(fname)
 				local filename =
@@ -292,21 +294,27 @@ local function setup_servers()
 					javascript = { prettier, eslint },
 					typescriptreact = { prettier, eslint },
 					javascriptreact = { prettier, eslint },
-					vue = { prettier },
+					vue = { prettier, eslint },
 					yaml = { prettier },
 					json = { prettier },
 					html = { prettier },
 					scss = { prettier },
 					css = { prettier },
 					markdown = { prettier },
-					sh = { shellcheck },
-					bash = { shellcheck },
+					sh = { shellcheck, shfmt },
+					bash = { shellcheck, shfmt },
 					zsh = { shellcheck },
 				},
 			}
 		end
 
-		require"lspconfig"[server].setup(config)
+		require"lspconfig"[server].setup(
+			vim.tbl_extend("force", config, {
+				capabilities = cmp_lsp.update_capabilities(
+					vim.lsp.protocol.make_client_capabilities()
+				),
+			})
+		)
 	end
 end
 
@@ -327,7 +335,7 @@ end
 -- 		},
 -- 	},
 -- 	init_options = {
--- 		usePlacehorequire('lspsaga.diagnostic')ers = true,
+-- 		usePlaceholders = true,
 -- 		completeUnimported = true,
 -- 	},
 -- }
@@ -342,6 +350,7 @@ vim.g.format_options_typescript = format_options_prettier
 vim.g.format_options_javascript = format_options_prettier
 vim.g.format_options_typescriptreact = format_options_prettier
 vim.g.format_options_javascriptreact = format_options_prettier
+vim.g.format_options_vue = format_options_prettier
 vim.g.format_options_json = format_options_prettier
 vim.g.format_options_css = format_options_prettier
 vim.g.format_options_scss = format_options_prettier

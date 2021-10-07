@@ -1,3 +1,7 @@
+if !get(g:, "loaded_fugitive", v:false)
+	finish	
+endif
+
 nnoremap <silent> <leader>gg <cmd>G<CR>
 nnoremap <silent> <leader>gp <cmd>Gpush<CR>
 

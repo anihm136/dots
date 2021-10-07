@@ -1,3 +1,7 @@
+if !get(g:, "loaded_quickrun", v:false)
+	finish
+endif
+
 " Define a custom outputter for browser
 let s:outputter = quickrun#outputter#browser#new()
 function! s:outputter.validate() abort

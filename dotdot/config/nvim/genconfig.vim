@@ -46,12 +46,14 @@ nnoremap <silent> <leader>fs :w<cr>
 nnoremap <silent> <leader>fS :wa!<cr>
 nnoremap <silent> <leader>fU :Write<cr>
 xnoremap <silent> y ygv<Esc>
-inoremap <silent> <C-v> <C-o>P
+inoremap <silent> <C-v> <C-r><C-o>+
 nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
-imap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
-imap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
-xnoremap <silent> <Tab> <cmd>lua helpers.x_tab()<CR>
+" imap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
+" imap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
+" smap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
+" smap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
+" xnoremap <silent> <Tab> <cmd>lua helpers.x_tab()<CR>
 
 function! s:show_documentation()
 	if (index(['vim','help', 'lua'], &filetype) >= 0)
@@ -62,7 +64,7 @@ function! s:show_documentation()
 		endtry
 	endif
 	try
-		execute "lua require('lspsaga.hover').render_hover_doc()"
+		execute "lua vim.lsp.buf.hover()"
 	catch
 		echoerr "No help available for " . expand('<cword>')
 	endtry
@@ -129,9 +131,10 @@ set diffopt&
 syntax enable
 
 command! -nargs=? -complete=customlist,CompleteColors SetColorscheme call helpers#setColorscheme(<f-args>)
-nnoremap <silent><F12> :SetColorscheme dark<cr>
-nnoremap <silent><F24> :SetColorscheme light<cr>
-silent exec "SetColorscheme"
+nnoremap <silent><F12> <cmd>SetColorscheme dark<cr>
+nnoremap <silent><F24> <cmd>SetColorscheme light<cr>
+nnoremap <silent><F36> <cmd>lua helpers.set_sl_colors()<cr>
+SetColorscheme
 
 set encoding=utf8
 set ffs=unix,dos,mac
@@ -196,10 +199,6 @@ if &wildoptions =~ "pum"
 	cnoremap <expr> <right> pumvisible() ? "<down>" : "<right>"
 endif
 
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.hpp,*.go,*.lua let g:nav_mode = 1
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.java let g:nav_mode = -1
-autocmd custom_commands BufRead,BufNewFile,VimEnter *.js,*.jsx,*.ts,*.tsx,*.py,*.c,*.cpp,*.hpp,*.java,*.go,*.lua silent call ProgFunc()
-
 nnoremap <silent> <Leader>rn :%s///g<Left><Left>
 nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
 xnoremap <silent> <Leader>rn :s///g<Left><Left>
@@ -259,13 +258,4 @@ function! CompleteColors(ArgLead, CommandLine, CursorColumn) abort
 	let l:pat = '^'.a:ArgLead
 	call filter(l:comp, {idx,val -> val =~ l:pat})
 	return l:comp
-endfunction
-
-function! ProgFunc() abort
-	silent exec "RainbowParentheses"
-	if !get(g:, "nav_mode")
-		let g:nav_mode = helpers#toggleTags()
-	else
-		call helpers#navMap(g:nav_mode)
-	endif
 endfunction

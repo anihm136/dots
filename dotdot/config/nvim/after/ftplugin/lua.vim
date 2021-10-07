@@ -9,8 +9,6 @@ function! s:LuaInclude(fname) abort
 		let template .= '/lua/'
 		let chk1 = template . module . '.lua'
 		let chk2 = template . module . '/init.lua'
-		echo chk1
-		echo chk2
 		if filereadable(chk1)
 			return chk1
 		elseif filereadable(chk2)
