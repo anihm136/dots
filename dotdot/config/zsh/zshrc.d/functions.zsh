@@ -15,33 +15,6 @@ cf() {
   fi
 }
 
-#
-# # ext - archive extractor
-# # usage: ext <file>
-ext ()
-{
-  if [[ -f $1 ]] || [[ -z $1(#qN) ]] ; then
-    local ext_path=$(dirname $1)
-    case $1 in
-      *.tar.bz2)   tar xjf $1 -C $ext_path    ;;
-      *.tar.gz)    tar xzf $1 -C $ext_path    ;;
-      *.tar.xz)    tar xf $1 -C $ext_path   ;;
-      *.bz2)       bunzip2 $1            ;;
-      *.rar)       unrar x $1 $ext_path      ;;
-      *.gz)        gunzip $1             ;;
-      *.tar)       tar xf $1 -C $ext_path    ;;
-      *.tbz2)      tar xjf $1 -C $ext_path    ;;
-      *.tgz)       tar xzf $1 -C $ext_path    ;;
-      *.zip)       unzip $1 -d $ext_path     ;;
-      *.Z)         uncompress $1         ;;
-      *.7z)        7z x $1 -o $ext_path      ;;
-      *)           echo "'$1' cannot be extracted via ext()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
 fif() {
   if [ ! "$#" -gt 0 ]; then
     echo "Need a string to search for!"
@@ -79,10 +52,6 @@ e() {
   fi
 }
 
-z() {
-  cd "$(_z -l "$*" 2>&1 | fzf --select-1 +s --tac --query "${*##-* }" | sed 's/^\S* *//')"
-}
-
 mcp() {
   local fro=()
   local to=()
@@ -109,36 +78,15 @@ mcp() {
   echo $to | xargs -n 1 cp $flags $fro
 }
 
-mmv() {
-  local fro=()
-  local to=()
-  local flags=()
-  local dest=false
-  local args=$@
-  while [[ $# -gt 0 ]]; do
-    case "$1" in
-      -d)
-        dest=true
-        ;;
-      -*)
-        flags+=("$1")
-        ;;
-      *)
-        if [[ $dest == true ]]; then
-          to+=("${(q)1}")
-        else
-          fro+=($1)
-        fi
-        ;;
-    esac
-    shift
-  done
-  mcp $args && rm $fro
-}
-
 dlm() {
   for url in $@; do
     youtube-dl -f "m4a" $url --add-metadata
+  done
+}
+
+dlmn() {
+  for name in $@; do
+    youtube-dl -f "m4a" "ytsearch:$name audio" --add-metadata
   done
 }
 
@@ -155,6 +103,7 @@ codi() {
 }
 
 tm() {
+  [[ -z $(pgrep tmux) ]] && direnv exec / tmux new-session -d && sleep 3
   local session=$(tmux ls -F '#S' | fzf -0 --header='Select session to attach to')
   if [[ -n $session ]]; then
     tmux attach -t $session
@@ -162,3 +111,35 @@ tm() {
 }
 
 direnv() { asdf exec direnv "$@"; }
+
+addtool() {
+  local lang=${1}
+
+  if [[ ! $lang ]]; then
+    lang=$(asdf plugin-list | fzf)
+  fi
+
+  if [[ $lang ]]; then
+    local versions=$(asdf list-all $lang | fzf --tac --no-sort --multi)
+    if [[ $versions ]]; then
+      for version in $(echo $versions);
+      do; asdf install $lang $version; done;
+    fi
+  fi
+}
+
+remtool() {
+  local lang=${1}
+
+  if [[ ! $lang ]]; then
+    lang=$(asdf plugin-list | fzf)
+  fi
+
+  if [[ $lang ]]; then
+    local versions=$(asdf list $lang | fzf -m)
+    if [[ $versions ]]; then
+      for version in $(echo $versions);
+      do; asdf uninstall $lang $version; done;
+    fi
+  fi
+}

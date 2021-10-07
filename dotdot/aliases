@@ -17,6 +17,8 @@ alias o='xdg-open'
 alias dotdrop='(){(cd ~/vcs/dots; pipenv run ./dotdrop.sh $@) ;}'
 alias ssh='kitty +kitten ssh'
 alias lg='lazygit'
+alias pvpn='protonvpn-cli'
+alias timesync='sudo ntpdate pool.ntp.org'
 
 # Common aliases
 alias l='ls -lFh'     
