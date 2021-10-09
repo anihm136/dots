@@ -17,7 +17,6 @@ let g:python3_host_prog = "{{@@ home @@}}/dev/python/tool-env/bin/python"
 
 set splitbelow splitright
 set confirm
-set smarttab
 set shiftround
 set termguicolors
 set mouse=a
@@ -40,20 +39,18 @@ set listchars=eol:↲,tab:»\ ,trail:𝁢,extends:…,precedes:…,conceal:┊
 set list
 set cursorline
 set completeopt=menu,menuone,noselect
-
+set noexpandtab
+set tabstop=4
+set softtabstop=0
+set shiftwidth=4
 
 nnoremap <silent> <leader>fs :w<cr>
 nnoremap <silent> <leader>fS :wa!<cr>
 nnoremap <silent> <leader>fU :Write<cr>
 xnoremap <silent> y ygv<Esc>
-inoremap <silent> <C-v> <C-r><C-o>+
+inoremap <silent> <C-v> <C-r><C-p>+
 nnoremap <silent> <leader>tw :set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
-" imap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
-" imap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
-" smap <silent><expr> <Tab>   v:lua.helpers.tab_complete()
-" smap <silent><expr> <S-Tab> v:lua.helpers.s_tab_complete()
-" xnoremap <silent> <Tab> <cmd>lua helpers.x_tab()<CR>
 
 function! s:show_documentation()
 	if (index(['vim','help', 'lua'], &filetype) >= 0)
@@ -80,10 +77,8 @@ autocmd custom_commands FileType * set formatoptions=lcqnrj
 autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
 autocmd custom_commands FileType help,plugins nnoremap <silent><buffer> q :q<cr>
-autocmd custom_commands BufReadPost,BufNewFile * DetectIndent
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
-autocmd custom_commands ColorScheme * lua package.loaded['colorizer'] = nil; require('colorizer').setup{}; require('colorizer').attach_to_buffer(0)
 
 command! -nargs=0 Reload call helpers#vim_reload()
 command! -nargs=0 Write silent! SudoWrite | edit!
@@ -163,10 +158,6 @@ set nowrap
 
 nnoremap <silent> <leader><leader> :noh<cr>
 
-map j gj
-map k gk
-map <Down> gj
-map <Up> gk
 vnoremap <S-Up> <Up>
 vnoremap <S-Down> <Down>
 nnoremap . :<C-u>execute "norm! " . repeat(".", v:count1)<CR>
@@ -186,7 +177,6 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 nnoremap Y y$
-nnoremap x "_x
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
 
@@ -203,19 +193,6 @@ nnoremap <silent> <Leader>rn :%s///g<Left><Left>
 nnoremap <silent> <Leader>rc :%s///gc<Left><Left><Left>
 xnoremap <silent> <Leader>rn :s///g<Left><Left>
 xnoremap <silent> <Leader>rc :s///gc<Left><Left><Left>
-
-nnoremap <F2>
-			\ :let @s='\<'.expand('<cword>').'\>'<CR>
-			\ :Grepper -cword -noprompt<CR>
-			\ :cfdo %s/<C-r>s//g \| update
-			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
-
-xnoremap <F2>
-			\ "sy
-			\ :Grepper -noprompt -query <C-r>s<CR>
-			\ :let @s='\<'.@s.'\>'<CR>
-			\ :cfdo %s/<C-r>s//g \| update
-			\<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Text objects
@@ -241,13 +218,21 @@ onoremap <silent> al :<C-u>normal val<CR>
 " Range of last action
 xnoremap ik `]o`[
 onoremap ik :<C-u>normal vik<CR>
-onoremap ak :<C-u>normal vikV<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 noremap <leader>ss :setlocal spell!<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Signs
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+call sign_define("DiagnosticSignError", {"text" : "◉", "texthl" : "DiagnosticSignError"})
+call sign_define("DiagnosticSignWarn", {"text" : "⚠", "texthl" : "DiagnosticSignWarn"})
+call sign_define("DiagnosticSignInfo", {"text" : "", "texthl" : "DiagnosticSignInfo"})
+call sign_define("LightBulbSign", {"text" : ""})
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions

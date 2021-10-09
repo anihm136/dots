@@ -24,27 +24,9 @@ function! helpers#setColorscheme(...) abort
   else
     let l:color = a:1
   endif
-
-  let l:dark_themes = ["gruvbit", "equinusocio_material", "solarized8_flat", "despacio", "dogrun", "miramare", "tokyonight", "nightfox"]
-
-  let l:light_themes = ["solarized8_flat", "tempus_totus", "tempus_day", "tokyonight"]
-
-  let l:all_themes = extend(copy(dark_themes), light_themes)
-
-  let l:select = [dark_themes, light_themes]
-
   if l:color == 'dark' || l:color == 'light'
-    let g:solarized_italics = 0
-    let g:solarized_extra_hi_groups = 1
-    let g:equinusocio_material_style = 'darker'
-    let g:equinusocio_material_hide_vertsplit = 1
-    let g:despacio_Twilight = 1
-    let g:tokyonight_style = (l:color == 'dark' ? 'storm' : 'day')
-    let g:tokyonight_italic_keywords = 0
     silent exec "set background=" . l:color
-    let l:theme_set = select[(l:color == 'dark' ? 0 : 1)]
-    let l:themeIndex = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:]) % len(l:theme_set)
-    let l:colorscheme = l:theme_set[l:themeIndex]
+    let l:colorscheme = v:lua.helpers.get_random_colorscheme(l:color)
     exec "colorscheme " . l:colorscheme
     echo l:colorscheme
   else
@@ -54,7 +36,6 @@ function! helpers#setColorscheme(...) abort
   highlight LineNr ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE
   highlight FoldColumn ctermbg=NONE guibg=NONE
-  " lua helpers.makeColorChanges()
   highlight Comment gui=italic
   highlight! link TabLineFill Normal
   highlight! link TabLineSel PmenuSel
