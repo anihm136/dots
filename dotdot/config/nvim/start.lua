@@ -12,11 +12,11 @@ getmetatable("").__index = function(str, i)
 end
 
 require"impatient".enable_profile()
+_G.helpers = require("helpers")
 require"packer_compiled"
 require"gen_config"
 require"lsp_config"
 require"dap_config"
-_G.helpers = require("helpers")
 
 vim.cmd[[
     command! -complete=file -nargs=* DebugC lua require "dap/gdb_config".start_c_debugger({<f-args>}, "gdb")

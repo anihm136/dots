@@ -6,5 +6,6 @@ return {
 	nvim_cmp = require('plugin_config.nvim_cmp'),
 	hop = require('plugin_config.hop'),
 	treesitter = require('plugin_config.treesitter'),
-	matchup = require('plugin_config.matchup')
+	matchup = require('plugin_config.matchup'),
+	sandwich = require('plugin_config.sandwich')
 }

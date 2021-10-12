@@ -13,7 +13,7 @@ return require('packer').startup{
 		}
 
 		use'tpope/vim-repeat'
-		
+
 		use'tpope/vim-apathy'
 
 		use'airblade/vim-rooter'
@@ -95,7 +95,14 @@ return require('packer').startup{
 
 		-- Git
 
-		use'whiteinge/diffconflicts'
+		use{
+			'whiteinge/diffconflicts',
+			cmd = {
+				'DiffConflicts',
+				'DiffConflictsShowHistory',
+				'DiffConflictsWithHistory',
+			},
+		}
 
 		use{
 			'lewis6991/gitsigns.nvim',
@@ -201,7 +208,10 @@ return require('packer').startup{
 
 		use'cohama/lexima.vim'
 
-		use'psliwka/vim-smoothie'
+		use{
+			'psliwka/vim-smoothie',
+			keys = { '<C-d>', '<C-u>', '<C-f>', '<C-b>' },
+		}
 
 		use{
 			'kyazdani42/nvim-tree.lua',
@@ -212,21 +222,22 @@ return require('packer').startup{
 		use{
 			'justinmk/vim-dirvish',
 			requires = { 'kyazdani42/nvim-web-devicons' },
+			cmd = { 'Dirvish' },
 		}
 
-		use'ggandor/lightspeed.nvim'
+		use{
+			'machakann/vim-sandwich',
+			config = configs.sandwich,
+		}
+
+		use{ 'ggandor/lightspeed.nvim' }
 
 		use{
 			'phaazon/hop.nvim',
 			config = configs.hop,
 		}
 
-		use'haya14busa/vim-asterisk'
-
-		use{
-			'machakann/vim-sandwich',
-			setup = setups.sandwich,
-		}
+		use{ 'haya14busa/vim-asterisk' }
 
 		use'romainl/vim-cool'
 
@@ -241,7 +252,10 @@ return require('packer').startup{
 			setup = setups.better_escape,
 		}
 
-		use'inside/vim-search-pulse'
+		use{
+			'inside/vim-search-pulse',
+			keys = { '<Plug>(pulse)' },
+		}
 
 		-- Themes
 
@@ -251,7 +265,7 @@ return require('packer').startup{
 
 		use'habamax/vim-gruvbit'
 
-		use'https://gitlab.com/protesilaos/tempus-themes-vim'
+		use'git@gitlab.com:protesilaos/tempus-themes-vim'
 
 		use'franbach/miramare'
 
