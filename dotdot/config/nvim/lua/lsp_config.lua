@@ -201,7 +201,7 @@ local function setup_servers()
 						},
 						globals = vim.list_extend(
 							{ -- Neovim
-							"vim", "describe", "it", "before_each", "after_each", "teardown", "pending", "clear" }, -- Busted
+							"vim", "describe", "it", "before_each", "after_each", "teardown", "pending", "clear", "awesome" },
 							config.globals or {}
 						),
 					},
