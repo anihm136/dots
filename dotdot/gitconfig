@@ -45,3 +45,8 @@
     plus-emph-style = syntax "#004300"
     plus-style = syntax "#002a00"
     syntax-theme = Vibrant Sunburst
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
