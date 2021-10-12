@@ -8,6 +8,8 @@ docopt = "*"
 "ruamel.yaml" = "*"
 python-magic = "*"
 Jinja2 = "*"
+requests = "*"
+packaging = "*"
 
 [dev-packages]
 
