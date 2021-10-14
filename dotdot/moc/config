@@ -1,0 +1,6 @@
+MusicDir = /home/anihm136/Music
+StartInMusicDir = yes
+Shuffle = yes
+Theme = transparent-background
+ResampleMethod = SincMediumQuality
+Allow24bitOutput = yes
