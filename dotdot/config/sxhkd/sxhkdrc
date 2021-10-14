@@ -38,13 +38,13 @@ alt + Tab
   rofiwindow
 
 XF86AudioNext
-  music playnext
+  playerctl next
 
 XF86AudioPrev
-  music playprev
+  playerctl previous
 
 XF86AudioPlay
-  music playpause
+  playerctl play-pause
 
 XF86AudioRaiseVolume
   vol up
