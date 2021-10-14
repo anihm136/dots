@@ -125,7 +125,20 @@ dotfiles:
   d_moc:
     src: moc
     dst: ~/.moc
+    link: link_children
     chmod: '700'
+    instignore:
+    - .gitignore
+  d_config_mpd:
+    src: config/mpd
+    dst: ~/.config/mpd
+    link: link_children
+  d_config_ncmpcpp:
+    src: config/ncmpcpp
+    dst: ~/.config/ncmpcpp
+    link: link_children
+    instignore:
+    - .gitignore
 profiles:
   sorcery:
     dotfiles:
@@ -149,7 +162,8 @@ profiles:
     - d_config_interception
     - f_tmux.conf
     - d_config_git
-    - d_moc
+    - d_config_mpd
+    - d_config_ncmpcpp
   apex:
     dotfiles:
     - d_config_awesome
