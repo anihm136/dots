@@ -113,14 +113,19 @@ dotfiles:
     src: config/interception
     dst: ~/.config/interception
     link: link_children
-  f_gitconfig:
-    src: gitconfig
-    dst: ~/.gitconfig
   f_tmux.conf:
     src: tmux.conf
     dst: ~/.tmux.conf
     actions:
     - tmux
+  d_config_git:
+    src: config/git
+    dst: ~/.config/git
+    link: link_children
+  d_moc:
+    src: moc
+    dst: ~/.moc
+    chmod: '700'
 profiles:
   sorcery:
     dotfiles:
@@ -142,8 +147,9 @@ profiles:
     - f_xprofile
     - f_aliases
     - d_config_interception
-    - f_gitconfig
     - f_tmux.conf
+    - d_config_git
+    - d_moc
   apex:
     dotfiles:
     - d_config_awesome
@@ -160,5 +166,5 @@ profiles:
     - f_xprofile
     - f_aliases
     - d_config_interception
-    - f_gitconfig
     - f_tmux.conf
+    - d_config_git
