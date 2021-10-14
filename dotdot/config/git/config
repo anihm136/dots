@@ -3,6 +3,7 @@
 	name = Anirudh H M
 [core]
 	pager = delta
+	excludesFile = {{@@ home @@}}/.config/git/ignore
 [interactive]
 	diffFilter = delta --color-only
 [pull]
