@@ -1,3 +1,4 @@
+library: ~/.local/share/beets/library.db
 plugins: deezer chroma edit embedart fetchart ftintitle zero info lastgenre duplicates lyrics
 import:
   copy: yes
@@ -6,7 +7,7 @@ import:
   incremental: yes
   group_albums: yes
   autotag: no
-  log: beet_log.txt
+  log: ~/.cache/beets/beet_log.txt
 paths:
   default: $albumartist/$album/$title
   singleton: Singles/$artist/$title
