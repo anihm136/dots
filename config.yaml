@@ -1,7 +1,8 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
   awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
-    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain'
+    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling ]] && git -C ~/.config/awesome/bling pull
+    origin master || gh repo clone BlingCorp/bling ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
 dynvariables:
@@ -33,8 +34,10 @@ dotfiles:
     - awesome
     upignore:
     - lain
+    - bling
     cmpignore:
     - lain
+    - bling
   d_config_beets:
     src: config/beets
     dst: ~/.config/beets

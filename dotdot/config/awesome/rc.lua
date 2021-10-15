@@ -16,7 +16,6 @@ local keys = require("keys")
 root.keys(keys.globalkeys)
 root.buttons(keys.desktopbuttons)
 
-local hotkeys_popup = require("awful.hotkeys_popup").widget
 require("awful.hotkeys_popup.keys")
 
 -- Import notification appearance

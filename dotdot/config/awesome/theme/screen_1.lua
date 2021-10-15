@@ -1,43 +1,28 @@
-local gears = require("gears")
-local lain = require("lain")
-local awful = require("awful")
-local wibox = require("wibox")
-local dpi = require("beautiful.xresources").apply_dpi
+local gears = require('gears')
+local lain = require('lain')
+local awful = require('awful')
+local wibox = require('wibox')
+local dpi = require('beautiful.xresources').apply_dpi
+local deepcopy = require('utils').deepcopy
 
-local awesome, client, os = awesome, client, os
-
-local theme = {}
-theme.dir = gears.filesystem.get_configuration_dir() .. "theme"
-theme.font = "Overpass 14"
-theme.taglist_font = "Kimberley Bl 12"
-theme.fg_normal = "#BBBBBB"
-theme.fg_focus = "#78A4FF"
-theme.bg_normal = "#222222"
-theme.bg_focus = "#222222"
-theme.fg_urgent = "#000000"
-theme.bg_urgent = "#FFFFFF"
-theme.taglist_fg_focus = "#FFFFFF"
-theme.taglist_bg_focus = "#222222"
-theme.taglist_bg_normal = "#222222"
-theme.titlebar_bg_normal = "#191919"
-theme.titlebar_bg_focus = "#262626"
-theme.tooltip_bg = "#222222"
-theme.tooltip_fg = "#BBBBBB"
-theme.tooltip_font = "Overpass 9"
-theme.menu_height = dpi(30)
-theme.menu_width = dpi(250)
-theme.taglist_squares_sel = theme.dir .. "/icons/square_unsel.png"
-theme.taglist_squares_unsel = theme.dir .. "/icons/square_unsel.png"
-theme.disk = theme.dir .. "/icons/disk.png"
+local screen_theme = deepcopy(require'beautiful'.get())
+screen_theme.font = 'Overpass 14'
+screen_theme.taglist_font = 'Kimberley Bl 12'
+screen_theme.menu_height = dpi(30)
+screen_theme.menu_width = dpi(250)
+screen_theme.taglist_squares_sel = screen_theme.dir .. '/icons/square_unsel.png'
+screen_theme.taglist_squares_unsel =
+	screen_theme.dir .. '/icons/square_unsel.png'
+screen_theme.disk = screen_theme.dir .. '/icons/disk.png'
 {%@@ if profile == "apex" @@%}
-theme.ac = theme.dir .. "/icons/ac.png"
-theme.bat = theme.dir .. "/icons/bat.png"
-theme.bat_low = theme.dir .. "/icons/bat_low.png"
-theme.bat_no = theme.dir .. "/icons/bat_no.png"
-theme.vol = theme.dir .. "/icons/vol.png"
-theme.vol_low = theme.dir .. "/icons/vol_low.png"
-theme.vol_no = theme.dir .. "/icons/vol_no.png"
-theme.vol_mute = theme.dir .. "/icons/vol_mute.png"
+screen_theme.ac = screen_theme.dir .. "/icons/ac.png"
+screen_theme.bat = screen_theme.dir .. "/icons/bat.png"
+screen_theme.bat_low = screen_theme.dir .. "/icons/bat_low.png"
+screen_theme.bat_no = screen_theme.dir .. "/icons/bat_no.png"
+screen_theme.vol = screen_theme.dir .. "/icons/vol.png"
+screen_theme.vol_low = screen_theme.dir .. "/icons/vol_low.png"
+screen_theme.vol_no = screen_theme.dir .. "/icons/vol_no.png"
+screen_theme.vol_mute = screen_theme.dir .. "/icons/vol_mute.png"
 
 local red = "#EB8F8F"
 local green = "#87ed87"
@@ -50,67 +35,68 @@ mytextclock.font = "Kimberley Bl 12"
 mytextclock.forced_width = dpi(84)
 
 -- Calendar
-theme.cal = lain.widget.cal({
+screen_theme.cal = lain.widget.cal({
 	attach_to = { mytextclock },
 	notification_preset = {
 		title = "",
 		icon_size = 110,
 		margin = 5,
 		font = "Overpass Mono 11",
-		fg = theme.fg_normal,
-		bg = theme.bg_normal,
+		fg = screen_theme.fg_normal,
+		bg = screen_theme.bg_normal,
 	},
 })
 
 -- /home fs
-local fsicon = wibox.widget.imagebox(theme.disk)
+local fsicon = wibox.widget.imagebox(screen_theme.disk)
 local fsbar = wibox.widget{
 	forced_height = dpi(1),
 	forced_width = dpi(65),
-	color = theme.fg_normal,
-	background_color = theme.bg_normal,
+	color = screen_theme.fg_normal,
+	background_color = screen_theme.bg_normal,
 	margins = 1,
 	paddings = 1,
 	ticks = true,
 	ticks_size = dpi(6),
 	widget = wibox.widget.progressbar,
 }
-theme.fs = lain.widget.fs{
+screen_theme.fs = lain.widget.fs{
 	notification_preset = {
-		fg = theme.fg_normal,
-		bg = theme.bg_normal,
-		font = "Overpass Mono 10.5",
-		title = "Storage overview"
+		fg = screen_theme.fg_normal,
+		bg = screen_theme.bg_normal,
+		font = 'Overpass Mono 10.5',
+		title = 'Storage overview',
+		width = 0,
 	},
-	showpopup = "off",
+	showpopup = 'off',
 	settings = function()
-		if fs_now["/"].percentage < 90 then
-			fsbar:set_color(theme.fg_normal)
+		if fs_now['/'].percentage < 90 then
+			fsbar:set_color(screen_theme.fg_normal)
 		else
-			fsbar:set_color("#EB8F8F")
+			fsbar:set_color('#EB8F8F')
 		end
-		fsbar:set_value(fs_now["/"].percentage / 100)
+		fsbar:set_value(fs_now['/'].percentage / 100)
 	end,
 }
-local fsbg = wibox.container.background(fsbar, "#474747", gears.shape.rectangle)
+local fsbg = wibox.container.background(fsbar, '#474747', gears.shape.rectangle)
 local fswidget = wibox.container.margin(fsbg, dpi(2), dpi(7), dpi(4), dpi(4))
 
-fswidget:connect_signal("mouse::enter", function()
-	theme.fs.show(0)
+fswidget:connect_signal('mouse::enter', function()
+	screen_theme.fs.show(0)
 end)
-fswidget:connect_signal("mouse::leave", function()
-	theme.fs.hide()
+fswidget:connect_signal('mouse::leave', function()
+	screen_theme.fs.hide()
 end)
 --]]
 
 {%@@ if profile == "apex" @@%}
 -- Battery
-local baticon = wibox.widget.imagebox(theme.bat)
+local baticon = wibox.widget.imagebox(screen_theme.bat)
 local batbar = wibox.widget {
   forced_height    = dpi(1),
   forced_width     = dpi(65),
-  color            = theme.fg_normal,
-  background_color = theme.bg_normal,
+  color            = screen_theme.fg_normal,
+  background_color = screen_theme.bg_normal,
   margins          = 1,
   paddings         = 1,
   ticks            = true,
@@ -123,13 +109,13 @@ local batupd = lain.widget.bat({
       if (not bat_now.status) or bat_now.status == "N/A" or type(bat_now.perc) ~= "number" then return end
 
       if bat_now.status == "Charging" then
-        baticon:set_image(theme.ac)
+        baticon:set_image(screen_theme.ac)
         if bat_now.perc >= 98 then
           batbar:set_color(green)
         elseif bat_now.perc > 50 then
-          batbar:set_color(theme.fg_normal)
+          batbar:set_color(screen_theme.fg_normal)
         elseif bat_now.perc > 15 then
-          batbar:set_color(theme.fg_normal)
+          batbar:set_color(screen_theme.fg_normal)
         else
           batbar:set_color(red)
         end
@@ -137,14 +123,14 @@ local batupd = lain.widget.bat({
         if bat_now.perc >= 98 then
           batbar:set_color(green)
         elseif bat_now.perc > 50 then
-          batbar:set_color(theme.fg_normal)
-          baticon:set_image(theme.bat)
+          batbar:set_color(screen_theme.fg_normal)
+          baticon:set_image(screen_theme.bat)
         elseif bat_now.perc > 15 then
-          batbar:set_color(theme.fg_normal)
-          baticon:set_image(theme.bat_low)
+          batbar:set_color(screen_theme.fg_normal)
+          baticon:set_image(screen_theme.bat_low)
         else
           batbar:set_color(red)
-          baticon:set_image(theme.bat_no)
+          baticon:set_image(screen_theme.bat_no)
         end
       end
       batbar:set_value(bat_now.perc / 100)
@@ -154,9 +140,9 @@ local batbg = wibox.container.background(batbar, "#474747", gears.shape.rectangl
 local batwidget = wibox.container.margin(batbg, dpi(2), dpi(7), dpi(4), dpi(4))
 
 local bat_tooltip = awful.tooltip{
-	bg = theme.tooltip_bg,
-	fg = theme.tooltip_fg,
-	font = theme.tooltip_font,
+	bg = screen_theme.tooltip_bg,
+	fg = screen_theme.tooltip_fg,
+	font = screen_theme.tooltip_font,
 	objects = { batwidget }
 }
 
@@ -171,38 +157,38 @@ batwidget:connect_signal("mouse::enter", function()
 end)
 
 -- ALSA volume bar
-local volicon = wibox.widget.imagebox(theme.vol)
-theme.volume = lain.widget.alsabar{
+local volicon = wibox.widget.imagebox(screen_theme.vol)
+screen_theme.volume = lain.widget.alsabar{
 	width = dpi(65),
 	height = dpi(1),
 	border_width = 0,
 	ticks = true,
 	ticks_size = dpi(6),
-	notification_preset = { font = theme.font },
+	notification_preset = { font = screen_theme.font },
 	settings = function()
 		if volume_now.status == "off" then
-			volicon:set_image(theme.vol_mute)
+			volicon:set_image(screen_theme.vol_mute)
 		elseif volume_now.level == 0 then
-			volicon:set_image(theme.vol_no)
+			volicon:set_image(screen_theme.vol_no)
 		elseif volume_now.level <= 50 then
-			volicon:set_image(theme.vol_low)
+			volicon:set_image(screen_theme.vol_low)
 		else
-			volicon:set_image(theme.vol)
+			volicon:set_image(screen_theme.vol)
 		end
 	end,
 	colors = {
-		background = theme.bg_normal,
+		background = screen_theme.bg_normal,
 		mute = red,
-		unmute = theme.fg_normal,
+		unmute = screen_theme.fg_normal,
 	},
 }
-theme.volume.tooltip.fg = theme.tooltip_fg
-theme.volume.tooltip.bg = theme.tooltip_bg
-theme.volume.tooltip.font = theme.tooltip_font
+screen_theme.volume.tooltip.fg = screen_theme.tooltip_fg
+screen_theme.volume.tooltip.bg = screen_theme.tooltip_bg
+screen_theme.volume.tooltip.font = screen_theme.tooltip_font
 
 local volumebg =
 	wibox.container.background(
-		theme.volume.bar,
+		screen_theme.volume.bar,
 		"#474747",
 		gears.shape.rectangle
 	)
@@ -217,7 +203,7 @@ local small_spr = wibox.widget.textbox(markup.font("Overpass Mono 4", " "))
 local bar_spr =
 	wibox.widget.textbox(
 		markup.font("Overpass Mono 3", " ") .. markup.fontfg(
-			theme.font,
+			screen_theme.font,
 			"#777777",
 			"|"
 		) .. markup.font("Overpass Mono 5", " ")
@@ -233,7 +219,7 @@ awful.widget.taglist.filter.all = function(t, args)
 	end
 end
 
-function theme.at_screen_connect(s)
+function screen_theme.at_screen_connect(s)
 	-- Tags
 	{%@@ if profile == "sorcery" @@%}
 	local tagnames = awful.util.tagnames_1
@@ -242,8 +228,6 @@ function theme.at_screen_connect(s)
 	{%@@ endif @@%}
 	for i, tag in pairs(tagnames) do
 		awful.tag.add(tag, {
-			-- icon = tag.icon,
-			-- icon_only = true,
 			layout = awful.layout.layouts[1],
 			screen = s,
 			selected = i == 1,
@@ -255,7 +239,7 @@ function theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
 		buttons = awful.util.taglist_buttons,
-		style = { font = theme.taglist_font },
+		style = { font = screen_theme.taglist_font },
 	}
 
 	-- Create a tasklist widget
@@ -263,16 +247,32 @@ function theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = awful.util.tasklist_buttons,
-		style = { font = theme.font },
+		style = { font = screen_theme.font },
+		widget_template = {
+			{
+				{
+					{
+						id = 'text_role',
+						widget = wibox.widget.textbox,
+					},
+					layout = wibox.layout.fixed.horizontal,
+				},
+				left = 10,
+				right = 10,
+				widget = wibox.container.margin,
+			},
+			id = 'background_role',
+			widget = wibox.container.background,
+		},
 	}
 
 	-- Create the wibox
 	s.mywibox = awful.wibar({
-		position = "top",
+		position = 'top',
 		screen = s,
-		height = theme.menu_height,
-		bg = theme.bg_normal,
-		fg = theme.fg_normal,
+		height = screen_theme.menu_height,
+		bg = screen_theme.bg_normal,
+		fg = screen_theme.fg_normal,
 	})
 
 	-- Add widgets to the wibox
@@ -310,4 +310,5 @@ function theme.at_screen_connect(s)
 	}
 end
 
-return theme
+
+return screen_theme
