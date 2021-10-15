@@ -205,7 +205,7 @@ keys.globalkeys = my_table.join(
 		{ ctrl, altkey },
 		't',
 		function()
-			awful.spawn('urxvt')
+			awful.spawn(awful.util.terminal_alt)
 		end,
 		{
 			description = 'terminal',

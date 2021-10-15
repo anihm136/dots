@@ -170,7 +170,7 @@ function utils.log(item, opts)
     local log_method = opts.log_method or "notif"
     local log_file = opts.log_file or "{{@@ home @@}}/.cache/awesome/log.txt"
     if log_method == 'notif' then
-        require('naughty').notification{title="Log", message=inspect(item)}
+        require('naughty').notification{title="Log", message=inspect(item), timeout=10}
     else
         local file = io.open(log_file, 'a')
         io.output(file)

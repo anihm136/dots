@@ -15,13 +15,13 @@ theme.wallpaper = function(_)
 	)
 	return wall
 end
-theme.font = 'Overpass 13'
+theme.font = 'Inter 13'
 theme.fg_normal = '#BBBBBB'
 theme.fg_focus = '#78A4FF'
 theme.bg_normal = '#222222'
 theme.bg_focus = '#222222'
 theme.fg_urgent = '#000000'
-theme.bg_urgent = '#FFFFFF'
+theme.bg_urgent = '#DDDDDD'
 theme.border_width = dpi(1)
 theme.border_normal = '#111111'
 theme.border_focus = '#93B6FF'

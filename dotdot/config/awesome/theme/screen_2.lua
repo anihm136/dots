@@ -9,9 +9,9 @@ local my_table = gears.table
 require('pl.stringx').import()
 
 local screen_theme = deepcopy(require('beautiful').get())
-screen_theme.font = 'Overpass 13'
-screen_theme.taglist_font = 'Kimberley Bl 11'
-screen_theme.tooltip_font = 'Overpass 8'
+screen_theme.font = 'Inter 13'
+screen_theme.taglist_font = 'Inter Black 11'
+screen_theme.tooltip_font = 'Inter 6'
 screen_theme.menu_height = dpi(24)
 screen_theme.menu_width = dpi(250)
 screen_theme.vol = screen_theme.dir .. '/icons/vol.png'
@@ -21,6 +21,8 @@ screen_theme.vol_mute = screen_theme.dir .. '/icons/vol_mute.png'
 screen_theme.play = screen_theme.dir .. '/icons/play.png'
 screen_theme.pause = screen_theme.dir .. '/icons/pause.png'
 screen_theme.stop = screen_theme.dir .. '/icons/stop.png'
+screen_theme.widget_music = screen_theme.dir .. '/icons/note.png'
+screen_theme.widget_music_on = screen_theme.dir .. '/icons/note_on.png'
 
 local markup = lain.util.markup
 local red = '#EB8F8F'
@@ -57,7 +59,7 @@ screen_theme.volume.tooltip.font = screen_theme.tooltip_font
 screen_theme.volume.bar:buttons(
 	my_table.join(
 		awful.button({}, 1, function()
-			os.execute(string.format('%s -e alsamixer', awful.terminal))
+			awful.spawn(string.format('%s -e alsamixer', awful.util.terminal))
 		end),
 		awful.button({}, 2, function()
 			os.execute(
@@ -105,93 +107,82 @@ screen_theme.volume.bar:buttons(
 		end)
 	)
 )
-local volumebg =
-	wibox.container.background(
+local volumewidget = wibox.widget{
+	{
 		screen_theme.volume.bar,
-		'#474747',
-		gears.shape.rectangle
-	)
-local volumewidget =
-	wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
-
-local mocp, mocp_timer = awful.widget.watch('mocp -i', 1, function(
-widget,
-	stdout
-)
-	local mocp_now = {
-		state = 'N/A',
-		artist = 'N/A',
-		title = 'N/A',
-		album = 'N/A',
-		cur_time = '`',
-		tot_time = '`',
-	}
-
-	if string.match(stdout, 'SongTitle: ([^\n]+)\n') then
-		mocp_now['title'] = string.match(stdout, 'SongTitle: ([^\n]+)\n')
-	end
-	if string.match(stdout, 'State: (%a+)') then
-		mocp_now['state'] = string.match(stdout, 'State: (%a+)')
-	end
-	if string.match(stdout, 'Artist: ([^\n]+)\n') then
-		mocp_now['artist'] = string.match(stdout, 'Artist: ([^\n]+)\n')
-	end
-	if string.match(stdout, 'CurrentTime: ([%d%p ]+)\n') then
-		mocp_now['cur_time'] = string.match(stdout, 'CurrentTime: ([%d%p ]+)')
-	end
-	if string.match(stdout, 'TotalTime: ([%d%p ]+)\n') then
-		mocp_now['tot_time'] = string.match(stdout, 'TotalTime: ([%d%p ]+)')
-	end
-
-	-- customize here
-	local total_length = #mocp_now.artist + #mocp_now.title
-	local percent = 35 / total_length
-
-	local max_artist = math.floor(#mocp_now.artist * percent)
-	local max_title = math.floor(#mocp_now.title * percent)
-
-	local info_string = ' ' .. mocp_now.artist .. ' - ' .. mocp_now.title
-
-	local wistring =
-		' ' .. mocp_now.artist:shorten(
-			max_artist
-		) .. ' - ' .. mocp_now.title:shorten(
-			max_title
-		) .. '   ' .. mocp_now.cur_time .. ' [' .. mocp_now.tot_time .. '] '
-	if mocp_now.state == 'PAUSE' then
-		wistring = ' ⏸ ' .. wistring
-	elseif mocp_now.state == 'PLAY' then
-		wistring = ' ▶ ' .. wistring
-	elseif mocp_now.state == 'STOP' then
-		wistring = ' ■ ' .. wistring
-	end
-	widget:set_font('Overpass 9')
-	widget:set_text(wistring)
-	widget.info_string = info_string
-end)
-local music_tooltip = awful.tooltip{
-	bg = screen_theme.tooltip_bg,
-	fg = screen_theme.tooltip_fg,
-	font = screen_theme.tooltip_font,
+		widget = wibox.container.background,
+		bg = '#474747',
+		shape = gears.shape.rectangle,
+	},
+	widget = wibox.container.margin,
+	margins = {
+		top = 3,
+		bottom = 3,
+		left = 4,
+		right = 4,
+	},
 }
 
-music_tooltip:add_to_object(mocp)
+-- MPD
+local musicplr =
+	string.format('%s -T Music -e ncmpcpp', awful.util.terminal)
+screen_theme.mpd = lain.widget.mpd{
+	settings = function()
+		local total_length = #mpd_now.artist + #mpd_now.title
+		local percent = 35 / total_length
 
-mocp:connect_signal('mouse::enter', function()
-	music_tooltip.text = mocp.info_string
-end)
+		local max_artist = math.floor(#mpd_now.artist * percent)
+		local max_title = math.floor(#mpd_now.title * percent)
+		mpd_now.artist = mpd_now.artist:shorten(max_artist)
+		mpd_now.title = mpd_now.title:shorten(max_title)
+		if mpd_now.state == 'play' then
+			artist = ' ' .. mpd_now.artist .. ' '
+			title = mpd_now.title .. ' '
+		elseif mpd_now.state == 'pause' then
+			artist = ' mpd '
+			title = 'paused '
+		else
+			artist = ''
+			title = ''
+		end
+
+		widget:set_markup(
+			markup.font("Inter 9", markup('#78FFA4', artist) .. title)
+		)
+	end,
+	notify = "off",
+}
+screen_theme.mpd.widget:buttons(
+	my_table.join(
+		awful.button({ 'Mod4' }, 1, function()
+			awful.spawn(musicplr)
+		end),
+		awful.button({}, 1, function()
+			os.execute('mpc prev')
+			screen_theme.mpd.update()
+		end),
+		awful.button({}, 2, function()
+			os.execute('mpc toggle')
+			screen_theme.mpd.update()
+		end),
+		awful.button({}, 3, function()
+			os.execute('mpc next')
+			screen_theme.mpd.update()
+		end)
+	)
+)
 
 -- Separators
-local first = wibox.widget.textbox(markup.font('Overpass Mono 3', ' '))
+local first = wibox.widget.textbox(markup.font('Inter Mono 3', ' '))
 local spr = wibox.widget.textbox(' ')
-local small_spr = wibox.widget.textbox(markup.font('Overpass Mono 4', ' '))
+local small_spr = wibox.widget.textbox(markup.font('Inter Mono 4', ' '))
 local bar_spr =
 	wibox.widget.textbox(
-		markup.font('Overpass Mono 5', ' ') .. markup.fontfg(
+		markup.font('Inter Mono 5', ' ') .. markup.fontfg(
 			screen_theme.font,
 			'#777777',
 			'|'
-		) .. markup.font('Overpass Mono 5', ' ')
+		) .. markup.font('Inter Mono 5', ' ')
 	)
 
 function screen_theme.at_screen_connect(s)
@@ -257,26 +248,37 @@ function screen_theme.at_screen_connect(s)
 	s.mywibox:setup{
 		layout = wibox.layout.align.horizontal,
 		{
-			-- Left widgets
-			layout = wibox.layout.fixed.horizontal,
-			small_spr,
-			s.mylayoutbox,
-			first,
-			bar_spr,
-			s.mytaglist,
-			first,
-			s.mypromptbox,
+			{
+				layout = wibox.layout.fixed.horizontal,
+				s.mylayoutbox,
+				first,
+				bar_spr,
+				s.mytaglist,
+				first,
+				s.mypromptbox,
+			},
+			widget = wibox.container.margin,
+			margins = { left = 5 },
 		},
-		s.mytasklist, -- Middle widget
+		s.mytasklist,
 		{
-			-- Right widgets
-			layout = wibox.layout.fixed.horizontal,
-			mocp,
-			bar_spr,
-			volicon,
-			volumewidget,
+			{
+				layout = wibox.layout.fixed.horizontal,
+				-- wibox.container.background(mpdicon, screen_theme.bg_normal),
+				wibox.container.background(
+					screen_theme.mpd.widget,
+					screen_theme.bg_focus
+				),
+				bar_spr,
+				volicon,
+				small_spr,
+				volumewidget,
+			},
+			widget = wibox.container.margin,
+			margins = { right = 5 },
 		},
 	}
 end
+
 
 return screen_theme
