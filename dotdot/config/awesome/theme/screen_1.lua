@@ -8,7 +8,7 @@ local deepcopy = require('utils').deepcopy
 local screen_theme = deepcopy(require'beautiful'.get())
 screen_theme.font = 'Inter 14'
 screen_theme.taglist_font = 'Inter Black 12'
-screen_theme.menu_height = dpi(30)
+screen_theme.menu_height = dpi(35)
 screen_theme.menu_width = dpi(250)
 screen_theme.taglist_squares_sel = screen_theme.dir .. '/icons/square_unsel.png'
 screen_theme.taglist_squares_unsel =
@@ -92,12 +92,7 @@ local fswidget = wibox.widget{
 		shape = gears.shape.rectangle,
 	},
 	widget = wibox.container.margin,
-	margins = {
-		top = 3,
-		bottom = 3,
-		left = 4,
-		right = 4,
-	},
+	margins = 5,
 }
 
 fswidget:connect_signal('mouse::enter', function()
@@ -216,16 +211,15 @@ local volumewidget =
 {%@@ endif @@%}
 
 -- Separators
-local first = wibox.widget.textbox(markup.font("Overpass Mono 3", " "))
-local spr = wibox.widget.textbox(" ")
-local small_spr = wibox.widget.textbox(markup.font("Overpass Mono 4", " "))
+local first = wibox.widget.textbox(markup.font('Overpass Mono 3', ' '))
+local small_spr = wibox.widget.textbox(markup.font('Overpass Mono 4', ' '))
 local bar_spr =
 	wibox.widget.textbox(
-		markup.font("Overpass Mono 3", " ") .. markup.fontfg(
+		markup.font('Overpass Mono 3', ' ') .. markup.fontfg(
 			screen_theme.font,
-			"#777777",
-			"|"
-		) .. markup.font("Overpass Mono 5", " ")
+			'#777777',
+			'|'
+		) .. markup.font('Overpass Mono 5', ' ')
 	)
 
 -- Eminent-like task filtering
@@ -298,7 +292,6 @@ function screen_theme.at_screen_connect(s)
 	s.mywibox:setup{
 		layout = wibox.layout.align.horizontal,
 		{
-			-- Left widgets
 			{
 				layout = wibox.layout.fixed.horizontal,
 				small_spr,
@@ -309,14 +302,17 @@ function screen_theme.at_screen_connect(s)
 				first,
 			},
 			widget = wibox.container.margin,
-			margins = { left = 5 }
+			margins = { left = 5 },
 		},
-		s.mytasklist, -- Middle widget
+		s.mytasklist,
 		{
-			-- Right widgets
 			{
 				layout = wibox.layout.fixed.horizontal,
-				wibox.widget.systray(),
+				{
+					wibox.widget.systray(),
+					widget = wibox.container.margin,
+					margins = { top = 3, bottom = 3 }
+				},
 				bar_spr,
 				{%@@ if profile == "apex" @@%}
 				baticon,
@@ -332,7 +328,7 @@ function screen_theme.at_screen_connect(s)
 				clock,
 			},
 			widget = wibox.container.margin,
-			margins = { right = 5 }
+			margins = { right = 5 },
 		},
 	}
 end
