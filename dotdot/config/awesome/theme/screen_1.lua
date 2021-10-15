@@ -6,8 +6,8 @@ local dpi = require('beautiful.xresources').apply_dpi
 local deepcopy = require('utils').deepcopy
 
 local screen_theme = deepcopy(require'beautiful'.get())
-screen_theme.font = 'Overpass 14'
-screen_theme.taglist_font = 'Kimberley Bl 12'
+screen_theme.font = 'Inter 14'
+screen_theme.taglist_font = 'Inter Black 12'
 screen_theme.menu_height = dpi(30)
 screen_theme.menu_width = dpi(250)
 screen_theme.taglist_squares_sel = screen_theme.dir .. '/icons/square_unsel.png'
@@ -30,22 +30,28 @@ local green = "#87ed87"
 local markup = lain.util.markup
 
 -- Textclock
-local mytextclock = wibox.widget.textclock("<span> %I:%M:%S </span>", 1)
-mytextclock.font = "Kimberley Bl 12"
-mytextclock.forced_width = dpi(84)
+local clock = wibox.widget.textclock('%a %d %b %r', 1)
+clock.font = 'Inter Black 12'
+clock.align = "center"
+clock.forced_width = dpi(200)
 
 -- Calendar
-screen_theme.cal = lain.widget.cal({
-	attach_to = { mytextclock },
-	notification_preset = {
-		title = "",
-		icon_size = 110,
-		margin = 5,
-		font = "Overpass Mono 11",
-		fg = screen_theme.fg_normal,
-		bg = screen_theme.bg_normal,
+local month_calendar = awful.widget.calendar_popup.month{
+	margin = dpi(10),
+	style_header = {
+		border_width = 0,
+		bg_color = screen_theme.bg_urgent,
+		fg_color = screen_theme.bg_normal,
 	},
-})
+	style_normal = { border_width = 0 },
+	style_focus = {
+		border_width = 0,
+		bg_color = screen_theme.bg_urgent,
+		fg_color = screen_theme.bg_normal,
+	},
+	style_weekday = { border_width = 0 },
+}
+month_calendar:attach(clock, 'tr')
 
 -- /home fs
 local fsicon = wibox.widget.imagebox(screen_theme.disk)
@@ -78,8 +84,21 @@ screen_theme.fs = lain.widget.fs{
 		fsbar:set_value(fs_now['/'].percentage / 100)
 	end,
 }
-local fsbg = wibox.container.background(fsbar, '#474747', gears.shape.rectangle)
-local fswidget = wibox.container.margin(fsbg, dpi(2), dpi(7), dpi(4), dpi(4))
+local fswidget = wibox.widget{
+	{
+		fsbar,
+		widget = wibox.container.background,
+		bg = '#474747',
+		shape = gears.shape.rectangle,
+	},
+	widget = wibox.container.margin,
+	margins = {
+		top = 3,
+		bottom = 3,
+		left = 4,
+		right = 4,
+	},
+}
 
 fswidget:connect_signal('mouse::enter', function()
 	screen_theme.fs.show(0)
@@ -280,32 +299,40 @@ function screen_theme.at_screen_connect(s)
 		layout = wibox.layout.align.horizontal,
 		{
 			-- Left widgets
-			layout = wibox.layout.fixed.horizontal,
-			small_spr,
-			s.mylayoutbox,
-			first,
-			bar_spr,
-			s.mytaglist,
-			first,
+			{
+				layout = wibox.layout.fixed.horizontal,
+				small_spr,
+				s.mylayoutbox,
+				first,
+				bar_spr,
+				s.mytaglist,
+				first,
+			},
+			widget = wibox.container.margin,
+			margins = { left = 5 }
 		},
 		s.mytasklist, -- Middle widget
 		{
 			-- Right widgets
-			layout = wibox.layout.fixed.horizontal,
-			wibox.widget.systray(),
-			bar_spr,
-			{%@@ if profile == "apex" @@%}
-			baticon,
-			batwidget,
-			bar_spr,
-			volicon,
-			volumewidget,
-			bar_spr,
-			{%@@ endif @@%}
-			fsicon,
-			fswidget,
-			bar_spr,
-			mytextclock,
+			{
+				layout = wibox.layout.fixed.horizontal,
+				wibox.widget.systray(),
+				bar_spr,
+				{%@@ if profile == "apex" @@%}
+				baticon,
+				batwidget,
+				bar_spr,
+				volicon,
+				volumewidget,
+				bar_spr,
+				{%@@ endif @@%}
+				fsicon,
+				fswidget,
+				bar_spr,
+				clock,
+			},
+			widget = wibox.container.margin,
+			margins = { right = 5 }
 		},
 	}
 end

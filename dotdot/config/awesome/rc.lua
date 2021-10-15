@@ -21,6 +21,15 @@ require("awful.hotkeys_popup.keys")
 -- Import notification appearance
 require("notifications")
 
+-- Set default applications
+local apps = require('apps')
+for k,v in pairs(apps) do
+	awful.util[k] = v
+end
+
+-- UI stuff
+require('ui')
+
 -- ===================================================================
 -- Set Up Screen & Connect Signals
 -- ===================================================================
