@@ -3,67 +3,58 @@ local lain = require('lain')
 local awful = require('awful')
 local wibox = require('wibox')
 local dpi = require('beautiful.xresources').apply_dpi
+local deepcopy = require('utils').deepcopy
 
-local awesome, client, os = awesome, client, os
 local my_table = gears.table
 require('pl.stringx').import()
 
-local theme = {}
-theme.dir = gears.filesystem.get_configuration_dir() .. 'theme'
-theme.font = 'Overpass 13'
-theme.taglist_font = 'Kimberley Bl 11'
-theme.fg_normal = '#BBBBBB'
-theme.fg_focus = '#78A4FF'
-theme.bg_normal = '#222222'
-theme.bg_focus = '#222222'
-theme.fg_urgent = '#000000'
-theme.bg_urgent = '#FFFFFF'
-theme.tooltip_bg = '#222222'
-theme.tooltip_fg = '#BBBBBB'
-theme.tooltip_font = 'Overpass 8'
-theme.menu_height = dpi(24)
-theme.menu_width = dpi(250)
-theme.vol = theme.dir .. '/icons/vol.png'
-theme.vol_low = theme.dir .. '/icons/vol_low.png'
-theme.vol_no = theme.dir .. '/icons/vol_no.png'
-theme.vol_mute = theme.dir .. '/icons/vol_mute.png'
-theme.play = theme.dir .. '/icons/play.png'
-theme.pause = theme.dir .. '/icons/pause.png'
-theme.stop = theme.dir .. '/icons/stop.png'
+local screen_theme = deepcopy(require('beautiful').get())
+screen_theme.font = 'Overpass 13'
+screen_theme.taglist_font = 'Kimberley Bl 11'
+screen_theme.tooltip_font = 'Overpass 8'
+screen_theme.menu_height = dpi(24)
+screen_theme.menu_width = dpi(250)
+screen_theme.vol = screen_theme.dir .. '/icons/vol.png'
+screen_theme.vol_low = screen_theme.dir .. '/icons/vol_low.png'
+screen_theme.vol_no = screen_theme.dir .. '/icons/vol_no.png'
+screen_theme.vol_mute = screen_theme.dir .. '/icons/vol_mute.png'
+screen_theme.play = screen_theme.dir .. '/icons/play.png'
+screen_theme.pause = screen_theme.dir .. '/icons/pause.png'
+screen_theme.stop = screen_theme.dir .. '/icons/stop.png'
 
 local markup = lain.util.markup
 local red = '#EB8F8F'
 
 -- ALSA volume bar
-local volicon = wibox.widget.imagebox(theme.vol)
-theme.volume = lain.widget.alsabar{
+local volicon = wibox.widget.imagebox(screen_theme.vol)
+screen_theme.volume = lain.widget.alsabar{
 	width = dpi(59),
 	border_width = 0,
 	ticks = true,
 	ticks_size = dpi(6),
-	notification_preset = { font = theme.font },
+	notification_preset = { font = screen_theme.font },
 	settings = function()
 		if volume_now.status == 'off' then
-			volicon:set_image(theme.vol_mute)
+			volicon:set_image(screen_theme.vol_mute)
 		elseif volume_now.level == 0 then
-			volicon:set_image(theme.vol_no)
+			volicon:set_image(screen_theme.vol_no)
 		elseif volume_now.level <= 50 then
-			volicon:set_image(theme.vol_low)
+			volicon:set_image(screen_theme.vol_low)
 		else
-			volicon:set_image(theme.vol)
+			volicon:set_image(screen_theme.vol)
 		end
 	end,
 	colors = {
-		background = theme.bg_normal,
+		background = screen_theme.bg_normal,
 		mute = red,
-		unmute = theme.fg_normal,
+		unmute = screen_theme.fg_normal,
 	},
 }
-theme.volume.tooltip.fg = theme.tooltip_fg
-theme.volume.tooltip.bg = theme.tooltip_bg
-theme.volume.tooltip.font = theme.tooltip_font
+screen_theme.volume.tooltip.fg = screen_theme.tooltip_fg
+screen_theme.volume.tooltip.bg = screen_theme.tooltip_bg
+screen_theme.volume.tooltip.font = screen_theme.tooltip_font
 
-theme.volume.bar:buttons(
+screen_theme.volume.bar:buttons(
 	my_table.join(
 		awful.button({}, 1, function()
 			os.execute(string.format('%s -e alsamixer', awful.terminal))
@@ -72,51 +63,51 @@ theme.volume.bar:buttons(
 			os.execute(
 				string.format(
 					'%s -D %s set %s 100%%',
-					theme.volume.cmd,
-					theme.volume.device,
-					theme.volume.channel
+					screen_theme.volume.cmd,
+					screen_theme.volume.device,
+					screen_theme.volume.channel
 				)
 			)
-			theme.volume.update()
+			screen_theme.volume.update()
 		end),
 		awful.button({}, 3, function()
 			os.execute(
 				string.format(
 					'%s -D %s set %s toggle',
-					theme.volume.cmd,
-					theme.volume.device,
-					theme.volume.togglechannel or theme.volume.channel
+					screen_theme.volume.cmd,
+					screen_theme.volume.device,
+					screen_theme.volume.togglechannel or screen_theme.volume.channel
 				)
 			)
-			theme.volume.update()
+			screen_theme.volume.update()
 		end),
 		awful.button({}, 4, function()
 			os.execute(
 				string.format(
 					'%s -D %s set %s 1%%+',
-					theme.volume.cmd,
-					theme.volume.device,
-					theme.volume.channel
+					screen_theme.volume.cmd,
+					screen_theme.volume.device,
+					screen_theme.volume.channel
 				)
 			)
-			theme.volume.update()
+			screen_theme.volume.update()
 		end),
 		awful.button({}, 5, function()
 			os.execute(
 				string.format(
 					'%s -D %s set %s 1%%-',
-					theme.volume.cmd,
-					theme.volume.device,
-					theme.volume.channel
+					screen_theme.volume.cmd,
+					screen_theme.volume.device,
+					screen_theme.volume.channel
 				)
 			)
-			theme.volume.update()
+			screen_theme.volume.update()
 		end)
 	)
 )
 local volumebg =
 	wibox.container.background(
-		theme.volume.bar,
+		screen_theme.volume.bar,
 		'#474747',
 		gears.shape.rectangle
 	)
@@ -179,9 +170,9 @@ widget,
 	widget.info_string = info_string
 end)
 local music_tooltip = awful.tooltip{
-	bg = theme.tooltip_bg,
-	fg = theme.tooltip_fg,
-	font = theme.tooltip_font,
+	bg = screen_theme.tooltip_bg,
+	fg = screen_theme.tooltip_fg,
+	font = screen_theme.tooltip_font,
 }
 
 music_tooltip:add_to_object(mocp)
@@ -196,24 +187,14 @@ local spr = wibox.widget.textbox(' ')
 local small_spr = wibox.widget.textbox(markup.font('Overpass Mono 4', ' '))
 local bar_spr =
 	wibox.widget.textbox(
-		markup.font('Overpass Mono 3', ' ') .. markup.fontfg(
-			theme.font,
+		markup.font('Overpass Mono 5', ' ') .. markup.fontfg(
+			screen_theme.font,
 			'#777777',
 			'|'
 		) .. markup.font('Overpass Mono 5', ' ')
 	)
 
--- Eminent-like task filtering
-local orig_filter = awful.widget.taglist.filter.all
-
--- Taglist label functions
-awful.widget.taglist.filter.all = function(t, args)
-	if t.selected or #t:clients() > 0 then
-		return orig_filter(t, args)
-	end
-end
-
-function theme.at_screen_connect(s)
+function screen_theme.at_screen_connect(s)
 	-- Tags
 	local layout = awful.layout.layouts[1]
 	for i, tag in pairs(awful.util.tagnames_2) do
@@ -236,7 +217,7 @@ function theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
 		buttons = awful.util.taglist_buttons,
-		style = { font = theme.taglist_font },
+		style = { font = screen_theme.taglist_font },
 	}
 
 	-- Create a tasklist widget
@@ -244,16 +225,32 @@ function theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = awful.util.tasklist_buttons,
-		style = { font = theme.font },
+		style = { font = screen_theme.font },
+		widget_template = {
+			{
+				{
+					{
+						id = 'text_role',
+						widget = wibox.widget.textbox,
+					},
+					layout = wibox.layout.fixed.horizontal,
+				},
+				left = 10,
+				right = 10,
+				widget = wibox.container.margin,
+			},
+			id = 'background_role',
+			widget = wibox.container.background,
+		},
 	}
 
 	-- Create the wibox
 	s.mywibox = awful.wibar({
 		position = 'top',
 		screen = s,
-		height = theme.menu_height,
-		bg = theme.bg_normal,
-		fg = theme.fg_normal,
+		height = screen_theme.menu_height,
+		bg = screen_theme.bg_normal,
+		fg = screen_theme.fg_normal,
 	})
 
 	-- Add widgets to the wibox
@@ -282,4 +279,4 @@ function theme.at_screen_connect(s)
 	}
 end
 
-return theme
+return screen_theme
