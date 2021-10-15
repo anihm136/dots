@@ -12,7 +12,7 @@ local screen_theme = deepcopy(require('beautiful').get())
 screen_theme.font = 'Inter 13'
 screen_theme.taglist_font = 'Inter Black 11'
 screen_theme.tooltip_font = 'Inter 6'
-screen_theme.menu_height = dpi(24)
+screen_theme.menu_height = dpi(28)
 screen_theme.menu_width = dpi(250)
 screen_theme.vol = screen_theme.dir .. '/icons/vol.png'
 screen_theme.vol_low = screen_theme.dir .. '/icons/vol_low.png'
@@ -115,12 +115,7 @@ local volumewidget = wibox.widget{
 		shape = gears.shape.rectangle,
 	},
 	widget = wibox.container.margin,
-	margins = {
-		top = 3,
-		bottom = 3,
-		left = 4,
-		right = 4,
-	},
+	margins = 4,
 }
 
 -- MPD
@@ -174,7 +169,6 @@ screen_theme.mpd.widget:buttons(
 
 -- Separators
 local first = wibox.widget.textbox(markup.font('Inter Mono 3', ' '))
-local spr = wibox.widget.textbox(' ')
 local small_spr = wibox.widget.textbox(markup.font('Inter Mono 4', ' '))
 local bar_spr =
 	wibox.widget.textbox(
