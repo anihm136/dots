@@ -1,5 +1,3 @@
-configuration {
-  theme: "themes/default";
-}
+@theme "themes/default"
 
 
