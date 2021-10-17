@@ -68,13 +68,13 @@ end
 
 local on_attach = function(_, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<CR>")
-	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>")
-	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<CR>")
-	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>")
-	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<CR>")
-	mapper("n", "<leader>cn", "<cmd>lua vim.lsp.buf.rename()<CR>")
-	mapper("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<CR>")
+	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<cr>")
+	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>")
+	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<cr>")
+	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>")
+	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<cr>")
+	mapper("n", "<leader>cn", "<cmd>lua vim.lsp.buf.rename()<cr>")
+	mapper("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<cr>")
 end
 
 local function make_config()
