@@ -14,7 +14,7 @@
     {%@@ endif @@%}
 }
 
-#window {
+window {
     anchor:     north;
     location:   north;
     width:      100%;
@@ -22,34 +22,36 @@
     children:   [ horibox ];
 }
 
-#horibox {
+horibox {
     orientation: horizontal;
     children:   [ prompt, entry, listview ];
 }
 
-#prompt {
-    color: #78A4FF;
-}
-
-#listview {
+listview {
     layout:     horizontal;
     {%@@ if profile == "sorcery" @@%}
     spacing:    40px;
     {%@@ elif profile == "apex" @@%}
     spacing:    100px;
     {%@@ endif @@%}
-    spacing:    100px;
     lines:      100;
 }
 
-#entry {
+entry {
     expand:     false;
     width:      10em;
 }
 
-#element {
+element {
     padding: 0px 2px;
 }
-#element selected {
+element selected {
     color: #78A4FF;
+}
+element-text, element-icon {
+  background-color: inherit;
+  text-color: inherit;
+}
+prompt {
+     color: #78A4FF;
 }
