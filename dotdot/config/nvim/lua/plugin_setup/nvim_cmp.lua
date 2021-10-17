@@ -12,7 +12,7 @@ return function()
 			['<C-f>'] = cmp.mapping.scroll_docs(4),
 			['<C-Space>'] = cmp.mapping.complete(),
 			['<C-e>'] = cmp.mapping.close(),
-			['<CR>'] = cmp.mapping.confirm({ select = true }),
+			['<cr>'] = cmp.mapping.confirm({ select = true }),
 			['<Tab>'] = cmp.mapping(helpers.smart_tab, { 'i', 's' }),
 			['<S-Tab>'] = cmp.mapping(helpers.smart_backtab, { 'i', 's' }),
 		},

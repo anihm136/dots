@@ -44,12 +44,12 @@ set tabstop=4
 set softtabstop=0
 set shiftwidth=4
 
-nnoremap <silent> <leader>fs :w<cr>
-nnoremap <silent> <leader>fS :wa!<cr>
-nnoremap <silent> <leader>fU :Write<cr>
+nnoremap <silent> <leader>fs <cmd>w<cr>
+nnoremap <silent> <leader>fS <cmd>wa!<cr>
+nnoremap <silent> <leader>fU <cmd>Write<cr>
 xnoremap <silent> y ygv<Esc>
 inoremap <silent> <C-v> <C-r><C-p>+
-nnoremap <silent> <leader>tw :set wrap!<cr>
+nnoremap <silent> <leader>tw <cmd>set wrap!<cr>
 nnoremap gx :<C-u>!$BROWSER <C-r><C-f><cr>
 
 function! s:show_documentation()
@@ -67,7 +67,7 @@ function! s:show_documentation()
 	endtry
 endfunction
 
-nnoremap <silent> K <cmd>call <SID>show_documentation()<CR>
+nnoremap <silent> K <cmd>call <SID>show_documentation()<cr>
 
 augroup custom_commands
 	autocmd!
@@ -76,9 +76,17 @@ augroup END
 autocmd custom_commands FileType * set formatoptions=lcqnrj
 autocmd custom_commands VimResized * wincmd =
 autocmd custom_commands FocusGained,BufEnter * checktime
-autocmd custom_commands FileType help,plugins nnoremap <silent><buffer> q :q<cr>
+autocmd custom_commands FileType help,plugins nnoremap <silent><buffer> q <cmd>q<cr>
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
-autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> :call helpers#toggleFt()<cr>
+autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> <cmd>call helpers#toggleFt()<cr>
+autocmd custom_commands BufWinEnter */vcs/dots/dotdot/* echo "Calling autocmd" | call jinja#AdjustFiletype({
+			\'block_start_string': '\{\%\@\@',
+			\'block_end_string': '\@\@\%\}',
+			\'variable_start_string': '\{\{\@\@',
+			\'variable_end_string': '\@\@\}\}',
+			\'comment_start_string': '\{\#\@\@',
+			\'comment_end_string': '\@\@\#\}',
+			\})
 
 command! -nargs=0 Reload call helpers#vim_reload()
 command! -nargs=0 Write silent! SudoWrite | edit!
@@ -156,17 +164,17 @@ set nowrap
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-nnoremap <silent> <leader><leader> :noh<cr>
+nnoremap <silent> <leader><leader> <cmd>noh<cr>
 
 vnoremap <S-Up> <Up>
 vnoremap <S-Down> <Down>
-nnoremap . :<C-u>execute "norm! " . repeat(".", v:count1)<CR>
+nnoremap . :<C-u>execute "norm! " . repeat(".", v:count1)<cr>
 
-nnoremap <silent><leader>bd :call helpers#bufcloseCloseIt()<cr>
-nnoremap <silent><leader>wd :call helpers#bufcloseCloseIt() \| q<cr>
+nnoremap <silent><leader>bd <cmd>call helpers#bufcloseCloseIt()<cr>
+nnoremap <silent><leader>wd <cmd>call helpers#bufcloseCloseIt() \| q<cr>
 
-nnoremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
-nnoremap <leader>pd :cd %:p:h <bar> pwd<cr>
+nnoremap <leader>e <cmd>edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
+nnoremap <leader>pd <cmd>cd %:p:h <bar> pwd<cr>
 
 set switchbuf=useopen,usetab
 
@@ -180,7 +188,7 @@ nnoremap Y y$
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
 
-nnoremap B :<C-u>call helpers#breakLine()<CR>
+nnoremap B :<C-u>call helpers#breakLine()<cr>
 
 if &wildoptions =~ "pum"
 	cnoremap <expr> <up>   pumvisible() ? "<C-p>" : "\<up>"
@@ -202,28 +210,28 @@ function! VisualNumber()
 	normal v
 	call search('\(^\|[^0-9\.]\d\)', 'becW')
 endfunction
-xnoremap <silent> in :<C-u>call VisualNumber()<CR>
-onoremap <silent> in :<C-u>normal vin<CR>
+xnoremap <silent> in :<C-u>call VisualNumber()<cr>
+onoremap <silent> in :<C-u>normal vin<cr>
 
-xnoremap <silent> ig :<C-u>let z = @/\|1;/^./kz<CR>G??<CR>:let @/ = z<CR>V'z
-onoremap <silent> ig :<C-u>normal vig<CR>
+xnoremap <silent> ig :<C-u>let z = @/\|1;/^./kz<cr>G??<cr>:let @/ = z<cr>V'z
+onoremap <silent> ig :<C-u>normal vig<cr>
 xnoremap <silent> ag GoggV
-onoremap <silent> ag :<C-u>normal vag<CR>
+onoremap <silent> ag :<C-u>normal vag<cr>
 
 xnoremap <silent> il g_o^
-onoremap <silent> il :<C-u>normal vil<CR>
+onoremap <silent> il :<C-u>normal vil<cr>
 xnoremap <silent> al $o0
-onoremap <silent> al :<C-u>normal val<CR>
+onoremap <silent> al :<C-u>normal val<cr>
 
 " Range of last action
 xnoremap ik `]o`[
-onoremap ik :<C-u>normal vik<CR>
+onoremap ik :<C-u>normal vik<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-noremap <leader>ss :setlocal spell!<cr>
+noremap <leader>ss <cmd>setlocal spell!<cr>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Signs

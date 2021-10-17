@@ -6,13 +6,13 @@ return function()
 			buffer = true,
 			['n ]c'] = {
 				expr = true,
-				"&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'",
+				"&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<cr>'",
 			},
 			['n [c'] = {
 				expr = true,
-				"&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'",
+				"&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<cr>'",
 			},
-			['n <leader>gl'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
+			['n <leader>gl'] = '<cmd>lua require"gitsigns".blame_line(true)<cr>',
 		},
 		watch_gitdir = { interval = 2000 },
 		update_debounce = 500,

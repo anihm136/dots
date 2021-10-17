@@ -1,6 +1,8 @@
 local configs = require'plugin_config'
 local setups = require'plugin_setup'
 
+local disable_feat = { jinja = true }
+
 return require('packer').startup{
 	function(use)
 		use'wbthomason/packer.nvim'
@@ -18,10 +20,9 @@ return require('packer').startup{
 
 		use'airblade/vim-rooter'
 
-		-- use 'b3nj5m1n/kommentary'
-
 		use{
-			'anihm136/kommentary',
+			-- 'anihm136/kommentary',
+			'b3nj5m1n/kommentary',
 			config = configs.kommentary,
 			setup = setups.kommentary,
 		}
@@ -54,6 +55,17 @@ return require('packer').startup{
 		use{
 			'dcampos/nvim-snippy',
 			requires = { 'honza/vim-snippets' },
+		}
+
+		use{
+			'tweekmonster/wstrip.vim',
+			cmd = 'WStrip',
+		}
+
+		use{
+			'tpope/vim-abolish',
+			cmd = { 'Abolish', 'Subvert' },
+			keys = { 'crs', 'crm', 'crc', 'cru', 'cr-', 'cr.', 'cr ', 'crt' },
 		}
 
 		-- LSP/Completion
@@ -89,6 +101,7 @@ return require('packer').startup{
 			requires = {
 				'nvim-treesitter/nvim-treesitter-textobjects',
 				'JoosepAlviste/nvim-ts-context-commentstring',
+				'RRethy/nvim-treesitter-textsubjects',
 			},
 			config = configs.treesitter,
 		}
@@ -164,15 +177,28 @@ return require('packer').startup{
 				'javascriptreact',
 				'typescriptreact',
 				'php',
-				'htmljinja',
+				'jinja.html',
 				'htmldjango',
 				'vue',
 			},
 		}
 
 		use{
-			'mitsuhiko/vim-jinja',
-			ft = { 'html', 'htmldjango' },
+			'windwp/nvim-ts-autotag',
+			ft = {
+				'html',
+				'javascript',
+				'javascriptreact',
+				'typescriptreact',
+				'vue',
+				'svelte',
+				'php',
+			},
+		}
+
+		use{
+			'Glench/Vim-Jinja2-Syntax',
+			disable = disable_feat.jinja,
 		}
 
 		-- Textobjects
@@ -200,13 +226,81 @@ return require('packer').startup{
 		use'TaDaa/vimade'
 
 		use{
-			'hoob3rt/lualine.nvim',
-			config = configs.lualine,
+			'famiu/feline.nvim',
+			config = function()
+				require('feline').setup()
+			end,
+		}
+		-- use{
+		-- 	'hoob3rt/lualine.nvim',
+		-- 	config = configs.lualine,
+		-- }
+		use{
+			'goolord/alpha-nvim',
+			config = function()
+				local alpha = require('alpha')
+				local dashboard = require('alpha.themes.dashboard')
+
+				-- Set header
+				dashboard.section.header.val =
+					{
+						'                                                     ',
+						'  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ',
+						'  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ',
+						'  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ',
+						'  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ',
+						'  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ',
+						'  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ',
+						'                                                     ',
+					}
+
+				-- Set menu
+				dashboard.section.buttons.val =
+					{
+						dashboard.button(
+							'e',
+							'  > New file',
+							':ene <BAR> startinsert <CR>'
+						),
+						dashboard.button(
+							'r',
+							'  > Frecent',
+							':Telescope frecency<CR>'
+						),
+						dashboard.button(
+							'd',
+							'  > Dotfiles',
+							':lua require("telescope_config").edit_dotfiles()'
+						),
+						dashboard.button('q', '  > Quit NVIM', ':qa<CR>'),
+					}
+
+				-- Set footer
+				local fortune = require('alpha.fortune')
+				dashboard.section.footer.val = fortune()
+
+				-- Send config to alpha
+				alpha.setup(dashboard.opts)
+
+				-- Disable folding on alpha buffer
+				vim.cmd([[
+    autocmd FileType alpha setlocal nofoldenable
+]])
+			end,
 		}
 
 		-- UX
-
-		use'cohama/lexima.vim'
+		-- use'cohama/lexima.vim'
+		use{
+			'anihm136/auto-pairs',
+			config = function()
+				vim.g.AutoPairsMapBS = true
+				vim.g.AutoPairsCompleteOnlyOnSpace = true
+				vim.g.AutoPairsShortcutToggleMultilineClose = ''
+				vim.g.AutoPairsMultilineClose = true
+				vim.g.AutoPairsCompatibleMaps = false
+			end,
+		}
 
 		use{
 			'psliwka/vim-smoothie',
@@ -218,7 +312,6 @@ return require('packer').startup{
 			requires = { 'kyazdani42/nvim-web-devicons' },
 			config = configs.nvim_tree,
 		}
-
 		use{
 			'justinmk/vim-dirvish',
 			requires = { 'kyazdani42/nvim-web-devicons' },
@@ -230,7 +323,46 @@ return require('packer').startup{
 			config = configs.sandwich,
 		}
 
-		use{ 'ggandor/lightspeed.nvim' }
+		use{
+			'ggandor/lightspeed.nvim',
+			keys = {
+				'<Plug>Lightspeed_s',
+				'<Plug>Lightspeed_S',
+				'<Plug>Lightspeed_x',
+				'<Plug>Lightspeed_X',
+				'<Plug>Lightspeed_f',
+				'<Plug>Lightspeed_F',
+				'<Plug>Lightspeed_t',
+				'<Plug>Lightspeed_T',
+			},
+			setup = function()
+				local default_keymaps =
+					{
+						{ 'n', 's', '<Plug>Lightspeed_s' },
+						{ 'n', 'S', '<Plug>Lightspeed_S' },
+						{ 'x', 's', '<Plug>Lightspeed_s' },
+						{ 'o', 'z', '<Plug>Lightspeed_s' },
+						{ 'o', 'Z', '<Plug>Lightspeed_S' },
+						{ 'o', 'x', '<Plug>Lightspeed_x' },
+						{ 'o', 'X', '<Plug>Lightspeed_X' },
+						{ 'n', 'f', '<Plug>Lightspeed_f' },
+						{ 'n', 'F', '<Plug>Lightspeed_F' },
+						{ 'x', 'f', '<Plug>Lightspeed_f' },
+						{ 'x', 'F', '<Plug>Lightspeed_F' },
+						{ 'o', 'f', '<Plug>Lightspeed_f' },
+						{ 'o', 'F', '<Plug>Lightspeed_F' },
+						{ 'n', 't', '<Plug>Lightspeed_t' },
+						{ 'n', 'T', '<Plug>Lightspeed_T' },
+						{ 'x', 't', '<Plug>Lightspeed_t' },
+						{ 'x', 'T', '<Plug>Lightspeed_T' },
+						{ 'o', 't', '<Plug>Lightspeed_t' },
+						{ 'o', 'T', '<Plug>Lightspeed_T' },
+					}
+				for _, m in ipairs(default_keymaps) do
+					vim.api.nvim_set_keymap(m[1], m[2], m[3], { silent = true })
+				end
+			end,
+		}
 
 		use{
 			'phaazon/hop.nvim',
@@ -255,6 +387,11 @@ return require('packer').startup{
 		use{
 			'inside/vim-search-pulse',
 			keys = { '<Plug>(pulse)' },
+		}
+
+		use{
+			'brooth/far.vim',
+			cmd = { 'Far', 'Farp', 'Farr', 'Farf' },
 		}
 
 		-- Themes
@@ -297,6 +434,15 @@ return require('packer').startup{
 		use'antoinemadec/FixCursorHold.nvim'
 
 		use{
+			'Shatur/neovim-session-manager',
+			config = function()
+				require('session_manager').setup{
+					autoload_last_session = false,
+				}
+			end,
+		}
+
+		use{
 			'nvim-telescope/telescope.nvim',
 			requires = {
 				'nvim-lua/plenary.nvim',
@@ -319,10 +465,6 @@ return require('packer').startup{
 			'nvim-telescope/telescope-symbols.nvim',
 			requires = { 'nvim-telescope/telescope.nvim' },
 		}
-
-		use'rmagatti/auto-session'
-
-		use'rmagatti/session-lens'
 
 		use'weilbith/nvim-lsp-smag'
 

@@ -2,11 +2,11 @@ if !get(g:, "loaded_fugitive", v:false)
 	finish	
 endif
 
-nnoremap <silent> <leader>gg <cmd>G<CR>
-nnoremap <silent> <leader>gp <cmd>Gpush<CR>
+nnoremap <silent> <leader>gg <cmd>G<cr>
+nnoremap <silent> <leader>gp <cmd>Gpush<cr>
 
 if &diff
-	nnoremap <silent> <leader>gf <cmd>diffget //2<CR>
-	nnoremap <silent> <leader>gj <cmd>diffget //3<CR>
+	nnoremap <silent> <leader>gf <cmd>diffget //2<cr>
+	nnoremap <silent> <leader>gj <cmd>diffget //3<cr>
 endif
 
