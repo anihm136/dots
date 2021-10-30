@@ -75,18 +75,9 @@ function M.edit_dotfiles()
 	}
 end
 
-function M.git_files()
-	local opts = themes.get_dropdown{
-		winblend = 10,
-		border = true,
-		previewer = false,
-	}
-
-	require('telescope.builtin').git_files(opts)
-end
-
-function M.live_grep()
-	require('telescope.builtin').live_grep{ cwd = get_root() }
+function M.live_grep(cwd)
+	cwd = cwd or get_root()
+	require('telescope.builtin').live_grep{ cwd = cwd }
 end
 
 function M.grep_prompt()
@@ -96,8 +87,9 @@ function M.grep_prompt()
 	}
 end
 
-function M.project_search()
-	require('telescope.builtin').find_files{ cwd = get_root() }
+function M.file_search(cwd)
+	cwd = cwd or get_root()
+	require('telescope.builtin').find_files{ cwd = cwd }
 end
 
 function M.buffers()

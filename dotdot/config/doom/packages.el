@@ -62,4 +62,4 @@
   :recipe (:local-repo "lisp/org-diagrams"))
 (package! aggressive-indent)
 (package! org-ql)
-(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+;; (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))

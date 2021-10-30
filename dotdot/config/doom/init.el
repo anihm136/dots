@@ -23,10 +23,12 @@
        company           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy
-        +fuzzy
-        +prescient
-        +icons)               ; a search engine for love and life
+       ;; (ivy
+       ;;  +fuzzy
+       ;;  +prescient
+       ;;  +icons)               ; a search engine for love and life
+       (vertico
+        +icons)
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -37,6 +39,7 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        ;; indent-guides     ; highlighted indent columns
+       ligatures
        modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -44,7 +47,6 @@
        (popup
         +defaults
         +all)   ; tame sudden yet inevitable temporary windows
-       ;;pretty-code       ; ligatures or substitute text with pretty symbols
        tabs              ; an tab bar for Emacs
        ;; treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
@@ -75,6 +77,7 @@
        ;; electric          ; smarter, keyword-based electric-indent
        (ibuffer
         +icons)                                        ; interactive buffer management
+       undo
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
@@ -114,7 +117,6 @@
 
        :lang
        ;;agda              ; types of types of types of types..          .
-       ;;assembly          ; assembly for fun or debugging
        ;; (cc
        ;;  +lsp)                ; C/C++/Obj-C madness
        ;;clojure           ; java with a lisp

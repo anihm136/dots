@@ -96,7 +96,7 @@ function rules.create(clientkeys, clientbuttons)
 	}, { -- Floating clients.
 		rule_any = {
 			instance = { 'DTA', 'copyq' },
-			class = { 'Nm-connection-editor', 'Galculator', 'Blueberry.py' },
+			class = { 'Nm-connection-editor', 'Galculator', 'Blueberry.py', 'Tk' },
 			name = {
 				'Event Tester',
 				'Steam Guard - Computer Authorization Required',

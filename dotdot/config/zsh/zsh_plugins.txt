@@ -3,7 +3,7 @@ robbyrussell/oh-my-zsh
 robbyrussell/oh-my-zsh path:lib
 robbyrussell/oh-my-zsh path:plugins/command-not-found
 robbyrussell/oh-my-zsh path:plugins/npm
-robbyrussell/oh-my-zsh path:plugins/yarn
+robbyrussell/oh-my-zsh path:plugins/yarn kind:fpath
 robbyrussell/oh-my-zsh path:plugins/rust
 robbyrussell/oh-my-zsh path:plugins/web-search
 robbyrussell/oh-my-zsh path:plugins/sudo
@@ -11,6 +11,7 @@ robbyrussell/oh-my-zsh path:plugins/cpanm kind:fpath
 robbyrussell/oh-my-zsh path:plugins/pip kind:fpath
 robbyrussell/oh-my-zsh path:plugins/ripgrep kind:fpath
 robbyrussell/oh-my-zsh path:plugins/cargo kind:fpath
+robbyrussell/oh-my-zsh path:plugins/celery kind:fpath
 zdharma/fast-syntax-highlighting
 sinetoami/antibody-completion
 zsh-users/zsh-completions

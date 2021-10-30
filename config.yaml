@@ -1,8 +1,9 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
   awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
-    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling ]] && git -C ~/.config/awesome/bling pull
-    origin master || gh repo clone BlingCorp/bling ~/.config/awesome/bling'
+    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling
+    ]] && git -C ~/.config/awesome/bling pull origin master || gh repo clone BlingCorp/bling
+    ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
 dynvariables:
@@ -17,6 +18,10 @@ config:
   longkey: true
   showdiff: true
   workdir: ~/.local/share/dotdrop
+  instignore:
+  - '*/.gitignore'
+  cmpignore:
+  - '*/.gitignore'
 dotfiles:
   d_config_nvim:
     src: config/nvim
@@ -130,8 +135,6 @@ dotfiles:
     dst: ~/.moc
     link: link_children
     chmod: '700'
-    instignore:
-    - .gitignore
   d_config_mpd:
     src: config/mpd
     dst: ~/.config/mpd
@@ -140,8 +143,6 @@ dotfiles:
     src: config/ncmpcpp
     dst: ~/.config/ncmpcpp
     link: link_children
-    instignore:
-    - .gitignore
 profiles:
   sorcery:
     dotfiles:
