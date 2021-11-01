@@ -47,6 +47,10 @@ dotfiles:
     src: config/beets
     dst: ~/.config/beets
     link: link_children
+    upignore:
+    - state.pickle
+    cmpignore:
+    - state.pickle
   d_config_direnv:
     src: config/direnv
     dst: ~/.config/direnv
