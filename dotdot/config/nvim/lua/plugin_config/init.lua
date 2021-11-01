@@ -7,5 +7,12 @@ return {
 	hop = require('plugin_config.hop'),
 	treesitter = require('plugin_config.treesitter'),
 	matchup = require('plugin_config.matchup'),
-	sandwich = require('plugin_config.sandwich')
+	sandwich = require('plugin_config.sandwich'),
+	telescope = require('plugin_config.telescope'),
+	slime = require('plugin_config.slime'),
+	auto_pairs = require('plugin_config.auto_pairs'),
+	alpha = require('plugin_config.alpha'),
+	qf = require('plugin_config.qf'),
+	tmux_navigator = require('plugin_config.tmux_navigator'),
+	vim_rooter = require('plugin_config.vim_rooter'),
 }

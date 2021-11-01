@@ -70,4 +70,28 @@ return function()
 		comment_and_duplicate
 	)
 
+	local map = vim.api.nvim_set_keymap
+	local opts = {
+		silent = true,
+	}
+
+
+	map("n", "gcc", "<Plug>kommentary_line_default", opts)
+
+	map("n", "gc", "<Plug>kommentary_motion_default", opts)
+
+	map("v", "gc", "<Plug>kommentary_visual_default<Esc>", opts)
+
+	map("n", "gcyy", "<Plug>kommentary_comment_and_yank", opts)
+
+	map("n", "gcy", "<Plug>kommentary_comment_and_yank_motion", opts)
+
+	map("v", "gcy", "<Plug>kommentary_comment_and_yank_visual", opts)
+
+	map("n", "gcdd", "<Plug>kommentary_comment_and_duplicate", opts)
+
+	map("n", "gcd", "<Plug>kommentary_comment_and_duplicate_motion", opts)
+
+	map("v", "gcd", "<Plug>kommentary_comment_and_duplicate_visual", opts)
+
 end

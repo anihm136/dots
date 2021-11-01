@@ -12,30 +12,47 @@ return require("packer").startup{
 		}
 		use"tpope/vim-repeat"
 		use"tpope/vim-apathy"
-		use"airblade/vim-rooter"
+		use{
+			"airblade/vim-rooter",
+			config = configs.vim_rooter,
+		}
 		use{
 			-- 'anihm136/kommentary',
 			"b3nj5m1n/kommentary",
 			config = configs.kommentary,
 			setup = setups.kommentary,
+			keys = { "gc", "gcc", "gcy", "gcyy", "gcd", "gcdd" },
 		}
 		use{
 			"anihm136/vim-unimpaired",
 			setup = setups.unimpaired,
 		}
 		use"fedorenchik/gtags.vim"
-		use"junegunn/vim-easy-align"
+		use{
+			"junegunn/vim-easy-align",
+			config = function()
+				local map = vim.api.nvim_set_keymap
+				local opts = { silent = true }
+				map("x", "ga", "<Plug>(EasyAlign)", opts)
+				map("n", "ga", "<Plug>(EasyAlign)", opts)
+			end,
+		}
 		use"Darazaki/indent-o-matic"
 		use"tpope/vim-eunuch"
 		use{
 			"christoomey/vim-tmux-navigator",
 			setup = setups.tmux_navigator,
+			config = configs.tmux_navigator,
+			keys = { "<C-h>", "<C-j>", "<C-k>", "<C-;>", "<C-\\>" },
 		}
 		use{
 			"AndrewRadev/splitjoin.vim",
 			keys = { "gJ", "gS" },
 		}
-		use"romainl/vim-qf"
+		use{
+			"romainl/vim-qf",
+			config = configs.qf,
+		}
 		use{
 			"dcampos/nvim-snippy",
 			requires = { "honza/vim-snippets" },
@@ -57,14 +74,21 @@ return require("packer").startup{
 			requires = {
 				"dcampos/nvim-snippy",
 				"onsails/lspkind-nvim",
-				"hrsh7th/cmp-nvim-lsp",
-				{ "hrsh7th/cmp-buffer" },
-				-- after = "hrsh7th/nvim-cmp",
-				{ "hrsh7th/cmp-path" },
-				-- after = "hrsh7th/nvim-cmp",
-				{ "dcampos/cmp-snippy" },
-				-- after = "hrsh7th/nvim-cmp",
+				{ "hrsh7th/cmp-nvim-lsp" },
+				{
+					"hrsh7th/cmp-buffer",
+					opt = true,
+				},
+				{
+					"hrsh7th/cmp-path",
+					opt = true,
+				},
+				{
+					"dcampos/cmp-snippy",
+					opt = true,
+				},
 			},
+			after = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path", "cmp-snippy" },
 			event = "InsertEnter",
 			config = configs.nvim_cmp,
 		}
@@ -177,7 +201,6 @@ return require("packer").startup{
 		use{
 			"famiu/feline.nvim",
 			config = function()
-				vim.o.termguicolors = true
 				require("feline").setup()
 			end,
 		}
@@ -187,63 +210,13 @@ return require("packer").startup{
 		-- }
 		use{
 			"goolord/alpha-nvim",
-			config = function()
-				local alpha = require("alpha")
-				local dashboard = require("alpha.themes.dashboard")
-				-- Set header
-				dashboard.section.header.val =
-					{
-						"                                                     ",
-						"  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
-						"  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
-						"  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
-						"  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
-						"  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
-						"  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-						"                                                     ",
-					}
-				-- Set menu
-				dashboard.section.buttons.val =
-					{
-						dashboard.button(
-							"e",
-							"  > New file",
-							":ene <BAR> startinsert <CR>"
-						),
-						dashboard.button(
-							"r",
-							"  > Frecent",
-							":Telescope frecency<CR>"
-						),
-						dashboard.button(
-							"d",
-							"  > Dotfiles",
-							':lua require("telescope_config").edit_dotfiles()<CR>'
-						),
-						dashboard.button("q", "  > Quit NVIM", ":qa<CR>"),
-					}
-				-- Set footer
-				local fortune = require("alpha.fortune")
-				dashboard.section.footer.val = fortune()
-				-- Send config to alpha
-				alpha.setup(dashboard.opts)
-				-- Disable folding on alpha buffer
-				vim.cmd([[
-    autocmd FileType alpha setlocal nofoldenable
-]])
-			end,
+			config = configs.alpha,
 		}
 		-- UX
 		-- use'cohama/lexima.vim'
 		use{
 			"anihm136/auto-pairs",
-			config = function()
-				vim.g.AutoPairsMapBS = true
-				vim.g.AutoPairsCompleteOnlyOnSpace = true
-				vim.g.AutoPairsShortcutToggleMultilineClose = ""
-				vim.g.AutoPairsMultilineClose = true
-				vim.g.AutoPairsCompatibleMaps = false
-			end,
+			config = configs.auto_pairs,
 		}
 		use{
 			"psliwka/vim-smoothie",
@@ -253,11 +226,12 @@ return require("packer").startup{
 			"kyazdani42/nvim-tree.lua",
 			requires = { "kyazdani42/nvim-web-devicons" },
 			config = configs.nvim_tree,
+			keys = { "<leader>0" },
+			cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
 		}
 		use{
 			"justinmk/vim-dirvish",
 			requires = { "kyazdani42/nvim-web-devicons" },
-			cmd = { "Dirvish" },
 		}
 		use{
 			"machakann/vim-sandwich",
@@ -275,39 +249,16 @@ return require("packer").startup{
 				"<Plug>Lightspeed_t",
 				"<Plug>Lightspeed_T",
 			},
-			setup = function()
-				local default_keymaps =
-					{
-						{ "n", "s", "<Plug>Lightspeed_s" },
-						{ "n", "S", "<Plug>Lightspeed_S" },
-						{ "x", "s", "<Plug>Lightspeed_s" },
-						{ "o", "z", "<Plug>Lightspeed_s" },
-						{ "o", "Z", "<Plug>Lightspeed_S" },
-						{ "o", "x", "<Plug>Lightspeed_x" },
-						{ "o", "X", "<Plug>Lightspeed_X" },
-						{ "n", "f", "<Plug>Lightspeed_f" },
-						{ "n", "F", "<Plug>Lightspeed_F" },
-						{ "x", "f", "<Plug>Lightspeed_f" },
-						{ "x", "F", "<Plug>Lightspeed_F" },
-						{ "o", "f", "<Plug>Lightspeed_f" },
-						{ "o", "F", "<Plug>Lightspeed_F" },
-						{ "n", "t", "<Plug>Lightspeed_t" },
-						{ "n", "T", "<Plug>Lightspeed_T" },
-						{ "x", "t", "<Plug>Lightspeed_t" },
-						{ "x", "T", "<Plug>Lightspeed_T" },
-						{ "o", "t", "<Plug>Lightspeed_t" },
-						{ "o", "T", "<Plug>Lightspeed_T" },
-					}
-				for _, m in ipairs(default_keymaps) do
-					vim.api.nvim_set_keymap(m[1], m[2], m[3], { silent = true })
-				end
-			end,
+			setup = setups.lightspeed,
 		}
 		use{
 			"phaazon/hop.nvim",
 			config = configs.hop,
 		}
-		use{ "haya14busa/vim-asterisk" }
+		use{
+			"haya14busa/vim-asterisk",
+			opt = true,
+		}
 		use"romainl/vim-cool"
 		use{
 			"andymass/vim-matchup",
@@ -321,6 +272,8 @@ return require("packer").startup{
 		use{
 			"inside/vim-search-pulse",
 			keys = { "<Plug>(pulse)" },
+			after = { "vim-asterisk" },
+			setup = setups.vim_search_pulse,
 		}
 		use{
 			"brooth/far.vim",
@@ -346,6 +299,8 @@ return require("packer").startup{
 		use{
 			"jpalardy/vim-slime",
 			ft = "python",
+			keys = "gr",
+			config = configs.slime,
 		}
 		-- use{
 		-- 	"michaelb/sniprun",
@@ -381,6 +336,7 @@ return require("packer").startup{
 				"nvim-lua/plenary.nvim",
 				"kyazdani42/nvim-web-devicons",
 			},
+			config = configs.telescope,
 		}
 		use{
 			"nvim-telescope/telescope-fzf-native.nvim",

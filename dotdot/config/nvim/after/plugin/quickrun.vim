@@ -7,12 +7,12 @@ let s:outputter = quickrun#outputter#browser#new()
 function! s:outputter.validate() abort
 endfunction
 
-let s:outputter.name = "firefox"
+let s:outputter.name = "xdg-open"
 let s:outputter.kind = "outputter"
 
 function! s:outputter.finish(session) abort
 	try
-		call system('firefox ' . self._file)
+		call system('xdg-open ' . self._file)
 	endtry
 endfunction
 
@@ -44,5 +44,5 @@ let g:quickrun_config.lua = {
 let g:quickrun_config.markdown = {
 			\'command': 'pandoc',
 			\'exec': '%c --from=gfm --to=html %o %s %a',
-			\'outputter': 'firefox'
+			\'outputter': 'xdg-open'
 			\}
