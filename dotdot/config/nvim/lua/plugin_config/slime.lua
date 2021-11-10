@@ -8,7 +8,7 @@ return function()
 	}
 	vim.g.slime_dont_ask_default = 1
 	local opts = { silent = true }
-	map("n", "gr", "<Plug>SlimeMotionSend", opts)
-	map("x", "gr", "<Plug>SlimeRegionSend", opts)
+	map(0, "n", "gr", "<Plug>SlimeMotionSend", opts)
+	map(0, "x", "gr", "<Plug>SlimeRegionSend", opts)
 
 end

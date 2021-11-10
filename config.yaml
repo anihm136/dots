@@ -170,7 +170,6 @@ profiles:
     - d_config_interception
     - f_tmux.conf
     - d_config_git
-    - d_config_mpd
     - d_config_ncmpcpp
   apex:
     dotfiles:

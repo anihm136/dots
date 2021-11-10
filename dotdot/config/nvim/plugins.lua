@@ -154,20 +154,6 @@ return require("packer").startup{
 		use"tridactyl/vim-tridactyl"
 		-- Language-specific
 		use{
-			"mattn/emmet-vim",
-			ft = {
-				"html",
-				"javascript",
-				"typescript",
-				"javascriptreact",
-				"typescriptreact",
-				"php",
-				"jinja.html",
-				"htmldjango",
-				"vue",
-			},
-		}
-		use{
 			"windwp/nvim-ts-autotag",
 			ft = {
 				"html",
@@ -204,18 +190,14 @@ return require("packer").startup{
 				require("feline").setup()
 			end,
 		}
-		-- use{
-		-- 	'hoob3rt/lualine.nvim',
-		-- 	config = configs.lualine,
-		-- }
 		use{
 			"goolord/alpha-nvim",
 			config = configs.alpha,
 		}
 		-- UX
-		-- use'cohama/lexima.vim'
 		use{
 			"anihm136/auto-pairs",
+			branch = "feat/ignore-autocmd",
 			config = configs.auto_pairs,
 		}
 		use{
@@ -257,7 +239,7 @@ return require("packer").startup{
 		}
 		use{
 			"haya14busa/vim-asterisk",
-			opt = true,
+			-- keys = { "<Plug>(asterisk-z*)", "<Plug>(asterisk-z#)"},
 		}
 		use"romainl/vim-cool"
 		use{
@@ -271,7 +253,7 @@ return require("packer").startup{
 		}
 		use{
 			"inside/vim-search-pulse",
-			keys = { "<Plug>(pulse)" },
+			-- keys = { "<Plug>(pulse)" },
 			after = { "vim-asterisk" },
 			setup = setups.vim_search_pulse,
 		}
@@ -302,14 +284,6 @@ return require("packer").startup{
 			keys = "gr",
 			config = configs.slime,
 		}
-		-- use{
-		-- 	"michaelb/sniprun",
-		-- 	run = "bash ./install.sh",
-		-- 	cmd = { "SnipRun", "SnipInfo", "SnipReset", "SnipClose" },
-		-- 	config = function()
-		-- 		require"sniprun".setup{ display = { "Terminal" } }
-		-- 	end,
-		-- }
 		use{
 			"thinca/vim-quickrun",
 			config = function()
