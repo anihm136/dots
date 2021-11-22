@@ -13,19 +13,9 @@ function run2 {
    fi
 }
 
-eval $(gnome-keyring-daemon --start)
-export SSH_AUTH_SOCK
-if (command -v start-pulseaudio-x11 && ! pgrep pulseaudio); then
-    start-pulseaudio-x11 &
-fi
-
 run tilda
-run mocp -S
-run nm-applet
-run flameshot
 
 {%@@ if profile == "sorcery" @@%}
-jack_control start
 run thunderbird
 run slack
 run teams

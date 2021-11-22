@@ -14,6 +14,8 @@ HISTFILE="$XDG_CACHE_HOME/zsh/history"
 ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 # Disable 'magic functions' i.e, bracketed paste. This is for OMZ
 DISABLE_MAGIC_FUNCTIONS="true"
+# Disable omz auto-update
+DISABLE_AUTO_UPDATE=true
 
 # Load zsh run-help module
 autoload -Uz run-help
@@ -80,7 +82,7 @@ fi
 # Signal handler for reloading neovim
 catch_signal_usr1() {
   trap catch_signal_usr1 USR1
-  nvim
+  nvim -c ":LoadSession!"
 }
 trap catch_signal_usr1 USR1
 

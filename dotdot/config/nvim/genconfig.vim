@@ -79,14 +79,6 @@ autocmd custom_commands FocusGained,BufEnter * checktime
 autocmd custom_commands FileType help,plugins nnoremap <silent><buffer> q <cmd>q<cr>
 autocmd custom_commands TextYankPost *  silent! lua require'vim.highlight'.on_yank()
 autocmd custom_commands FileType html,jinja,htmldjango,php nnoremap <silent><buffer> <F7> <cmd>call helpers#toggleFt()<cr>
-autocmd custom_commands BufWinEnter */vcs/dots/dotdot/* echo "Calling autocmd" | call jinja#AdjustFiletype({
-			\'block_start_string': '\{\%\@\@',
-			\'block_end_string': '\@\@\%\}',
-			\'variable_start_string': '\{\{\@\@',
-			\'variable_end_string': '\@\@\}\}',
-			\'comment_start_string': '\{\#\@\@',
-			\'comment_end_string': '\@\@\#\}',
-			\})
 
 command! -nargs=0 Reload call helpers#vim_reload()
 command! -nargs=0 Write silent! SudoWrite | edit!
@@ -173,7 +165,7 @@ nnoremap . :<C-u>execute "norm! " . repeat(".", v:count1)<cr>
 nnoremap <silent><leader>bd <cmd>call helpers#bufcloseCloseIt()<cr>
 nnoremap <silent><leader>wd <cmd>call helpers#bufcloseCloseIt() \| q<cr>
 
-nnoremap <leader>e <cmd>edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
+nnoremap <leader>e :edit <c-r>=fnameescape(expand("%:p:h"))<cr>/
 nnoremap <leader>pd <cmd>cd %:p:h <bar> pwd<cr>
 
 set switchbuf=useopen,usetab

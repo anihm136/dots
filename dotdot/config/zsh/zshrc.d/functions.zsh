@@ -52,6 +52,29 @@ e() {
   fi
 }
 
+egi() {
+  if [[ -n "$@" ]]; then
+    nvim $@
+  else
+    local FZF_PREVIEW_CMD='bat --color=always --plain --line-range :$FZF_PREVIEW_LINES {}'
+    local IFS=$'\n'
+    local files=()
+    files=(
+      "$(fd --no-ignore-vcs | fzf \
+            --query="$1" \
+            --multi \
+            --preview="${FZF_PREVIEW_CMD}" \
+            --preview-window='right:hidden:wrap' \
+            --bind=ctrl-v:toggle-preview \
+            --bind=ctrl-x:toggle-sort \
+            --header='(view:ctrl-v) (sort:ctrl-x)'
+      )"
+    ) || return
+    local args=("${(f)files}")
+    ${EDITOR:-nvim} ${args[@]}
+  fi
+}
+
 mcp() {
   local fro=()
   local to=()

@@ -7,16 +7,38 @@ function current_branch() {
 	git_current_branch
 }
 
+function gsetup() {
+	local main
+	if git branch | grep -w 'main' > /dev/null 2>&1; then
+		main="main"
+	else
+		main="master"
+	fi
+	git switch "$main"
+	git config remote.pushDefault "${1:-"origin"}"
+	git branch --set-upstream-to="${2:-"upstream"}/$main"
+}
+
+function gwork() {
+	if [[ $# -ne 1 ]]; then
+		echo "Usage: gwork <new-branch>"
+		return 1
+	fi
+	local branch="$1"
+	local upstream="origin/$(git_current_branch)"
+	git switch -c "$branch"
+	git push origin "$(git_current_branch)"
+	git branch --set-upstream-to="$upstream"
+}
+
 alias g='git'
 
 alias gaa='git add --all'
-alias gap='git apply'
 
 alias gbr='git branch'
-alias gbra='git branch -a'
 alias gbrd='git branch -d'
 alias gbrD='git branch -D'
-alias gbl='git blame -b -w'
+alias gbru='git branch --set-upstream-to origin/$(git_current_branch)'
 alias gbrnm='git branch --no-merged'
 alias gbs='git bisect'
 alias gbsb='git bisect bad'
@@ -44,14 +66,14 @@ function ggfl() {
 	git push --force-with-lease origin "${b:=$1}"
 }
 
-function ggl() {
-	if [[ "$#" != 0 ]] && [[ "$#" != 1 ]]; then
-		git pull origin "${*}"
-	else
-		[[ "$#" == 0 ]] && local b="$(git_current_branch)"
-		git pull origin "${b:=$1}"
-	fi
-}
+# function ggl() {
+# 	if [[ "$#" != 0 ]] && [[ "$#" != 1 ]]; then
+# 		git pull origin "${*}"
+# 	else
+# 		[[ "$#" == 0 ]] && local b="$(git_current_branch)"
+# 		git pull origin "${b:=$1}"
+# 	fi
+# }
 
 function ggp() {
 	if [[ "$#" != 0 ]] && [[ "$#" != 1 ]]; then
@@ -70,17 +92,16 @@ function ggpnp() {
 	fi
 }
 
-function ggu() {
-	[[ "$#" != 1 ]] && local b="$(git_current_branch)"
-	git pull --rebase origin "${b:=$1}"
-}
+# function ggu() {
+# 	[[ "$#" != 1 ]] && local b="$(git_current_branch)"
+# 	git pull --rebase origin "${b:=$1}"
+# }
 
 alias gpull='git pull'
 alias glg='git log --stat'
 alias glgg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset" --abbrev-commit --date=relative'
 alias glo='git log --oneline --decorate'
 alias gmerge='git merge'
-alias gmergea='git merge --abort'
 alias gpush='git push'
 alias grem='git remote'
 alias grema='git remote add'

@@ -1,14 +1,10 @@
-forgit_log=glog
-forgit_diff=gdiff
-forgit_add=ga
-forgit_reset_head=grh
-forgit_ignore=gignore
-forgit_restore=gcheck
-forgit_clean=gclean
-forgit_stash_show=gss
-forgit_cherry_pick=gcp
-forgit_checkout_file=gcf
-forgit_checkout_branch=gcb
-forgit_checkout_commit=gco
-forgit_rebase=grebi
-forgit_fixup=gfixup
+FORGIT_NO_ALIASES=1
+
+alias glog="forgit::log"
+alias gdiff="forgit::diff"
+alias ga="forgit::add"
+alias gignore="forgit::ignore"
+alias gstash="forgit::stash::show"
+alias gcf="forgit::checkout::file"
+alias gcb="forgit::checkout::branch"
+alias gco="forgit::checkout::commit"

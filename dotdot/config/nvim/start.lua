@@ -13,8 +13,8 @@ end
 
 require"impatient".enable_profile()
 _G.helpers = require("helpers")
-require"packer_compiled"
 require"gen_config"
+require"packer_compiled"
 require"lsp_config"
 require"dap_config"
 

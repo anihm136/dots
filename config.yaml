@@ -1,8 +1,9 @@
 actions:
   antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
   awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
-    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling ]] && git -C ~/.config/awesome/bling pull
-    origin master || gh repo clone BlingCorp/bling ~/.config/awesome/bling'
+    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling
+    ]] && git -C ~/.config/awesome/bling pull origin master || gh repo clone BlingCorp/bling
+    ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
 dynvariables:
@@ -17,19 +18,20 @@ config:
   longkey: true
   showdiff: true
   workdir: ~/.local/share/dotdrop
+  instignore:
+  - '*/.gitignore'
+  cmpignore:
+  - '*/.gitignore'
 dotfiles:
   d_config_nvim:
     src: config/nvim
     dst: ~/.config/nvim
-    link: link_children
   d_config_alacritty:
     src: config/alacritty
     dst: ~/.config/alacritty
-    link: link_children
   d_config_awesome:
     src: config/awesome
     dst: ~/.config/awesome
-    link: link_children
     actions:
     - awesome
     upignore:
@@ -41,15 +43,16 @@ dotfiles:
   d_config_beets:
     src: config/beets
     dst: ~/.config/beets
-    link: link_children
+    upignore:
+    - state.pickle
+    cmpignore:
+    - state.pickle
   d_config_direnv:
     src: config/direnv
     dst: ~/.config/direnv
-    link: link_children
   d_config_doom:
     src: config/doom
     dst: ~/.config/doom
-    link: link_children
     upignore:
     - lisp
     - custom.el
@@ -59,35 +62,28 @@ dotfiles:
   d_config_kitty:
     src: config/kitty
     dst: ~/.config/kitty
-    link: link_children
   d_config_nnn:
     src: config/nnn
     dst: ~/.config/nnn
-    link: link_children
   f_config_picom.conf:
     src: config/picom.conf
     dst: ~/.config/picom.conf
   d_config_ripgrep:
     src: config/ripgrep
     dst: ~/.config/ripgrep
-    link: link_children
   d_config_rofi:
     src: config/rofi
     dst: ~/.config/rofi
-    link: link_children
   d_config_sxhkd:
     src: config/sxhkd
     dst: ~/.config/sxhkd
-    link: link_children
   d_config_tilda:
     src: config/tilda
     dst: ~/.config/tilda
     chmod: '700'
-    link: link_children
   d_config_zsh:
     src: config/zsh
     dst: ~/.config/zsh
-    link: link_children
     actions:
     - antibody
     instignore:
@@ -115,7 +111,6 @@ dotfiles:
   d_config_interception:
     src: config/interception
     dst: ~/.config/interception
-    link: link_children
   f_tmux.conf:
     src: tmux.conf
     dst: ~/.tmux.conf
@@ -124,18 +119,13 @@ dotfiles:
   d_config_git:
     src: config/git
     dst: ~/.config/git
-    link: link_children
   d_moc:
     src: moc
     dst: ~/.moc
-    link: link_children
     chmod: '700'
-    instignore:
-    - .gitignore
   d_config_mpd:
     src: config/mpd
     dst: ~/.config/mpd
-    link: link_children
   d_config_ncmpcpp:
     src: config/ncmpcpp
     dst: ~/.config/ncmpcpp
@@ -162,11 +152,10 @@ profiles:
     - f_zshenv
     - f_xprofile
     - f_aliases
-    - d_config_interception
     - f_tmux.conf
     - d_config_git
-    - d_config_mpd
     - d_config_ncmpcpp
+    - d_config_mopidy
   apex:
     dotfiles:
     - d_config_awesome

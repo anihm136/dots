@@ -30,10 +30,10 @@ local green = "#87ed87"
 local markup = lain.util.markup
 
 -- Textclock
-local clock = wibox.widget.textclock('%a %d %b %r', 1)
+local clock = wibox.widget.textclock('%a, %d %b %l:%M %p', 60)
 clock.font = 'Inter Black 12'
 clock.align = "center"
-clock.forced_width = dpi(200)
+clock.forced_width = dpi(180)
 
 -- Calendar
 local month_calendar = awful.widget.calendar_popup.month{
@@ -211,15 +211,15 @@ local volumewidget =
 {%@@ endif @@%}
 
 -- Separators
-local first = wibox.widget.textbox(markup.font('Overpass Mono 3', ' '))
-local small_spr = wibox.widget.textbox(markup.font('Overpass Mono 4', ' '))
+local first = wibox.widget.textbox(markup.font('Inter Mono 3', ' '))
+local small_spr = wibox.widget.textbox(markup.font('Inter Mono 4', ' '))
 local bar_spr =
 	wibox.widget.textbox(
-		markup.font('Overpass Mono 3', ' ') .. markup.fontfg(
+		markup.font('Inter Mono 3', ' ') .. markup.fontfg(
 			screen_theme.font,
 			'#777777',
 			'|'
-		) .. markup.font('Overpass Mono 5', ' ')
+		) .. markup.font('Inter Mono 5', ' ')
 	)
 
 -- Eminent-like task filtering

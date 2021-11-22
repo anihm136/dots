@@ -8,9 +8,9 @@
     border-color:          White;
     text-color:           White;
     {%@@ if profile == "sorcery" @@%}
-    font:            "Overpass 12";
+    font:            "Inter 12";
     {%@@ elif profile == "apex" @@%}
-    font:            "Overpass 30";
+    font:            "Inter 30";
     {%@@ endif @@%}
 }
 
@@ -49,9 +49,9 @@ element selected {
     color: #78A4FF;
 }
 element-text, element-icon {
-  background-color: inherit;
-  text-color: inherit;
+    background-color: inherit;
+    text-color: inherit;
 }
 prompt {
-     color: #78A4FF;
+    color: #78A4FF;
 }

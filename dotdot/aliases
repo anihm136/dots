@@ -19,6 +19,7 @@ alias ssh='kitty +kitten ssh'
 alias lg='lazygit'
 alias pvpn='protonvpn-cli'
 alias timesync='sudo ntpdate pool.ntp.org'
+alias tmpd='cd $(mktemp -d)'
 
 # Common aliases
 alias l='ls -lFh'     

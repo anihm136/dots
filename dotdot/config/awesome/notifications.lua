@@ -89,6 +89,7 @@ end
 
 naughty.connect_signal('request::display', function(notif, _, args)
 	args.screen = awful.screen.focused()
+	args.title = '<b>' .. args.title .. '</b>'
 	local bound_strategy
 	if args.width or args.height or (args.preset and args.preset.width) or (args.preset and args.preset.height) then
 		bound_strategy = 'max'
@@ -104,7 +105,11 @@ naughty.connect_signal('request::display', function(notif, _, args)
 						{
 							naughty.widget.icon,
 							{
-								naughty.widget.title,
+								{
+									widget = wibox.widget.textbox,
+									text = notif.title,
+									font = "Inter Black 13"
+								},
 								naughty.widget.message,
 								spacing = 4,
 								layout = wibox.layout.fixed.vertical,

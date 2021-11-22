@@ -236,6 +236,7 @@
                     (- pt-original (+ pt 1 (length ws-second))))))))
 
 (defun +ani/evil-unimpaired-paste-above ()
+  "Linewise paste above."
   (interactive)
   (let ((register (if evil-this-register
                       evil-this-register
@@ -245,6 +246,7 @@
     (evil-paste-before 1 register)))
 
 (defun +ani/evil-unimpaired-paste-below ()
+  "Linewise paste below."
   (interactive)
   (let ((register (if evil-this-register
                       evil-this-register
@@ -254,7 +256,7 @@
     (evil-paste-after 1 register)))
 
 (defun +ani/my-init-func ()
-  "Function to run on init"
+  "Function to run on init."
   (global-subword-mode t)
   (+ani/set-random-theme)
   (setq-default uniquify-buffer-name-style 'forward
