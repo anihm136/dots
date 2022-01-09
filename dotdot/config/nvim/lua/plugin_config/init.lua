@@ -2,6 +2,7 @@ return {
 	gitsigns = require('plugin_config.gitsigns'),
 	kommentary = require('plugin_config.kommentary'),
 	lualine = require('plugin_config.lualine'),
+	feline = require('plugin_config.feline'),
 	nvim_tree = require('plugin_config.nvim_tree'),
 	nvim_cmp = require('plugin_config.nvim_cmp'),
 	hop = require('plugin_config.hop'),

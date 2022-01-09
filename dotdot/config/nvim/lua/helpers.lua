@@ -407,20 +407,20 @@ end
 helpers.install_servers = function()
 	local servers =
 		{
-			'cpp',
-			'go',
-			'lua',
-			'python',
-			'bash',
-			'css',
+			'clangd',
+			'gopls',
+			'sumneko_lua',
+			'pyright',
+			'bashls',
+			'cssls',
 			'html',
-			'json',
-			'typescript',
-			'vue',
+			'jsonls',
+			'tsserver',
+			'vuels',
 			'efm',
 		}
 	for _, server in pairs(servers) do
-		require'lspinstall'.install_server(server)
+		vim.cmd([[LspInstall ]]..server)
 	end
 end
 

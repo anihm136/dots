@@ -68,7 +68,7 @@ return require("packer").startup{
 		}
 		-- LSP/Completion
 		use"neovim/nvim-lspconfig"
-		use"kabouzeid/nvim-lspinstall"
+		use"williamboman/nvim-lsp-installer"
 		use{
 			"hrsh7th/nvim-cmp",
 			requires = {
@@ -84,11 +84,15 @@ return require("packer").startup{
 					opt = true,
 				},
 				{
+					"hrsh7th/cmp-nvim-lua",
+					opt = true,
+				},
+				{
 					"dcampos/cmp-snippy",
 					opt = true,
 				},
 			},
-			after = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path", "cmp-snippy" },
+			after = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path",  "cmp-nvim-lua", "cmp-snippy" },
 			event = "InsertEnter",
 			config = configs.nvim_cmp,
 		}
@@ -189,6 +193,7 @@ return require("packer").startup{
 			config = function()
 				require("feline").setup()
 			end,
+			-- config = configs.feline
 		}
 		use{
 			"goolord/alpha-nvim",
@@ -196,8 +201,7 @@ return require("packer").startup{
 		}
 		-- UX
 		use{
-			"anihm136/auto-pairs",
-			branch = "feat/ignore-autocmd",
+			"LunarWatcher/auto-pairs",
 			config = configs.auto_pairs,
 		}
 		use{

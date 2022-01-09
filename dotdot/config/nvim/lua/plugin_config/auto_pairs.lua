@@ -1,5 +1,5 @@
 return function()
-	vim.g.AutoPairsMapBS = true
+	vim.g.AutoPairsMapBS = false
 	vim.g.AutoPairsCompleteOnlyOnSpace = true
 	vim.g.AutoPairsShortcutToggleMultilineClose = ""
 	vim.g.AutoPairsMultilineClose = true

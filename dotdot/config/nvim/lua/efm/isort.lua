@@ -1,4 +1,3 @@
 return {
-	formatCommand = "isort --stdout --profile black -",
-	formatStdin = true,
+	formatCommand = "isort --stdout --profile black",
 }

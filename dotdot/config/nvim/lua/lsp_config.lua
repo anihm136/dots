@@ -72,9 +72,11 @@ local on_attach = function(_, bufnr)
 	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>")
 	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<cr>")
 	mapper("n", "<leader>ce", "<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>")
+	mapper("n", "<leader>cl", "<cmd>lua vim.diagnostic.open_float()<cr>")
 	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<cr>")
 	mapper("n", "<leader>cn", "<cmd>lua vim.lsp.buf.rename()<cr>")
 	mapper("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<cr>")
+	mapper("n", "<leader>cr", "<cmd>lua vim.lsp.buf.references()<cr>")
 end
 
 local function make_config()
@@ -93,33 +95,15 @@ local function make_config()
 	}
 end
 
-local function get_lua_runtime()
-	local result = {}
-	for _, path in pairs(vim.api.nvim_list_runtime_paths()) do
-		local lua_path = path .. "/lua/"
-		if vim.fn.isdirectory(lua_path) then
-			result[lua_path] = true
-		end
-	end
+local lsp_installer = require("nvim-lsp-installer")
 
-	result[vim.fn.expand("$VIMRUNTIME/lua")] = true
+-- Register a handler that will be called for all installed servers.
+-- Alternatively, you may also register handlers on specific server instances instead (see example below).
+lsp_installer.on_server_ready(function(server)
 
-	result[vim.fn.expand("~/build/neovim/src/nvim/lua")] = true
-
-	return result
-end
-
--- lsp-install
-local function setup_servers()
-	require"lspinstall".setup()
-
-	-- get all installed servers
-	local servers = require"lspinstall".installed_servers()
-
-	for _, server in pairs(servers) do
 		local config = make_config()
 
-		if server == "cpp" then
+		if server.name == "clangd" then
 			config.cmd =
 				{
 					"clangd",
@@ -140,18 +124,18 @@ local function setup_servers()
 				old_attach(client)
 				client.resolved_capabilities.document_formatting = false
 			end
-		elseif server == "typescript" then
+		elseif server.name == "tsserver" then
 			local old_attach = config.on_attach
 			config.on_attach = function(client)
 				old_attach(client)
 				client.resolved_capabilities.document_formatting = false
 			end
-		elseif server == "bash" then
+		elseif server.name == "bashls" then
 			config.filetypes = { "sh", "bash", "zsh" }
 			config.root_dir = function(_, _)
 				return "/tmp"
 			end
-		elseif server == "python" then
+		elseif server.name == "pyright" then
 			config.root_dir = function(fname)
 				local filename =
 					util.path.is_absolute(fname) and fname or util.path.join(
@@ -171,7 +155,7 @@ local function setup_servers()
 					)
 				return root_pattern(filename) or util.path.dirname(filename)
 			end
-		elseif server == "go" then
+		elseif server.name == "gopls" then
 			config.root_dir = function(fname)
 				local filename =
 					util.path.is_absolute(fname) and fname or util.path.join(
@@ -186,14 +170,13 @@ local function setup_servers()
 				old_attach(client)
 				client.resolved_capabilities.document_formatting = false
 			end
-		elseif server == "lua" then
+		elseif server.name == "sumneko_lua" then
 			config.root_dir = function(fname)
 				return util.find_git_ancestor(fname) or util.path.dirname(fname)
 			end
 			config.settings = {
 				Lua = {
 					runtime = { version = "LuaJIT" },
-					completion = { keywordSnippet = "Disable" },
 					diagnostics = {
 						enable = true,
 						disable = config.disabled_diagnostics or {
@@ -206,22 +189,21 @@ local function setup_servers()
 						),
 					},
 					workspace = {
-						library = vim.list_extend(
-							get_lua_runtime(),
-							config.library or {}
-						),
 						maxPreload = 1000,
 						preloadFileSize = 1000,
 					},
 				},
 			}
-		elseif server == "efm" then
+		elseif server.name == "hls" then
+			config.single_file_support = true
+		elseif server.name == "efm" then
 			local clangformat = require"efm/clangformat"
 			local golint = require"efm/golint"
 			local gofmt = require"efm/gofmt"
 			local black = require"efm/black"
 			local isort = require"efm/isort"
 			local flake8 = require"efm/flake8"
+			local ormolu = require"efm/ormolu"
 			local pylint = require"efm/pylint"
 			local prettier = require"efm/prettier"
 			local eslint = require"efm/eslint"
@@ -249,6 +231,7 @@ local function setup_servers()
 					"sh",
 					"bash",
 					"zsh",
+					"haskell"
 				}
 			config.root_dir = function(fname)
 				local filename =
@@ -304,59 +287,16 @@ local function setup_servers()
 					sh = { shellcheck, shfmt },
 					bash = { shellcheck, shfmt },
 					zsh = { shellcheck },
+					haskell = { ormolu }
 				},
 			}
 		end
 
-		require"lspconfig"[server].setup(
+	server:setup(
 			vim.tbl_extend("force", config, {
 				capabilities = cmp_lsp.update_capabilities(
 					vim.lsp.protocol.make_client_capabilities()
 				),
 			})
-		)
-	end
-end
-
-require"lspinstall".post_install_hook = function()
-	setup_servers()
-end
-
--- lsp.intelephense.setup{
--- 	on_attach = function(client)
--- 		client.resolved_capabilities.document_formatting = false
--- 		on_attach(client)
--- 	end,
--- 	capabilities = {
--- 		textDocument = {
--- 			completion = {
--- 				completionItem = { snippetSupport = true },
--- 			},
--- 		},
--- 	},
--- 	init_options = {
--- 		usePlaceholders = true,
--- 		completeUnimported = true,
--- 	},
--- }
-
--- local format_options_prettier = {
--- 	tabWidth = 4,
--- 	singleQuote = true,
--- 	trailingComma = "all",
--- 	configPrecedence = "prefer-file",
--- }
--- vim.g.format_options_typescript = format_options_prettier
--- vim.g.format_options_javascript = format_options_prettier
--- vim.g.format_options_typescriptreact = format_options_prettier
--- vim.g.format_options_javascriptreact = format_options_prettier
--- vim.g.format_options_vue = format_options_prettier
--- vim.g.format_options_json = format_options_prettier
--- vim.g.format_options_css = format_options_prettier
--- vim.g.format_options_scss = format_options_prettier
--- vim.g.format_options_html = format_options_prettier
--- vim.g.format_options_yaml = format_options_prettier
--- vim.g.format_options_markdown = format_options_prettier
--- vim.g.format_options_lua = format_options_prettier
-
-setup_servers()
+)
+end)
