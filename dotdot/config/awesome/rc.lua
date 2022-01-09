@@ -118,6 +118,11 @@ client.connect_signal("focus", function(c)
 	end
 end)
 
+-- Switch automatically to urgent client
+client.connect_signal("request::urgent", function(c)
+	c:jump_to()
+end)
+
 -- ===================================================================
 -- Client Focusing
 -- ===================================================================

@@ -129,9 +129,11 @@ dotfiles:
   d_config_ncmpcpp:
     src: config/ncmpcpp
     dst: ~/.config/ncmpcpp
-    link: link_children
     instignore:
     - .gitignore
+  d_config_mopidy:
+    src: config/mopidy
+    dst: ~/.config/mopidy
 profiles:
   sorcery:
     dotfiles:
