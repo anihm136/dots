@@ -42,32 +42,10 @@ e() {
             --multi \
             --preview="${FZF_PREVIEW_CMD}" \
             --preview-window='right:hidden:wrap' \
-            --bind=ctrl-v:toggle-preview \
-            --bind=ctrl-x:toggle-sort \
-            --header='(view:ctrl-v) (sort:ctrl-x)'
-      )"
-    ) || return
-    local args=("${(f)files}")
-    ${EDITOR:-nvim} ${args[@]}
-  fi
-}
-
-egi() {
-  if [[ -n "$@" ]]; then
-    nvim $@
-  else
-    local FZF_PREVIEW_CMD='bat --color=always --plain --line-range :$FZF_PREVIEW_LINES {}'
-    local IFS=$'\n'
-    local files=()
-    files=(
-      "$(fd --no-ignore-vcs | fzf \
-            --query="$1" \
-            --multi \
-            --preview="${FZF_PREVIEW_CMD}" \
-            --preview-window='right:hidden:wrap' \
-            --bind=ctrl-v:toggle-preview \
-            --bind=ctrl-x:toggle-sort \
-            --header='(view:ctrl-v) (sort:ctrl-x)'
+            --bind='ctrl-v:toggle-preview' \
+            --bind='ctrl-g:reload(fd --no-ignore-vcs)' \
+            --bind="ctrl-r:reload(${FZF_DEFAULT_COMMAND})" \
+            --header='(view:ctrl-v) (reload:ctrl-r) (view ignored:ctrl-g)'
       )"
     ) || return
     local args=("${(f)files}")
@@ -165,4 +143,9 @@ remtool() {
       do; asdf uninstall $lang $version; done;
     fi
   fi
+}
+
+swapfiles() {
+  local TMPFILE=$(mktemp)
+  mv "$1" "$TMPFILE" && mv "$2" "$1" && mv "$TMPFILE" "$2"
 }

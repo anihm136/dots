@@ -75,6 +75,8 @@ eval "$(asdf exec direnv hook zsh)"
 eval "$(pipenv --completion)"
 eval "$(register-python-argcomplete pipx)"
 eval "$(zoxide init --cmd j --hook pwd zsh)"
+# eval "$(stack --bash-completion-script stack)"
+complete -C '/sbin/aws_completer' aws
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   [[ -d "$HOME/perl5/lib/perl5" ]] && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi
@@ -82,7 +84,7 @@ fi
 # Signal handler for reloading neovim
 catch_signal_usr1() {
   trap catch_signal_usr1 USR1
-  nvim -c ":LoadSession!"
+  nvim -c ":LoadLastSession!"
 }
 trap catch_signal_usr1 USR1
 
@@ -103,9 +105,3 @@ source /usr/share/doc/pkgfile/command-not-found.zsh
 
 # Set $JAVA_HOME using ASDF
 source "$ASDF_DATA_DIR/plugins/java/set-java-home.zsh"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/anihm136/build/gcloud/google-cloud-sdk/path.zsh.inc' ]; then . '/home/anihm136/build/gcloud/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/anihm136/build/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/anihm136/build/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
