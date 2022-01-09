@@ -6,8 +6,6 @@
 	excludesFile = {{@@ home @@}}/.config/git/ignore
 [interactive]
 	diffFilter = delta --color-only
-[pull]
-	ff = only
 [credential]
 	helper = /usr/share/git/credential/libsecret/git-credential-libsecret
 [init]
@@ -51,3 +49,9 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[pull]
+	rebase = true
+[push]
+	default = current
+[fetch]
+	prune = true
