@@ -59,7 +59,8 @@
 (package! org-appear
   :recipe (:host github :repo "awth13/org-appear"))
 (package! org-diagrams
-  :recipe (:local-repo "lisp/org-diagrams"))
+  :recipe (:host github :repo "anihm136/org-diagrams" :branch "hotfix"))
 (package! aggressive-indent)
 (package! org-ql)
-;; (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+(package! code-review :disable t)

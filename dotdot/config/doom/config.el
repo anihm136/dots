@@ -29,6 +29,7 @@
 ;; Eager loading
 (setq-default tab-width 2
               standard-indent 2
+              load-prefer-newer t
               org-download-image-dir "./images"
               org-download-heading-lvl 'nil
               ispell-dictionary "en-custom"
@@ -78,23 +79,63 @@
         org-export-preserve-breaks t
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
+        org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")
+                            (sequence "REFILE(f)" "READ(r)" "PROJECT(p)" "|"))
         org-capture-templates
-        '(("l" "org-protocol-capture" entry (file "~/Documents/org/reading.org")
-           "* [[%:link][%:description]]\n %i"
+        `(("i" "Inbox" entry
+           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+           "* REFILE %i%?")
+          ("l" "Org protocol" entry
+           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+           "* READ [[%:link][%:description]]\n %i"
            :immediate-finish t)
-          ("k" "Cliplink capture task" entry (file "~/Documents/org/reading.org")
-           "* %(org-cliplink-capture)\n" :immediate-finish t)))
+          ("k" "Clipboard link" entry
+           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+           "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
   (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'proselint 'org-mode))
-  (+org-pretty-mode))
+    (flycheck-add-mode 'proselint 'org-mode)))
 
-(add-hook! 'org-mode-hook 'org-diagrams-init)
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
 (add-hook! 'org-mode-hook 'org-appear-mode)
+(add-hook! 'org-mode-hook '+org-pretty-mode)
+
+(use-package! org-diagrams
+  :commands (org-diagrams-insert-at-point-and-edit org-diagrams-edit-at-point org-diagrams-init)
+  :config (progn
+            (setq
+             org-diagrams-editor "drawio"
+             org-diagrams-on-update "drawio -x -f png -o ${OUT} ${IN}")
+            (org-diagrams-init)))
+
 (map! :map org-mode-map
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
       :i "C-c i" (lambda () (interactive) (org-emphasize ?/))
       :i "C-c m" (lambda () (interactive) (progn (insert "\\(\\)") (backward-char 2))))
+
+(use-package! org-agenda
+  :defer t
+  :init
+  (defalias '+org--restart-mode-h #'ignore)
+  (setq
+   org-agenda-files '("~/Documents/org/GTD")
+   org-refile-targets `((,(concat ani/org-directory "GTD/" "projects.org") :maxlevel . 3)
+                        (,(concat ani/org-directory "GTD/" "tasks.org") :maxlevel . 2)
+                        (,(concat ani/org-directory "GTD/" "reading.org") :level . 1)
+                        (,(concat ani/org-directory "GTD/" "someday.org") :level . 1))
+   gtd/next-action-head "Next actions:"
+   gtd/project-todos-head "Projects:"
+   gtd/task-todos-head "Tasks:"
+   gtd/waiting-head  "Waiting on:"
+   gtd/inbox-head  "Dump:"
+   org-agenda-custom-commands
+   `(("g" "GTD view"
+      ((agenda "" ((org-agenda-span 'day) (org-agenda-start-on-weekday nil)))
+       (todo "REFILE|READ" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org"))) (org-agenda-overriding-header gtd/inbox-head)))
+       (todo "NEXT" ((org-agenda-overriding-header gtd/next-action-head)))
+       (todo "REFILE|PROJECT" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org"))) (org-agenda-overriding-header gtd/project-todos-head)))
+       (todo "REFILE|TODO" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org"))) (org-agenda-overriding-header gtd/task-todos-head)))
+       (todo "WAITING" ((org-agenda-overriding-header gtd/waiting-head)))))
+     ("r" "Reading list" todo "READ" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org"))))))))
 
 (use-package! org-protocol
   :defer t
@@ -110,17 +151,15 @@
         org-roam-db-location (concat org-roam-directory "org-roam.db")
         org-roam-completion-fuzzy-match t
         org-roam-capture-templates
-        '(("d" "default" plain (function org-roam-capture--get-point)
-           "%?"
-           :file-name "${slug}"
-           :head "#+TITLE: ${title}\n"
+        '(("d" "default" plain "%?" :target
+           (file+head "${slug}.org" "#+title: ${title}\n")
            :unnarrowed t))
         org-roam-buffer-width 0.25))
 
 (use-package! magit
   :defer t
   :config
-  (setq magit-repository-directories '(("~/vcs/" . 2))
+  (setq magit-repository-directories '(("~/vcs/" . 2) ("~/os_contrib/" . 2))
         global-git-commit-mode t))
 
 (use-package! company
@@ -160,9 +199,6 @@
                      org-download-link-format)
              (org-link-escape (file-relative-name filename))))
    org-image-actual-width 400))
-
-(use-package! org-diagrams
-  :after org)
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -287,10 +323,10 @@
         :n "]p" '+ani/evil-unimpaired-paste-below
         :n "[p" '+ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
-        :i "C-v" "C-r C-o +"
+        :i "C-v" "C-r +"
         :desc "Set random theme"
         :n "<f12>" '+ani/set-random-theme
-        :n "S-<f12>" (λ! () (ani/set-random-theme 't))))
+        :n "S-<f12>" (λ! () (+ani/set-random-theme 't))))
 
 
 (defun +ani/set-random-theme (&optional light)
