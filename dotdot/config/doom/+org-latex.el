@@ -75,13 +75,7 @@ The cdr may be a:
 
 \\setlength{\\parskip}{\\baselineskip}\n\
 \\setlength{\\parindent}{0pt}\n\
-\\usepackage{enumitem}
-\\setlist[itemize]{noitemsep}
-\\setlist[enumerate]{noitemsep}
-\\setlist[description]{noitemsep}
-\\setlist[itemize]{nosep}
-\\setlist[enumerate]{nosep}
-\\setlist[description]{nosep}"
+\\usepackage{enumitem}"
 
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")

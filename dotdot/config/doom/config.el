@@ -76,7 +76,6 @@
         org-log-done 'time
         org-log-into-drawer t
         org-log-state-notes-insert-after-drawers nil
-        org-export-preserve-breaks t
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
         org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")
