@@ -1,6 +1,6 @@
 #! /usr/bin/sh
 
-alias joplin='gtk-launch joplin'
+alias joplin='joplin-desktop'
 alias libreoffice='libreoffice --nologo'
 alias writer='libreoffice --nologo --writer &!'
 alias calc='libreoffice --nologo --calc &!'
@@ -21,6 +21,8 @@ alias pvpn='protonvpn-cli'
 alias timesync='sudo ntpdate pool.ntp.org'
 alias tmpd='cd $(mktemp -d)'
 alias tmuxonly="tmux kill-pane -a -t 1"
+alias instagram="firefox -P Instagram --kiosk 'https://www.instagram.com' &!"
+alias whatsapp="firefox -P WhatsApp --kiosk 'https://web.whatsapp.com' &!"
 
 # Common aliases
 alias l='ls -lFh'     
