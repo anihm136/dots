@@ -17,8 +17,9 @@ return require("packer").startup{
 			config = configs.vim_rooter,
 		}
 		use{
-			-- 'anihm136/kommentary',
-			"b3nj5m1n/kommentary",
+			-- '~/code/os_contrib/kommentary',
+			'anihm136/kommentary', branch = "feat/default_hooks",
+			-- "b3nj5m1n/kommentary",
 			config = configs.kommentary,
 			setup = setups.kommentary,
 			keys = { "gc", "gcc", "gcy", "gcyy", "gcd", "gcdd" },

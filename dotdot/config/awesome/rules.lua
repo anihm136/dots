@@ -27,11 +27,9 @@ function rules.create(clientkeys, clientbuttons)
 			screen = awful.screen.preferred,
 			placement = awful.placement.no_overlap + awful.placement.no_offscreen,
 			size_hints_honor = false,
+			fullscreen = false,
+			maximized = false,
 			callback = function(c)
-				c.maximized, c.maximized_vertical, c.maximized_horizontal =
-					false,
-					false,
-					false
 				if c.transient_for then
 					c:move_to_tag(c.transient_for.first_tag)
 				end
@@ -71,8 +69,8 @@ function rules.create(clientkeys, clientbuttons)
 				'Signal',
 			},
 			name = {
-				'.*Instagram',
-				'.*WhatsApp'
+				'^.*Instagram.*Mozilla Firefox$',
+				'^.*WhatsApp.*Mozilla Firefox$'
 			}
 		},
 		properties = {

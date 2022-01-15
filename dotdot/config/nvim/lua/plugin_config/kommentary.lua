@@ -2,8 +2,11 @@ return function()
 	local kconfig = require("kommentary.config")
 	kconfig.configure_language("default", {
 		prefer_single_line_comments = true,
+		hook_function = function()
+			require("ts_context_commentstring.internal").update_commentstring()
+		end,
 	})
-	function _G.comment_and_duplicate(...)
+	local function comment_and_duplicate(...)
 		local args = { ... }
 		local start_line = args[1]
 		local end_line = args[2]
@@ -17,7 +20,7 @@ return function()
 		)
 		require("kommentary").toggle_comment(...)
 	end
-	function _G.comment_and_yank(...)
+	local function comment_and_yank(...)
 		local args = { ... }
 		local start_line = args[1]
 		local end_line = args[2]
@@ -71,10 +74,7 @@ return function()
 	)
 
 	local map = vim.api.nvim_set_keymap
-	local opts = {
-		silent = true,
-	}
-
+	local opts = { silent = true }
 
 	map("n", "gcc", "<Plug>kommentary_line_default", opts)
 

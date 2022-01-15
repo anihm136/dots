@@ -407,16 +407,16 @@ keys.globalkeys = my_table.join(
 	-- CLIENT RESIZING
 	-- =========================================
 
-	awful.key({ modkey, ctrl }, 'Down', function(c)
+	awful.key({ modkey, ctrl }, 'Down', function()
 		resize_client(client.focus, 'down')
 	end),
-	awful.key({ modkey, ctrl }, 'Up', function(c)
+	awful.key({ modkey, ctrl }, 'Up', function()
 		resize_client(client.focus, 'up')
 	end),
-	awful.key({ modkey, ctrl }, 'Left', function(c)
+	awful.key({ modkey, ctrl }, 'Left', function()
 		resize_client(client.focus, 'left')
 	end),
-	awful.key({ modkey, ctrl }, 'Right', function(c)
+	awful.key({ modkey, ctrl }, 'Right', function()
 		resize_client(client.focus, 'right')
 	end),
 	-- =========================================
@@ -603,6 +603,10 @@ keys.clientkeys = gears.table.join(
 	}),
 	awful.key({ modkey, 'Shift' }, 'c', awful.placement.centered, {
 		description = 'center floating client',
+		group = 'client',
+	}),
+	awful.key({ modkey, 'Shift' }, 'g', awful.rules.apply, {
+		description = 'reapply rules to client',
 		group = 'client',
 	}),
 	awful.key(

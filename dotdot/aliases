@@ -21,8 +21,8 @@ alias pvpn='protonvpn-cli'
 alias timesync='sudo ntpdate pool.ntp.org'
 alias tmpd='cd $(mktemp -d)'
 alias tmuxonly="tmux kill-pane -a -t 1"
-alias instagram="firefox -P Instagram --kiosk 'https://www.instagram.com' &!"
-alias whatsapp="firefox -P WhatsApp --kiosk 'https://web.whatsapp.com' &!"
+alias instagram="firefox -P Instagram --kiosk 'https://www.instagram.com' &!; sleep 2; awesome-client 'local c = client.focus; c.name = [[Instagram - Mozilla Firefox]]; c.fullscreen = false; require[[awful]].rules.apply(c)'"
+alias whatsapp="firefox -P WhatsApp --kiosk 'https://web.whatsapp.com' &!; sleep 2; awesome-client 'local c = client.focus; c.name = [[WhatsApp - Mozilla Firefox]]; c.fullscreen = false; require[[awful]].rules.apply(c)'"
 
 # Common aliases
 alias l='ls -lFh'     
