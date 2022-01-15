@@ -1,3 +1,4 @@
+configuration {
+	matching: "fuzzy";
+}
 @theme "themes/default"
-
-
