@@ -16,4 +16,4 @@ let g:loaded_netrwSettings     = 1 "$VIMRUNTIME/autoload/netrwSettings.vim
 let g:loaded_rrhelper          = 1 "$VIMRUNTIME/plugin/rrhelper.vim
 let g:loaded_vimball           = 1 "$VIMRUNTIME/autoload/vimball.vim
 let g:loaded_vimballPlugin     = 1 "$VIMRUNTIME/plugin/vimballPlugin.vim
-let g:did_load_filetypes       = 1
+let g:did_load_filetypes       = 0

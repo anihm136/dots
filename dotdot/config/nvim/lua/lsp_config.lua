@@ -66,8 +66,9 @@ local on_init = function(client)
 	client.config.flags.allow_incremental_sync = true
 end
 
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+	client.resolved_capabilities.document_formatting = false
 	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<cr>")
 	mapper("n", "[e", "<cmd>lua vim.lsp.diagnostic.goto_prev()<cr>")
 	mapper("n", "]e", "<cmd>lua vim.lsp.diagnostic.goto_next()<cr>")
@@ -99,163 +100,140 @@ local lsp_installer = require("nvim-lsp-installer")
 
 -- Register a handler that will be called for all installed servers.
 -- Alternatively, you may also register handlers on specific server instances instead (see example below).
-lsp_installer.on_server_ready(function(server)
+lsp_installer.on_server_ready(function(server) -- Neovim
+	local config = make_config()
 
-		local config = make_config()
-
-		if server.name == "clangd" then
-			config.cmd =
-				{
-					"clangd",
-					"--background-index",
-					"--clang-tidy",
-					"--suggest-missing-includes",
-					"--header-insertion=iwyu",
-				}
-			config.filetypes = { "c", "cpp" }
-
-			config.init_options = {
-				usePlaceholders = true,
-				completeUnimported = true,
-				clangdFileStatus = true,
+	if server.name == "clangd" then
+		config.cmd =
+			{
+				"clangd",
+				"--background-index",
+				"--clang-tidy",
+				"--suggest-missing-includes",
+				"--header-insertion=iwyu",
 			}
-			local old_attach = config.on_attach
-			config.on_attach = function(client)
-				old_attach(client)
-				client.resolved_capabilities.document_formatting = false
-			end
-		elseif server.name == "tsserver" then
-			local old_attach = config.on_attach
-			config.on_attach = function(client)
-				old_attach(client)
-				client.resolved_capabilities.document_formatting = false
-			end
-		elseif server.name == "bashls" then
-			config.filetypes = { "sh", "bash", "zsh" }
-			config.root_dir = function(_, _)
-				return "/tmp"
-			end
-		elseif server.name == "pyright" then
-			config.root_dir = function(fname)
-				local filename =
-					util.path.is_absolute(fname) and fname or util.path.join(
-						vim.loop.cwd(),
-						fname
-					)
-				local root_pattern =
-					util.root_pattern(
-						"setup.py",
-						"setup.cfg",
-						"requirements.txt",
-						"mypy.ini",
-						".pylintrc",
-						".flake8rc",
-						".git",
-						".gitignore"
-					)
-				return root_pattern(filename) or util.path.dirname(filename)
-			end
-		elseif server.name == "gopls" then
-			config.root_dir = function(fname)
-				local filename =
-					util.path.is_absolute(fname) and fname or util.path.join(
-						vim.loop.cwd(),
-						fname
-					)
-				local root_pattern = util.root_pattern("go.mod", ".git")
-				return root_pattern(filename) or util.path.dirname(filename)
-			end
-			local old_attach = config.on_attach
-			config.on_attach = function(client)
-				old_attach(client)
-				client.resolved_capabilities.document_formatting = false
-			end
-		elseif server.name == "sumneko_lua" then
-			config.root_dir = function(fname)
-				return util.find_git_ancestor(fname) or util.path.dirname(fname)
-			end
-			config.settings = {
-				Lua = {
-					runtime = { version = "LuaJIT" },
-					diagnostics = {
-						enable = true,
-						disable = config.disabled_diagnostics or {
-							"trailing-space",
+		config.filetypes = { "c", "cpp" }
+
+		config.init_options = {
+			usePlaceholders = true,
+			completeUnimported = true,
+			clangdFileStatus = true,
+		}
+	elseif server.name == "bashls" then
+		config.filetypes = { "sh", "bash", "zsh" }
+		config.root_dir = function(_, _)
+			return "/tmp"
+		end
+	elseif server.name == "pyright" then
+		config.root_dir = function(fname)
+			local filename =
+				util.path.is_absolute(fname) and fname or util.path.join(
+					vim.loop.cwd(),
+					fname
+				)
+			local root_pattern =
+				util.root_pattern(
+					"setup.py",
+					"setup.cfg",
+					"requirements.txt",
+					"mypy.ini",
+					".pylintrc",
+					".flake8rc",
+					".git",
+					".gitignore"
+				)
+			return root_pattern(filename) or util.path.dirname(filename)
+		end
+	elseif server.name == "gopls" then
+		config.root_dir = function(fname)
+			local filename =
+				util.path.is_absolute(fname) and fname or util.path.join(
+					vim.loop.cwd(),
+					fname
+				)
+			local root_pattern = util.root_pattern("go.mod", ".git")
+			return root_pattern(filename) or util.path.dirname(filename)
+		end
+	elseif server.name == "sumneko_lua" then
+		config.root_dir = function(fname)
+			return util.find_git_ancestor(fname) or util.path.dirname(fname)
+		end
+		config.settings = {
+			Lua = {
+				runtime = { version = "LuaJIT" },
+				diagnostics = {
+					enable = true,
+					disable = config.disabled_diagnostics or {
+						"trailing-space",
+					},
+					globals = vim.list_extend(
+						{
+							"vim",
+							"describe",
+							"it",
+							"before_each",
+							"after_each",
+							"teardown",
+							"pending",
+							"clear",
+							"awesome",
 						},
-						globals = vim.list_extend(
-							{ -- Neovim
-							"vim", "describe", "it", "before_each", "after_each", "teardown", "pending", "clear", "awesome" },
-							config.globals or {}
-						),
-					},
-					workspace = {
-						maxPreload = 1000,
-						preloadFileSize = 1000,
-					},
+						config.globals or {}
+					),
 				},
+				workspace = {
+					maxPreload = 1000,
+					preloadFileSize = 1000,
+				},
+			},
+		}
+	elseif server.name == "hls" then
+		config.single_file_support = true
+	elseif server.name == "efm" then
+		local clangformat = require"efm/clangformat"
+		local golint = require"efm/golint"
+		local gofmt = require"efm/gofmt"
+		local black = require"efm/black"
+		local isort = require"efm/isort"
+		local flake8 = require"efm/flake8"
+		local ormolu = require"efm/ormolu"
+		local pylint = require"efm/pylint"
+		local prettier = require"efm/prettier"
+		local eslint = require"efm/eslint"
+		local shellcheck = require"efm/shellcheck"
+		local shfmt = require"efm/shfmt"
+		config.init_options = { documentFormatting = true }
+		config.filetypes =
+			{
+				"lua",
+				"c",
+				"cpp",
+				"go",
+				"python",
+				"typescript",
+				"javascript",
+				"typescriptreact",
+				"javascriptreact",
+				"vue",
+				"yaml",
+				"json",
+				"html",
+				"scss",
+				"css",
+				"markdown",
+				"sh",
+				"bash",
+				"zsh",
+				"haskell",
 			}
-		elseif server.name == "hls" then
-			config.single_file_support = true
-		elseif server.name == "efm" then
-			local clangformat = require"efm/clangformat"
-			local golint = require"efm/golint"
-			local gofmt = require"efm/gofmt"
-			local black = require"efm/black"
-			local isort = require"efm/isort"
-			local flake8 = require"efm/flake8"
-			local ormolu = require"efm/ormolu"
-			local pylint = require"efm/pylint"
-			local prettier = require"efm/prettier"
-			local eslint = require"efm/eslint"
-			local shellcheck = require"efm/shellcheck"
-			local shfmt = require"efm/shfmt"
-			config.init_options = { documentFormatting = true }
-			config.filetypes =
-				{
-					"lua",
-					"c",
-					"cpp",
-					"go",
-					"python",
-					"typescript",
-					"javascript",
-					"typescriptreact",
-					"javascriptreact",
-					"vue",
-					"yaml",
-					"json",
-					"html",
-					"scss",
-					"css",
-					"markdown",
-					"sh",
-					"bash",
-					"zsh",
-					"haskell"
-				}
-			config.root_dir = function(fname)
-				local filename =
-					util.path.is_absolute(fname) and fname or util.path.join(
-						vim.loop.cwd(),
-						fname
-					)
-				local root_pattern =
-					util.root_pattern(
-						"setup.py",
-						"setup.cfg",
-						"requirements.txt",
-						"mypy.ini",
-						".pylintrc",
-						".flake8rc",
-						"go.mod",
-						"package.json",
-						".git",
-						".gitignore"
-					)
-				return root_pattern(filename) or util.path.dirname(filename)
-			end
-			config.settings = {
-				rootMarkers = {
+		config.root_dir = function(fname)
+			local filename =
+				util.path.is_absolute(fname) and fname or util.path.join(
+					vim.loop.cwd(),
+					fname
+				)
+			local root_pattern =
+				util.root_pattern(
 					"setup.py",
 					"setup.cfg",
 					"requirements.txt",
@@ -265,38 +243,59 @@ lsp_installer.on_server_ready(function(server)
 					"go.mod",
 					"package.json",
 					".git",
-					".gitignore",
-				},
-				languages = {
-					lua = { prettier },
-					c = { clangformat },
-					cpp = { clangformat },
-					go = { golint, gofmt },
-					python = { black, isort, flake8, pylint },
-					typescript = { prettier, eslint },
-					javascript = { prettier, eslint },
-					typescriptreact = { prettier, eslint },
-					javascriptreact = { prettier, eslint },
-					vue = { prettier, eslint },
-					yaml = { prettier },
-					json = { prettier },
-					html = { prettier },
-					scss = { prettier },
-					css = { prettier },
-					markdown = { prettier },
-					sh = { shellcheck, shfmt },
-					bash = { shellcheck, shfmt },
-					zsh = { shellcheck },
-					haskell = { ormolu }
-				},
-			}
+					".gitignore"
+				)
+			return root_pattern(filename) or util.path.dirname(filename)
 		end
+		config.settings = {
+			rootMarkers = {
+				"setup.py",
+				"setup.cfg",
+				"requirements.txt",
+				"mypy.ini",
+				".pylintrc",
+				".flake8rc",
+				"go.mod",
+				"package.json",
+				".git",
+				".gitignore",
+			},
+			languages = {
+				lua = { prettier },
+				c = { clangformat },
+				cpp = { clangformat },
+				go = { golint, gofmt },
+				python = { black, isort, flake8, pylint },
+				typescript = { prettier, eslint },
+				javascript = { prettier, eslint },
+				typescriptreact = { prettier, eslint },
+				javascriptreact = { prettier, eslint },
+				vue = { prettier, eslint },
+				yaml = { prettier },
+				json = { prettier },
+				html = { prettier },
+				scss = { prettier },
+				css = { prettier },
+				markdown = { prettier },
+				sh = { shellcheck, shfmt },
+				bash = { shellcheck, shfmt },
+				zsh = { shellcheck },
+				haskell = { ormolu },
+			},
+		}
+		local old_attach = config.on_attach
+		config.on_attach = function(client, bufnr)
+			old_attach(client, bufnr)
+			client.resolved_capabilities.document_formatting = true
+		end
+	end
 
 	server:setup(
-			vim.tbl_extend("force", config, {
-				capabilities = cmp_lsp.update_capabilities(
-					vim.lsp.protocol.make_client_capabilities()
-				),
-			})
-)
+		vim.tbl_extend("force", config, {
+			capabilities = cmp_lsp.update_capabilities(
+				vim.lsp.protocol.make_client_capabilities()
+			),
+		})
+	)
+
 end)

@@ -155,6 +155,12 @@ return require("packer").startup{
 			"chrisbra/csv.vim",
 			ft = "csv",
 		}
+		use{
+			'rhysd/vim-llvm',
+			config = function()
+				vim.g.llvm_ext_no_mapping = true
+			end
+		}
 		use"tridactyl/vim-tridactyl"
 		-- Language-specific
 		use{
@@ -178,6 +184,7 @@ return require("packer").startup{
 		use"wellle/targets.vim"
 		use"chaoren/vim-wordmotion"
 		-- UI
+		use 'stevearc/dressing.nvim'
 		use"anihm136/statusline-themer"
 		use"junegunn/rainbow_parentheses.vim"
 		use{
@@ -304,7 +311,7 @@ return require("packer").startup{
 			"Shatur/neovim-session-manager",
 			config = function()
 				require("session_manager").setup{
-					autoload_last_session = false,
+					autoload_mode = require('session_manager.config').AutoloadMode.Disabled,
 				}
 			end,
 		}
@@ -330,7 +337,6 @@ return require("packer").startup{
 			requires = { "nvim-telescope/telescope.nvim" },
 		}
 		use"weilbith/nvim-lsp-smag"
-		use"nathom/filetype.nvim"
 	end,
 	config = {
 		compile_path = vim.fn.stdpath("config") .. "/lua/packer_compiled.lua",
