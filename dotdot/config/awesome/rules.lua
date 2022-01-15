@@ -66,12 +66,14 @@ function rules.create(clientkeys, clientbuttons)
 				'discord',
 				'Slack',
 				'Element',
-				'whatsapp-nativefier-d40211',
-				'instagram-nativefier-9dcf0f',
 				'Microsoft Teams - Preview',
 				'TelegramDesktop',
 				'Signal',
 			},
+			name = {
+				'.*Instagram',
+				'.*WhatsApp'
+			}
 		},
 		properties = {
 			{%@@ if profile == "sorcery" @@%}
@@ -80,6 +82,19 @@ function rules.create(clientkeys, clientbuttons)
 			{%@@ elif profile == "apex" @@%}
 			screen = 1,
 			tag = awful.util.tagnames[5],
+			{%@@ endif @@%}
+		},
+	}, {
+		rule_any = {
+			class = { 'Spotify' },
+		},
+		properties = {
+			{%@@ if profile == "sorcery" @@%}
+			screen = 2,
+			tag = awful.util.tagnames_2[4],
+			{%@@ elif profile == "apex" @@%}
+			screen = 1,
+			tag = awful.util.tagnames[6],
 			{%@@ endif @@%}
 		},
 	}, {

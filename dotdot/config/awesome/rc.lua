@@ -36,7 +36,7 @@ require('ui')
 
 {%@@ if profile == "sorcery" @@%}
 awful.util.tagnames_1 = { "WS1_1", "WS1_2", "WWW", "MEDIA", "EMACS", "E1" }
-awful.util.tagnames_2 = { "WS2_1", "WS2_2", "SOCIAL", "READ", "E2" }
+awful.util.tagnames_2 = { "WS2_1", "WS2_2", "SOCIAL", "MEDIA", "E2" }
 {%@@ elif profile == "apex" @@%}
 awful.util.tagnames = {"WS1", "WS2", "WS3", "WWW", "SOCIAL", "MEDIA", "EMACS", "READ", "9"}
 {%@@ endif @@%}
@@ -48,19 +48,6 @@ awful.layout.layouts =
 		awful.layout.suit.floating,
 		lain.layout.centerwork,
 	}
-
--- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
-screen.connect_signal("property::geometry", function(s)
-	-- Wallpaper
-	if beautiful.wallpaper then
-		local wallpaper = beautiful.wallpaper
-		-- If wallpaper is a function, call it with the screen
-		if type(wallpaper) == "function" then
-			wallpaper = wallpaper(s)
-		end
-		gears.wallpaper.maximized(wallpaper, s, true)
-	end
-end)
 
 -- Handles borders
 
@@ -111,7 +98,7 @@ client.connect_signal("unmanage", function(c)
 	end
 end)
 
--- Change focused window when client is switched
+-- Change focused screen when client is switched
 client.connect_signal("focus", function(c)
 	if awful.screen.focused() ~= c.screen then
 		awful.screen.focus(c.screen)
@@ -120,7 +107,7 @@ end)
 
 -- Switch automatically to urgent client
 client.connect_signal("request::urgent", function(c)
-	c:jump_to()
+	c:raise()
 end)
 
 -- ===================================================================

@@ -111,7 +111,7 @@ naughty.connect_signal('request::display', function(notif, _, args)
 									font = "Inter Black 13"
 								},
 								naughty.widget.message,
-								spacing = 4,
+								spacing = 12,
 								layout = wibox.layout.fixed.vertical,
 							},
 							fill_space = true,
