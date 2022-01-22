@@ -6,6 +6,7 @@ actions:
     ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
+  neovim: '[[ -d ~/.local/share/nvim/site/pack/packer ]] || git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim'
 dynvariables:
   home: echo $HOME
 config:
@@ -26,6 +27,8 @@ dotfiles:
   d_config_nvim:
     src: config/nvim
     dst: ~/.config/nvim
+    actions:
+    - neovim
   d_config_alacritty:
     src: config/alacritty
     dst: ~/.config/alacritty
@@ -157,7 +160,7 @@ profiles:
     - f_tmux.conf
     - d_config_git
     - d_config_ncmpcpp
-    - d_config_mopidy
+    # - d_config_mopidy
   apex:
     dotfiles:
     - d_config_awesome
@@ -176,3 +179,4 @@ profiles:
     - d_config_interception
     - f_tmux.conf
     - d_config_git
+    - d_moc
