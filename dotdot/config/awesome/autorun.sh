@@ -18,7 +18,7 @@ run tilda
 {%@@ if profile == "sorcery" @@%}
 run thunderbird
 run slack
-run teams
+# run teams
 run2 discord Discord
 run element-desktop
 # run signal-desktop

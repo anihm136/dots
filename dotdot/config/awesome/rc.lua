@@ -22,13 +22,13 @@ require("awful.hotkeys_popup.keys")
 require("notifications")
 
 -- Set default applications
-local apps = require('apps')
-for k,v in pairs(apps) do
+local apps = require("apps")
+for k, v in pairs(apps) do
 	awful.util[k] = v
 end
 
 -- UI stuff
-require('ui')
+require("ui")
 
 -- ===================================================================
 -- Set Up Screen & Connect Signals
@@ -119,7 +119,10 @@ require("awful.autofocus")
 
 -- Focus clients under mouse
 client.connect_signal("mouse::enter", function(c)
-	c:emit_signal("request::activate", "mouse_enter", { raise = false })
+	c:activate({
+		context = "mouse_enter",
+		raise = false,
+	})
 end)
 client.connect_signal("focus", function(c)
 	c.border_color = beautiful.border_focus
@@ -138,5 +141,6 @@ awful.rules.rules = create_rules(keys.clientkeys, keys.clientbuttons)
 
 collectgarbage("setpause", 110)
 collectgarbage("setstepmul", 1000)
+
 
 awful.spawn.easy_async_with_shell("~/.config/awesome/autorun.sh")

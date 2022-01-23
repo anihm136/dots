@@ -22,7 +22,7 @@ vim.lsp.handlers["textDocument/formatting"] = function(err, result, ctx)
 	end
 	if not vim.api.nvim_buf_get_option(ctx.bufnr, "modified") then
 		local view = vim.fn.winsaveview()
-		vim.lsp.util.apply_text_edits(result, ctx.bufnr)
+		vim.lsp.util.apply_text_edits(result, ctx.bufnr, 'utf-16')
 		vim.fn.winrestview(view)
 		if ctx.bufnr == vim.api.nvim_get_current_buf() then
 			vim.cmd[[noautocmd :update]]

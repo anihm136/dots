@@ -52,6 +52,8 @@
         doom-modeline-unicode-fallback t
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
+(load! "lisp/llvm-mode")
+
 ;; Deferred loading
 (defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
@@ -78,7 +80,7 @@
         org-log-state-notes-insert-after-drawers nil
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
-        org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")
+        org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
                             (sequence "REFILE(f)" "READ(r)" "PROJECT(p)" "|"))
         org-capture-templates
         `(("i" "Inbox" entry
@@ -126,15 +128,31 @@
    gtd/task-todos-head "Tasks:"
    gtd/waiting-head  "Waiting on:"
    gtd/inbox-head  "Dump:"
+   gtd/recurring-head  "Recurring tasks:"
    org-agenda-custom-commands
    `(("g" "GTD view"
-      ((agenda "" ((org-agenda-span 'day) (org-agenda-start-on-weekday nil)))
-       (todo "REFILE|READ" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org"))) (org-agenda-overriding-header gtd/inbox-head)))
-       (todo "NEXT" ((org-agenda-overriding-header gtd/next-action-head)))
-       (todo "REFILE|PROJECT" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org"))) (org-agenda-overriding-header gtd/project-todos-head)))
-       (todo "REFILE|TODO" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org"))) (org-agenda-overriding-header gtd/task-todos-head)))
-       (todo "WAITING" ((org-agenda-overriding-header gtd/waiting-head)))))
-     ("r" "Reading list" todo "READ" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org"))))))))
+      ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil)))
+       (todo "" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org"))) (org-agenda-overriding-header gtd/inbox-head)))
+       (org-ql-search-block '(todo "NEXT")
+                            ((org-ql-block-header gtd/next-action-head)))
+       (org-ql-search-block '(or (todo "REFILE")
+                                 (and (todo "PROJECT")
+                                      (not (children (todo "PROJECT")))))
+                            ((org-ql-block-header gtd/project-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org")))))
+       (org-ql-search-block '(todo "REFILE" "TODO")
+                            ((org-ql-block-header gtd/task-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org")))))
+       (org-ql-search-block '(todo "RECURRING")
+                            ((org-ql-block-header gtd/recurring-head)))
+       (org-ql-search-block '(todo "WAITING")
+                            ((org-ql-block-header gtd/waiting-head)))))
+     ("r" "Reading list"
+      ((org-ql-search-block '(todo "READ")
+                            ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org")))))))
+     ("p" "Stuck projects"
+      ((org-ql-search-block '(and (todo "PROJECT")
+                                  (not (children (todo "PROJECT" "NEXT"))))))))))
+
+(add-hook! 'auto-save-hook 'org-save-all-org-buffers)
 
 (use-package! org-protocol
   :defer t

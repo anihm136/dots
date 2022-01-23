@@ -1,4 +1,4 @@
-personal_ws-1.1 en 83
+personal_ws-1.1 en 84
 Bitwise
 DevOps
 Failback
@@ -18,6 +18,7 @@ async
 autoconfiguration
 backend
 backends
+bitcode
 callee
 callee's
 checkpointing

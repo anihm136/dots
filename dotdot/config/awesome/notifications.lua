@@ -1,10 +1,10 @@
-local naughty = require('naughty')
-local beautiful = require('beautiful')
-local gears = require('gears')
-local wibox = require('wibox')
-local awful = require('awful')
+local naughty = require("naughty")
+local beautiful = require("beautiful")
+local gears = require("gears")
+local wibox = require("wibox")
+local awful = require("awful")
 local dpi = beautiful.xresources.apply_dpi
-local utils = require('utils')
+local utils = require("utils")
 
 -- ===================================================================
 -- Theme Definitions
@@ -15,9 +15,9 @@ local defaults = {
 	ontop = true,
 	icon_size = dpi(24),
 	timeout = 5,
-	title = 'Notification',
+	title = "Notification",
 	margin = dpi(10),
-	position = 'top_right',
+	position = "top_right",
 	width = dpi(500),
 	border_width = 0,
 	max_height = dpi(150),
@@ -45,8 +45,8 @@ local presets = {
 	},
 	critical = {
 		font = beautiful.title_font,
-		fg = '#ffffff',
-		bg = '#ff0000',
+		fg = "#ffffff",
+		bg = "#ff0000",
 	},
 }
 
@@ -66,20 +66,38 @@ naughty.config.padding = dpi(30)
 naughty.config.spacing = dpi(30)
 naughty.config.icon_dirs =
 	{
-		'/usr/share/icons/Sardi/scalable/actions/',
-		'/usr/share/icons/Sardi/scalable/animations/',
-		'/usr/share/icons/Sardi/scalable/apps/',
-		'/usr/share/icons/Sardi/scalable/categories/',
-		'/usr/share/icons/Sardi/scalable/devices/',
-		'/usr/share/icons/Sardi/scalable/emblems/',
-		'/usr/share/icons/Sardi/scalable/mimetypes/',
-		'/usr/share/icons/Sardi/scalable/notifications/',
-		'/usr/share/icons/Sardi/scalable/panel/',
-		'/usr/share/icons/Sardi/scalable/places/',
-		'/usr/share/icons/Sardi/scalable/status/',
+		"/usr/share/icons/Sardi/scalable/actions/",
+		"/usr/share/icons/Sardi/scalable/animations/",
+		"/usr/share/icons/Sardi/scalable/apps/",
+		"/usr/share/icons/Sardi/scalable/categories/",
+		"/usr/share/icons/Sardi/scalable/devices/",
+		"/usr/share/icons/Sardi/scalable/emblems/",
+		"/usr/share/icons/Sardi/scalable/mimetypes/",
+		"/usr/share/icons/Sardi/scalable/notifications/",
+		"/usr/share/icons/Sardi/scalable/panel/",
+		"/usr/share/icons/Sardi/scalable/places/",
+		"/usr/share/icons/Sardi/scalable/status/",
 	}
 
+local function handle_brave_apps(args)
+	local brave_apps = { "web.whatsapp.com", "www.instagram.com" }
+
+	for _, app in ipairs(brave_apps) do
+		local app_pattern = "^" .. app .. "\n\n"
+		local app_name = string.match(args.message, app_pattern)
+		if app_name ~= nil then
+			args.message = string.gsub(args.message, app_pattern, "")
+			args.actions = nil
+			args.timeout = nil
+			return args
+		end
+	end
+	return args
+end
+
 naughty.config.notify_callback = function(args)
+	args.screen = awful.screen.focused()
+	args = handle_brave_apps(args)
 	if args.actions ~= nil and #args.actions > 0 then
 		args.timeout = 0.0
 		args.ignore_suspend = true
@@ -87,15 +105,26 @@ naughty.config.notify_callback = function(args)
 	return args
 end
 
-naughty.connect_signal('request::display', function(notif, _, args)
-	args.screen = awful.screen.focused()
-	args.title = '<b>' .. args.title .. '</b>'
-	local bound_strategy
-	if args.width or args.height or (args.preset and args.preset.width) or (args.preset and args.preset.height) then
-		bound_strategy = 'max'
-	else
-		bound_strategy = 'exact'
-	end
+local function get_bounds(notif, args)
+	local width =
+		args.max_width or notif.max_width or (args.preset and args.preset.max_width) or (notif.preset and notif.preset.max_width) or nil
+	local height =
+		args.max_height or notif.max_height or (args.preset and args.preset.max_height) or (notif.preset and notif.preset.max_height) or nil
+	local forced_width =
+		args.width or notif.width or (args.preset and args.preset.width) or (notif.preset and notif.preset.width) or nil
+	local forced_height =
+		args.height or notif.height or (args.preset and args.preset.height) or (notif.preset and notif.preset.height) or nil
+	return {
+		width = width,
+		height = height,
+		forced_width = forced_width,
+		forced_height = forced_height,
+	}
+end
+
+naughty.connect_signal("request::display", function(notif, _, args)
+	local bounds = get_bounds(notif, args)
+	-- utils.log(notif.clients, { log_method = "file" })
 	naughty.layout.box{
 		notification = notif,
 		widget_template = {
@@ -108,7 +137,7 @@ naughty.connect_signal('request::display', function(notif, _, args)
 								{
 									widget = wibox.widget.textbox,
 									text = notif.title,
-									font = "Inter Black 13"
+									font = "Inter Black 13",
 								},
 								naughty.widget.message,
 								spacing = 12,
@@ -123,32 +152,35 @@ naughty.connect_signal('request::display', function(notif, _, args)
 						layout = wibox.layout.fixed.vertical,
 					},
 					widget = wibox.container.margin,
-					margins = defaults.margin
+					margins = defaults.margin,
 				},
-				id = 'background_role',
+				id = "background_role",
 				widget = naughty.container.background,
 			},
-			strategy = bound_strategy,
 			widget = wibox.container.constraint,
+			width = bounds.width,
+			height = bounds.height,
+			forced_width = bounds.forced_width,
+			forced_height = bounds.forced_height,
 		},
 		shape = defaults.shape,
 	}
 end)
 
-naughty.connect_signal('request::icon', function(notif, context, hints)
-	if context ~= 'app_icon' then return end
+naughty.connect_signal("request::icon", function(notif, context, hints)
+	if context ~= "app_icon" then return end
 
 	local path =
 		utils.lookup_icon(
 			hints.app_icon,
 			naughty.config.icon_dirs
 		) or utils.lookup_icon(hints.app_icon:lower(), naughty.config.icon_dirs)
-
 	if path then
 		notif.icon = path
 	end
 end)
-naughty.connect_signal('request::action_icon', function(action, _, hints)
+
+naughty.connect_signal("request::action_icon", function(action, _, hints)
 	local path =
 		utils.lookup_icon(
 			hints.app_icon,
@@ -159,6 +191,26 @@ naughty.connect_signal('request::action_icon', function(action, _, hints)
 	end
 end)
 
+naughty.connect_signal("destroyed", function(n, reason)
+	if not n.clients then return end
+	if reason == require(
+		"naughty.constants"
+	).notification_closed_reason.dismissed_by_user then
+		local jumped = false
+		for _, c in ipairs(n.clients) do
+			c.urgent = true
+			if jumped then
+				c:activate{
+					context = "client.jumpto"
+				}
+			else
+				c:jump_to()
+				jumped = true
+			end
+		end
+	end
+end)
+
 -- ===================================================================
 -- Error Handling
 -- ===================================================================
@@ -166,22 +218,23 @@ end)
 if awesome.startup_errors then
 	naughty.notification({
 		preset = naughty.config.presets.critical,
-		title = 'Oops, there were errors during startup!',
+		title = "Oops, there were errors during startup!",
 		text = awesome.startup_errors,
 	})
 end
 
 do
 	local in_error = false
-	awesome.connect_signal('debug::error', function(err)
+	awesome.connect_signal("debug::error", function(err)
 		if in_error then return end
 		in_error = true
 
 		naughty.notification({
 			preset = naughty.config.presets.critical,
-			title = 'Oops, an error happened!',
+			title = "Oops, an error happened!",
 			text = tostring(err),
 		})
 		in_error = false
 	end)
+
 end
