@@ -118,39 +118,52 @@
   :init
   (defalias '+org--restart-mode-h #'ignore)
   (setq
-   org-agenda-files '("~/Documents/org/GTD")
+   org-agenda-files `(,(concat ani/org-directory "GTD/"))
    org-refile-targets `((,(concat ani/org-directory "GTD/" "projects.org") :maxlevel . 3)
                         (,(concat ani/org-directory "GTD/" "tasks.org") :maxlevel . 2)
                         (,(concat ani/org-directory "GTD/" "reading.org") :level . 1)
                         (,(concat ani/org-directory "GTD/" "someday.org") :level . 1))
-   gtd/next-action-head "Next actions:"
-   gtd/project-todos-head "Projects:"
-   gtd/task-todos-head "Tasks:"
-   gtd/waiting-head  "Waiting on:"
-   gtd/inbox-head  "Dump:"
-   gtd/recurring-head  "Recurring tasks:"
-   org-agenda-custom-commands
-   `(("g" "GTD view"
-      ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil)))
-       (todo "" ((org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org"))) (org-agenda-overriding-header gtd/inbox-head)))
-       (org-ql-search-block '(todo "NEXT")
-                            ((org-ql-block-header gtd/next-action-head)))
-       (org-ql-search-block '(or (todo "REFILE")
-                                 (and (todo "PROJECT")
-                                      (not (children (todo "PROJECT")))))
-                            ((org-ql-block-header gtd/project-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org")))))
-       (org-ql-search-block '(todo "REFILE" "TODO")
-                            ((org-ql-block-header gtd/task-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org")))))
-       (org-ql-search-block '(todo "RECURRING")
-                            ((org-ql-block-header gtd/recurring-head)))
-       (org-ql-search-block '(todo "WAITING")
-                            ((org-ql-block-header gtd/waiting-head)))))
-     ("r" "Reading list"
-      ((org-ql-search-block '(todo "READ")
-                            ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org")))))))
-     ("p" "Stuck projects"
-      ((org-ql-search-block '(and (todo "PROJECT")
-                                  (not (children (todo "PROJECT" "NEXT"))))))))))
+   org-agenda-skip-deadline-if-done t
+   org-agenda-skip-scheduled-if-done t
+   org-agenda-skip-deadline-prewarning-if-scheduled t
+   org-agenda-custom-commands (let
+                                  ((gtd/next-action-head "Next actions:")
+                                   (gtd/project-todos-head "Projects:")
+                                   (gtd/task-todos-head "Tasks:")
+                                   (gtd/waiting-head  "Waiting on:")
+                                   (gtd/inbox-head  "Dump:")
+                                   (gtd/recurring-head  "Recurring tasks:")
+                                   (gtd/someday-head  "Review someday tasks:"))
+                                `(("g" . "GTD")
+                                  ("gg" "GTD overview"
+                                   ((org-ql-search-block '(todo)
+                                                         ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org")))))
+                                    (org-ql-search-block '(todo "NEXT")
+                                                         ((org-ql-block-header ,gtd/next-action-head)))
+                                    (org-ql-search-block '(or (todo "REFILE")
+                                                              (and (todo "PROJECT")
+                                                                   (children (not (todo "PROJECT" "DONE")))))
+                                                         ((org-ql-block-header ,gtd/project-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org")))))
+                                    (org-ql-search-block '(todo "REFILE" "TODO")
+                                                         ((org-ql-block-header ,gtd/task-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org")))))
+                                    (org-ql-search-block '(todo "RECURRING")
+                                                         ((org-ql-block-header ,gtd/recurring-head)))
+                                    (org-ql-search-block '(todo "WAITING")
+                                                         ((org-ql-block-header ,gtd/waiting-head)))))
+                                  ("gt" "Today"
+                                   ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day "+0d")))))
+                                  ("gs" "Review someday"
+                                   ((org-ql-search-block '(todo)
+                                                         ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "someday.org")))))))
+                                  ("r" "Reading list"
+                                   ((org-ql-search-block '(todo "READ")
+                                                         ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org")))))))
+                                  ("gp" "Stuck projects"
+                                   ((org-ql-search-block '(and (todo "PROJECT")
+                                                               (not (children (todo "PROJECT" "NEXT")))))))))))
+
+(map! :map org-agenda-mode-map
+      :localleader :prefix "d" :desc "Schedule item for today" :n "t" (lambda () (interactive) (org-agenda-schedule nil "+0d")))
 
 (add-hook! 'auto-save-hook 'org-save-all-org-buffers)
 
@@ -176,7 +189,7 @@
 (use-package! magit
   :defer t
   :config
-  (setq magit-repository-directories '(("~/vcs/" . 2) ("~/os_contrib/" . 2))
+  (setq magit-repository-directories '(("~/code/vcs/" . 2) ("~/code/os_contrib/" . 2))
         global-git-commit-mode t))
 
 (use-package! company

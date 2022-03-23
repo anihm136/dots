@@ -8,7 +8,7 @@ end
 -- check if window with buffer of given filetype is open
 helpers.open_window = function(val, checkvar)
 	if checkvar == nil then
-		checkvar = 'filetype'
+		checkvar = "filetype"
 	end
 	for _, win_id in pairs(api.nvim_list_wins()) do
 		local cur_val = vim.bo[api.nvim_win_get_buf(win_id)][checkvar]
@@ -23,13 +23,13 @@ end
 helpers.formatting = function()
 	vim.cmd[[undojoin]]
 	vim.lsp.buf.formatting(
-		vim.g[string.format('format_options_%s', vim.bo.filetype)] or {}
+		vim.g[string.format("format_options_%s", vim.bo.filetype)] or {}
 	)
 end
 
 -- smart tab completion:
 local has_words_before = function()
-	if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then
+	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
 		return false
 	end
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -38,7 +38,7 @@ local has_words_before = function()
 		line - 1,
 		line,
 		true
-	)[1]:sub(col, col):match('%s') == nil
+	)[1]:sub(col, col):match("%s") == nil
 end
 
 local feedkey = function(key, mode)
@@ -54,12 +54,12 @@ end
 --	start completion if word is present behind
 --	insert <tab> otherwise
 helpers.smart_tab = function(fallback)
-	local snippy = require'snippy'
-	local cmp = require'cmp'
+	local snippy = require"snippy"
+	local cmp = require"cmp"
 	if cmp.visible() then
 		cmp.select_next_item()
 	elseif snippy.can_expand_or_advance() then
-		feedkey('<cmd>lua require("snippy").expand_or_advance()<cr>', '')
+		feedkey('<cmd>lua require("snippy").expand_or_advance()<cr>', "")
 	elseif has_words_before() then
 		cmp.complete()
 	else
@@ -72,16 +72,16 @@ end
 --	remove <tab> if present
 --	do nothing otherwise
 helpers.smart_backtab = function(fallback)
-	local snippy = require'snippy'
-	local cmp = require'cmp'
+	local snippy = require"snippy"
+	local cmp = require"cmp"
 	if cmp.visible() then
 		cmp.select_prev_item()
 	elseif snippy.can_jump(-1) then
-		feedkey('<cmd>lua require("snippy").previous()<cr>', '')
+		feedkey('<cmd>lua require("snippy").previous()<cr>', "")
 	elseif api.nvim_get_current_line()[api.nvim_win_get_cursor(0)[2]]:match(
-		'[' .. t'<tab>' .. ' ]'
+		"[" .. t"<tab>" .. " ]"
 	) then
-		feedkey('<bs>', 'i')
+		feedkey("<bs>", "i")
 	else
 		fallback()
 	end
@@ -93,22 +93,22 @@ helpers.get_random_colorscheme = function(colorscheme_type)
 	end
 	local dark_colors =
 		{
-			'gruvbit',
-			'equinusocio_material',
-			'solarized8_flat',
-			'despacio',
-			'dogrun',
-			'miramare',
-			'tokyonight',
-			'nightfox',
+			"gruvbit",
+			"equinusocio_material",
+			"solarized8_flat",
+			"despacio",
+			"dogrun",
+			"miramare",
+			"tokyonight",
+			"nightfox",
 		}
 	local light_colors =
-		{ 'solarized8_flat', 'tempus_totus', 'tempus_day', 'tokyonight' }
-	math.randomseed(io.popen('od -vAn -N2 -d < /dev/urandom'):read('*a'))
-	if colorscheme_type == 'dark' then
+		{ "solarized8_flat", "tempus_totus", "tempus_day", "tokyonight" }
+	math.randomseed(io.popen("od -vAn -N2 -d < /dev/urandom"):read("*a"))
+	if colorscheme_type == "dark" then
 		local index = (round(math.random() * 10) % #dark_colors) + 1
 		return dark_colors[index]
-	elseif colorscheme_type == 'light' then
+	elseif colorscheme_type == "light" then
 		local index = (round(math.random() * 10) % #light_colors) + 1
 		return light_colors[index]
 	else
@@ -117,7 +117,7 @@ helpers.get_random_colorscheme = function(colorscheme_type)
 end
 
 helpers.set_sl_colors = function()
-	local colors = require('slthemer').getSlColors()
+	local colors = require("slthemer").getSlColors()
 	local hlGroups = {
 		lualine_a_normal = { colors.Normal, colors.Background },
 		lualine_a_insert = { colors.Insert, colors.Background },
@@ -396,10 +396,10 @@ helpers.set_sl_colors = function()
 	}
 	for k, v in pairs(hlGroups) do
 		if v[1] then
-			vim.cmd('hi! ' .. k .. ' guifg=' .. v[1])
+			vim.cmd("hi! " .. k .. " guifg=" .. v[1])
 		end
 		if v[2] then
-			vim.cmd('hi! ' .. k .. ' guibg=' .. v[2])
+			vim.cmd("hi! " .. k .. " guibg=" .. v[2])
 		end
 	end
 end
@@ -407,22 +407,21 @@ end
 helpers.install_servers = function()
 	local servers =
 		{
-			'clangd',
-			'gopls',
-			'sumneko_lua',
-			'pyright',
-			'bashls',
-			'cssls',
-			'html',
-			'jsonls',
-			'tsserver',
-			'vuels',
-			'efm',
+			"clangd",
+			"gopls",
+			"sumneko_lua",
+			"pyright",
+			"bashls",
+			"cssls",
+			"html",
+			"jsonls",
+			"tsserver",
+			"vuels",
+			"efm",
 		}
 	for _, server in pairs(servers) do
-		vim.cmd([[LspInstall ]]..server)
+		vim.cmd([[LspInstall ]] .. server)
 	end
 end
-
 
 return helpers

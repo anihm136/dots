@@ -16,4 +16,5 @@ return {
 	qf = require('plugin_config.qf'),
 	tmux_navigator = require('plugin_config.tmux_navigator'),
 	vim_rooter = require('plugin_config.vim_rooter'),
+	harpoon = require('plugin_config.harpoon'),
 }

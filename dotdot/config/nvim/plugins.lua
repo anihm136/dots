@@ -306,6 +306,10 @@ return require("packer").startup{
 				run = "make",
 			} },
 		}
+		use{
+			"ThePrimeagen/harpoon",
+			config = configs.harpoon
+		}
 		-- Nvim
 		use"antoinemadec/FixCursorHold.nvim"
 		use{

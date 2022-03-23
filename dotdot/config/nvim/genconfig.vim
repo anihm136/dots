@@ -179,6 +179,10 @@ autocmd custom_commands BufReadPost * if line("'\"") > 1 && line("'\"") <= line(
 nnoremap Y y$
 xnoremap <expr> p printf('pgv"%sygv<esc>', v:register)
 vnoremap o $
+onoremap io iw
+onoremap ao aw
+onoremap iO iW
+onoremap aO aW
 
 nnoremap B :<C-u>call helpers#breakLine()<cr>
 

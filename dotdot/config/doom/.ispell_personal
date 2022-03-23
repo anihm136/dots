@@ -1,4 +1,4 @@
-personal_ws-1.1 en 84
+personal_ws-1.1 en 86
 Bitwise
 DevOps
 Failback
@@ -77,7 +77,9 @@ structs
 superscalar
 systems's
 tokenization
+toolchain
 transpiler
+unencrypted
 unicast
 virtualizable
 virtualized

@@ -30,6 +30,9 @@ function rules.create(clientkeys, clientbuttons)
 			fullscreen = false,
 			maximized = false,
 			callback = function(c)
+				-- c.maximized = false
+				-- c.maximized_horizontal = false
+				-- c.maximized_vertical = false
 				if c.transient_for then
 					c:move_to_tag(c.transient_for.first_tag)
 				end
@@ -60,6 +63,12 @@ function rules.create(clientkeys, clientbuttons)
 			{%@@ endif @@%}
 		},
 	}, {
+		rule = { class = "Emacs" },
+		properties = {
+			screen = 1,
+			tag = awful.util.tagnames_1[5],
+		},
+	}, {
 		rule_any = {
 			class = {
 				"Thunderbird",
@@ -69,10 +78,7 @@ function rules.create(clientkeys, clientbuttons)
 				"Microsoft Teams - Preview",
 				"TelegramDesktop",
 				"Signal",
-			},
-			name = {
-				"^.*Instagram.*Mozilla Firefox$",
-				"^.*WhatsApp.*Mozilla Firefox$",
+				"Zulip"
 			},
 		},
 		properties = {
@@ -122,7 +128,7 @@ function rules.create(clientkeys, clientbuttons)
 				"Event Tester",
 				"Steam Guard - Computer Authorization Required",
 			},
-			role = { "pop-up", "GtkFileChooserDialog" },
+			role = { "pop-up", "Dialog" },
 			type = { "dialog" },
 		},
 		properties = { floating = true },
@@ -144,6 +150,29 @@ function rules.create(clientkeys, clientbuttons)
 			floating = true,
 			width = screen_width * 0.55,
 			height = screen_height * 0.65,
+		},
+	}, {
+		rule_any = {
+			instance = { "www.instagram.com", "web.whatsapp.com" },
+			name = {
+				"^.*Instagram.*Mozilla Firefox$",
+				"^.*WhatsApp.*Mozilla Firefox$",
+			},
+		},
+		properties = {
+			screen = 2,
+			tag = awful.util.tagnames_2[3],
+			floating = false,
+		},
+	}, {
+		rule_any = {
+			class = { "Spotify" },
+			instance = { "open.spotify.com" },
+		},
+		properties = {
+			screen = 2,
+			tag = awful.util.tagnames_2[4],
+			floating = false
 		},
 	}, {
 		-- Pavucontrol & Bluetooth Devices

@@ -1,4 +1,5 @@
 FORGIT_NO_ALIASES=1
+FORGIT_COPY_CMD='xclip -selection clipboard'
 
 alias glog="forgit::log"
 alias gdiff="forgit::diff"

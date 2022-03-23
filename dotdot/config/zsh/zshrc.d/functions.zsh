@@ -104,7 +104,10 @@ codi() {
 }
 
 tm() {
-  [[ -z $(pgrep tmux) ]] && direnv exec / tmux new-session -d && sleep 3
+  [[ -z $(pgrep tmux) ]] && direnv exec / tmux new-session -d
+  while [[ $(tmux show-option -s @tmux-resurrect-restoring | cut -d ' ' -f 2) != "0" ]] ; do
+    sleep 2
+  done
   local session=$(tmux ls -F '#S' | fzf -0 --header='Select session to attach to')
   if [[ -n $session ]]; then
     tmux attach -t $session

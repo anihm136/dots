@@ -123,7 +123,7 @@ end
 keys.desktopbuttons = my_table.join(
 -- left click on desktop to hide notification
 	awful.button({}, 1, function()
-		naughty.destroy_all_notifications()
+		naughty.destroy_all_notifications(nil, 1000)
 	end)
 )
 
@@ -372,7 +372,7 @@ keys.globalkeys = my_table.join(
 		description = "jump to urgent client",
 		group = "client",
 	}),
-	awful.key({ modkey }, "Escape", awful.tag.history.restore, {
+	awful.key({ modkey }, "'", awful.tag.history.restore, {
 		description = "go back",
 		group = "tag",
 	}),

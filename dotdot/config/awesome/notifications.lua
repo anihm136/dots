@@ -200,9 +200,7 @@ naughty.connect_signal("destroyed", function(n, reason)
 		for _, c in ipairs(n.clients) do
 			c.urgent = true
 			if jumped then
-				c:activate{
-					context = "client.jumpto"
-				}
+				c:activate{ context = "client.jumpto" }
 			else
 				c:jump_to()
 				jumped = true
@@ -236,5 +234,4 @@ do
 		})
 		in_error = false
 	end)
-
 end

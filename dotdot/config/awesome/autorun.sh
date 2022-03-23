@@ -22,7 +22,8 @@ run slack
 run2 discord Discord
 run element-desktop
 # run signal-desktop
-# run whatsapp
-# run instagram
+run whatsapp
+run instagram
+run zulip
 # run2 telegram-desktop telegram-deskto
 {%@@ endif @@%}

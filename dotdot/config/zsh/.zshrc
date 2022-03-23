@@ -1,3 +1,5 @@
+# zmodload zsh/zprof
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block, everything else may go below.
@@ -16,6 +18,7 @@ ZSH_COMPDUMP="$XDG_CACHE_HOME/zsh/.zcompdump"
 DISABLE_MAGIC_FUNCTIONS="true"
 # Disable omz auto-update
 DISABLE_AUTO_UPDATE=true
+ZSH_DISABLE_COMPFIX=true
 
 # Load zsh run-help module
 autoload -Uz run-help
@@ -72,10 +75,8 @@ setopt extendedglob
 
 # Load completions and hooks for various tools
 eval "$(asdf exec direnv hook zsh)"
-eval "$(pipenv --completion)"
-eval "$(register-python-argcomplete pipx)"
 eval "$(zoxide init --cmd j --hook pwd zsh)"
-# eval "$(stack --bash-completion-script stack)"
+eval "$(register-python-argcomplete pipx)"
 complete -C '/sbin/aws_completer' aws
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   [[ -d "$HOME/perl5/lib/perl5" ]] && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
@@ -105,3 +106,5 @@ source /usr/share/doc/pkgfile/command-not-found.zsh
 
 # Set $JAVA_HOME using ASDF
 source "$ASDF_DATA_DIR/plugins/java/set-java-home.zsh"
+
+# zprof
