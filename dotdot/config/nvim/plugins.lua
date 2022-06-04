@@ -18,7 +18,8 @@ return require("packer").startup{
 		}
 		use{
 			-- '~/code/os_contrib/kommentary',
-			'anihm136/kommentary', branch = "feat/default_hooks",
+			"anihm136/kommentary",
+			branch = "feat/default_hooks",
 			-- "b3nj5m1n/kommentary",
 			config = configs.kommentary,
 			setup = setups.kommentary,
@@ -93,7 +94,13 @@ return require("packer").startup{
 					opt = true,
 				},
 			},
-			after = { "cmp-nvim-lsp", "cmp-buffer", "cmp-path",  "cmp-nvim-lua", "cmp-snippy" },
+			after = {
+				"cmp-nvim-lsp",
+				"cmp-buffer",
+				"cmp-path",
+				"cmp-nvim-lua",
+				"cmp-snippy",
+			},
 			event = "InsertEnter",
 			config = configs.nvim_cmp,
 		}
@@ -101,6 +108,49 @@ return require("packer").startup{
 			"kosayoda/nvim-lightbulb",
 			setup = setups.nvim_lightbulb,
 		}
+		use({
+			"jose-elias-alvarez/null-ls.nvim",
+			config = function()
+				local n = require("null-ls")
+				n.setup({
+					sources = {
+						-- Python
+						n.builtins.formatting.black,
+						n.builtins.formatting.isort.with({
+							extra_args = { "--profile", "black" }
+						}),
+						n.builtins.diagnostics.flake8,
+
+						-- Go
+						n.builtins.diagnostics.golangci_lint,
+						n.builtins.formatting.gofmt,
+
+						-- C(pp)
+						n.builtins.formatting.clang_format.with({
+							extra_args = { "--style=file" }
+						}),
+
+						-- JS
+						n.builtins.formatting.prettierd,
+						n.builtins.diagnostics.eslint_d,
+						n.builtins.formatting.eslint_d,
+
+						-- Sh
+						n.builtins.diagnostics.zsh,
+						n.builtins.formatting.shfmt.with({
+							extra_filetypes = {"bash"}
+						}),
+						n.builtins.diagnostics.shellcheck.with({
+							extra_filetypes = {"bash"}
+						}),
+
+						-- Haskell
+						n.builtins.formatting.fourmolu
+					}
+				})
+			end,
+			requires = { "nvim-lua/plenary.nvim" },
+		})
 		-- Treesitter
 		use{
 			"nvim-treesitter/nvim-treesitter",
@@ -157,10 +207,10 @@ return require("packer").startup{
 			ft = "csv",
 		}
 		use{
-			'rhysd/vim-llvm',
+			"rhysd/vim-llvm",
 			config = function()
 				vim.g.llvm_ext_no_mapping = true
-			end
+			end,
 		}
 		use"tridactyl/vim-tridactyl"
 		-- Language-specific
@@ -185,7 +235,7 @@ return require("packer").startup{
 		use"wellle/targets.vim"
 		use"chaoren/vim-wordmotion"
 		-- UI
-		use 'stevearc/dressing.nvim'
+		use"stevearc/dressing.nvim"
 		use"anihm136/statusline-themer"
 		use"junegunn/rainbow_parentheses.vim"
 		use{
@@ -249,10 +299,8 @@ return require("packer").startup{
 			"phaazon/hop.nvim",
 			config = configs.hop,
 		}
-		use{
-			"haya14busa/vim-asterisk",
-			-- keys = { "<Plug>(asterisk-z*)", "<Plug>(asterisk-z#)"},
-		}
+		use{ "haya14busa/vim-asterisk" }
+		-- keys = { "<Plug>(asterisk-z*)", "<Plug>(asterisk-z#)"},
 		use"romainl/vim-cool"
 		use{
 			"andymass/vim-matchup",
@@ -308,7 +356,7 @@ return require("packer").startup{
 		}
 		use{
 			"ThePrimeagen/harpoon",
-			config = configs.harpoon
+			config = configs.harpoon,
 		}
 		-- Nvim
 		use"antoinemadec/FixCursorHold.nvim"
@@ -316,7 +364,9 @@ return require("packer").startup{
 			"Shatur/neovim-session-manager",
 			config = function()
 				require("session_manager").setup{
-					autoload_mode = require('session_manager.config').AutoloadMode.Disabled,
+					autoload_mode = require(
+						"session_manager.config"
+					).AutoloadMode.Disabled,
 				}
 			end,
 		}
@@ -347,5 +397,4 @@ return require("packer").startup{
 		compile_path = vim.fn.stdpath("config") .. "/lua/packer_compiled.lua",
 		ensure_dependencies = true,
 	},
-
 }

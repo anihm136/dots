@@ -57,3 +57,6 @@ XF86AudioMute
 
 Print
   flameshot gui
+
+super + k
+  copyq toggle

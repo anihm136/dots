@@ -77,6 +77,15 @@ setopt extendedglob
 eval "$(asdf exec direnv hook zsh)"
 eval "$(zoxide init --cmd j --hook pwd zsh)"
 eval "$(register-python-argcomplete pipx)"
+eval $(register-python-argcomplete ansible)
+eval $(register-python-argcomplete ansible-config)
+eval $(register-python-argcomplete ansible-console)
+eval $(register-python-argcomplete ansible-doc)
+eval $(register-python-argcomplete ansible-galaxy)
+eval $(register-python-argcomplete ansible-inventory)
+eval $(register-python-argcomplete ansible-playbook)
+eval $(register-python-argcomplete ansible-pull)
+eval $(register-python-argcomplete ansible-vault)
 complete -C '/sbin/aws_completer' aws
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   [[ -d "$HOME/perl5/lib/perl5" ]] && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)

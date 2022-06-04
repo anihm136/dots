@@ -22,12 +22,24 @@ vim.lsp.handlers["textDocument/formatting"] = function(err, result, ctx)
 	end
 	if not vim.api.nvim_buf_get_option(ctx.bufnr, "modified") then
 		local view = vim.fn.winsaveview()
-		vim.lsp.util.apply_text_edits(result, ctx.bufnr, 'utf-16')
+		local client_id = ctx.client_id
+		local client = vim.lsp.get_client_by_id(client_id)
+		vim.lsp.util.apply_text_edits(result, ctx.bufnr, client and client.offset_encoding or "utf-16")
 		vim.fn.winrestview(view)
 		if ctx.bufnr == vim.api.nvim_get_current_buf() then
 			vim.cmd[[noautocmd :update]]
 		end
 	end
+end
+
+vim.lsp.handlers["textDocument/formatting"] = function(_, res, ctx)
+    if not res then
+        return
+    end
+
+    local client_id = ctx.client_id
+    local client = vim.lsp.get_client_by_id(client_id)
+    vim.lsp.util.apply_text_edits(res, ctx.bufnr, client and client.offset_encoding or "utf-16")
 end
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
@@ -60,6 +72,15 @@ vim.lsp.handlers["textDocument/hover"] =
 
 vim.lsp.handlers["textDocument/signature_help"] =
 	vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
+	
+vim.diagnostic.config({
+  virtual_text = {
+    source = "always",  -- Or "if_many"
+  },
+  float = {
+    source = "always",  -- Or "if_many"
+  },
+})
 
 local on_init = function(client)
 	client.config.flags = client.config.flags or {}
@@ -68,7 +89,7 @@ end
 
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	client.resolved_capabilities.document_formatting = false
+	client.server_capabilities.document_formatting = false
 	mapper("i", "<c-s>", "<cmd>lua vim.lsp.buf.signature_help()<cr>")
 	mapper("n", "[e", "<cmd>lua vim.diagnostic.goto_prev()<cr>")
 	mapper("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>")
@@ -189,104 +210,10 @@ lsp_installer.on_server_ready(function(server) -- Neovim
 		}
 	elseif server.name == "hls" then
 		config.single_file_support = true
-	elseif server.name == "efm" then
-		local clangformat = require"efm/clangformat"
-		local golint = require"efm/golint"
-		local gofmt = require"efm/gofmt"
-		local black = require"efm/black"
-		local isort = require"efm/isort"
-		local flake8 = require"efm/flake8"
-		local ormolu = require"efm/ormolu"
-		local pylint = require"efm/pylint"
-		local prettier = require"efm/prettier"
-		local eslint = require"efm/eslint"
-		local shellcheck = require"efm/shellcheck"
-		local shfmt = require"efm/shfmt"
-		config.init_options = { documentFormatting = true }
-		config.filetypes =
-			{
-				"lua",
-				"c",
-				"cpp",
-				"go",
-				"python",
-				"typescript",
-				"javascript",
-				"typescriptreact",
-				"javascriptreact",
-				"vue",
-				"yaml",
-				"json",
-				"html",
-				"scss",
-				"css",
-				"markdown",
-				"sh",
-				"bash",
-				"zsh",
-				"haskell",
-			}
-		config.root_dir = function(fname)
-			local filename =
-				util.path.is_absolute(fname) and fname or util.path.join(
-					vim.loop.cwd(),
-					fname
-				)
-			local root_pattern =
-				util.root_pattern(
-					"setup.py",
-					"setup.cfg",
-					"requirements.txt",
-					"mypy.ini",
-					".pylintrc",
-					".flake8rc",
-					"go.mod",
-					"package.json",
-					".git",
-					".gitignore"
-				)
-			return root_pattern(filename) or util.path.dirname(filename)
-		end
-		config.settings = {
-			rootMarkers = {
-				"setup.py",
-				"setup.cfg",
-				"requirements.txt",
-				"mypy.ini",
-				".pylintrc",
-				".flake8rc",
-				"go.mod",
-				"package.json",
-				".git",
-				".gitignore",
-			},
-			languages = {
-				lua = { prettier },
-				c = { clangformat },
-				cpp = { clangformat },
-				go = { golint, gofmt },
-				python = { black, isort, flake8, pylint },
-				typescript = { prettier, eslint },
-				javascript = { prettier, eslint },
-				typescriptreact = { prettier, eslint },
-				javascriptreact = { prettier, eslint },
-				vue = { prettier, eslint },
-				yaml = { prettier },
-				json = { prettier },
-				html = { prettier },
-				scss = { prettier },
-				css = { prettier },
-				markdown = { prettier },
-				sh = { shellcheck, shfmt },
-				bash = { shellcheck, shfmt },
-				zsh = { shellcheck },
-				haskell = { ormolu },
-			},
-		}
 		local old_attach = config.on_attach
 		config.on_attach = function(client, bufnr)
 			old_attach(client, bufnr)
-			client.resolved_capabilities.document_formatting = true
+			client.server_capabilities.document_formatting = true
 		end
 	end
 

@@ -14,8 +14,9 @@ local rules = {}
 
 -- return a table of client rules including provided keys / buttons
 function rules.create(clientkeys, clientbuttons)
-	return { -- All clients will match this rule.
+	return {
 	{
+		-- All clients will match this rule.
 		rule = {},
 		properties = {
 			border_width = beautiful.border_width,
@@ -132,6 +133,11 @@ function rules.create(clientkeys, clientbuttons)
 			type = { "dialog" },
 		},
 		properties = { floating = true },
+	}, {
+		rule = { instance = "copyq" },
+		properties = {
+			skip_taskbar = true
+		}
 	}, {
 		-- Rofi
 		rule_any = {

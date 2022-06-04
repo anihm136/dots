@@ -78,10 +78,11 @@
         org-log-done 'time
         org-log-into-drawer t
         org-log-state-notes-insert-after-drawers nil
+        org-clock-mode-line-total 'today
         org-attach-id-dir ".attach/"
         org-attach-dir-relative t
         org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
-                            (sequence "REFILE(f)" "READ(r)" "PROJECT(p)" "|"))
+                            (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
         org-capture-templates
         `(("i" "Inbox" entry
            (file ,(concat ani/org-directory "GTD/" "inbox.org"))
@@ -120,9 +121,10 @@
   (setq
    org-agenda-files `(,(concat ani/org-directory "GTD/"))
    org-refile-targets `((,(concat ani/org-directory "GTD/" "projects.org") :maxlevel . 3)
-                        (,(concat ani/org-directory "GTD/" "tasks.org") :maxlevel . 2)
-                        (,(concat ani/org-directory "GTD/" "reading.org") :level . 1)
-                        (,(concat ani/org-directory "GTD/" "someday.org") :level . 1))
+                        (,(concat ani/org-directory "GTD/" "tasks.org") :level . 0)
+                        (,(concat ani/org-directory "GTD/" "reading.org") :level . 0)
+                        (,(concat ani/org-directory "GTD/" "learning.org") :level . 0)
+                        (,(concat ani/org-directory "GTD/" "someday.org") :level . 0))
    org-agenda-skip-deadline-if-done t
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-prewarning-if-scheduled t
@@ -158,6 +160,9 @@
                                   ("r" "Reading list"
                                    ((org-ql-search-block '(todo "READ")
                                                          ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org")))))))
+                                  ("l" "Learning topics"
+                                   ((org-ql-search-block '(todo "LEARN")
+                                                         ((org-agenda-files '(,(concat ani/org-directory "GTD/" "learning.org")))))))
                                   ("gp" "Stuck projects"
                                    ((org-ql-search-block '(and (todo "PROJECT")
                                                                (not (children (todo "PROJECT" "NEXT")))))))))))

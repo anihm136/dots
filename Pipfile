@@ -10,6 +10,7 @@ python-magic = "*"
 Jinja2 = "*"
 requests = "*"
 packaging = "*"
+toml = "*"
 
 [dev-packages]
 
