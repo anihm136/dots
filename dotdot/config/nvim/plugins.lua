@@ -1,22 +1,22 @@
-local configs = require"plugin_config"
-local setups = require"plugin_setup"
+local configs = require("plugin_config")
+local setups = require("plugin_setup")
 local disable_feat = { jinja = true }
 
-return require("packer").startup{
+return require("packer").startup({
 	function(use)
-		use"wbthomason/packer.nvim"
-		use"lewis6991/impatient.nvim"
-		use{
+		use("wbthomason/packer.nvim")
+		use("lewis6991/impatient.nvim")
+		use({
 			"dstein64/vim-startuptime",
 			cmd = "StartupTime",
-		}
-		use"tpope/vim-repeat"
-		use"tpope/vim-apathy"
-		use{
+		})
+		use("tpope/vim-repeat")
+		use("tpope/vim-apathy")
+		use({
 			"airblade/vim-rooter",
 			config = configs.vim_rooter,
-		}
-		use{
+		})
+		use({
 			-- '~/code/os_contrib/kommentary',
 			"anihm136/kommentary",
 			branch = "feat/default_hooks",
@@ -24,13 +24,13 @@ return require("packer").startup{
 			config = configs.kommentary,
 			setup = setups.kommentary,
 			keys = { "gc", "gcc", "gcy", "gcyy", "gcd", "gcdd" },
-		}
-		use{
+		})
+		use({
 			"anihm136/vim-unimpaired",
 			setup = setups.unimpaired,
-		}
-		use"fedorenchik/gtags.vim"
-		use{
+		})
+		use("fedorenchik/gtags.vim")
+		use({
 			"junegunn/vim-easy-align",
 			config = function()
 				local map = vim.api.nvim_set_keymap
@@ -38,40 +38,40 @@ return require("packer").startup{
 				map("x", "ga", "<Plug>(EasyAlign)", opts)
 				map("n", "ga", "<Plug>(EasyAlign)", opts)
 			end,
-		}
-		use"Darazaki/indent-o-matic"
-		use"tpope/vim-eunuch"
-		use{
+		})
+		use("Darazaki/indent-o-matic")
+		use("tpope/vim-eunuch")
+		use({
 			"christoomey/vim-tmux-navigator",
 			setup = setups.tmux_navigator,
 			config = configs.tmux_navigator,
 			keys = { "<C-h>", "<C-j>", "<C-k>", "<C-;>", "<C-\\>" },
-		}
-		use{
+		})
+		use({
 			"AndrewRadev/splitjoin.vim",
 			keys = { "gJ", "gS" },
-		}
-		use{
+		})
+		use({
 			"romainl/vim-qf",
 			config = configs.qf,
-		}
-		use{
+		})
+		use({
 			"dcampos/nvim-snippy",
 			requires = { "honza/vim-snippets" },
-		}
-		use{
+		})
+		use({
 			"tweekmonster/wstrip.vim",
 			cmd = "WStrip",
-		}
-		use{
+		})
+		use({
 			"tpope/vim-abolish",
 			cmd = { "Abolish", "Subvert" },
 			keys = { "crs", "crm", "crc", "cru", "cr-", "cr.", "cr ", "crt" },
-		}
+		})
 		-- LSP/Completion
-		use"neovim/nvim-lspconfig"
-		use"williamboman/nvim-lsp-installer"
-		use{
+		use("neovim/nvim-lspconfig")
+		use("williamboman/nvim-lsp-installer")
+		use({
 			"hrsh7th/nvim-cmp",
 			requires = {
 				"dcampos/nvim-snippy",
@@ -103,11 +103,11 @@ return require("packer").startup{
 			},
 			event = "InsertEnter",
 			config = configs.nvim_cmp,
-		}
-		use{
+		})
+		use({
 			"kosayoda/nvim-lightbulb",
 			setup = setups.nvim_lightbulb,
-		}
+		})
 		use({
 			"jose-elias-alvarez/null-ls.nvim",
 			config = function()
@@ -117,7 +117,7 @@ return require("packer").startup{
 						-- Python
 						n.builtins.formatting.black,
 						n.builtins.formatting.isort.with({
-							extra_args = { "--profile", "black" }
+							extra_args = { "--profile", "black" },
 						}),
 						n.builtins.diagnostics.flake8,
 
@@ -127,7 +127,7 @@ return require("packer").startup{
 
 						-- C(pp)
 						n.builtins.formatting.clang_format.with({
-							extra_args = { "--style=file" }
+							extra_args = { "--style=file" },
 						}),
 
 						-- JS
@@ -138,21 +138,24 @@ return require("packer").startup{
 						-- Sh
 						n.builtins.diagnostics.zsh,
 						n.builtins.formatting.shfmt.with({
-							extra_filetypes = {"bash"}
+							extra_filetypes = { "bash" },
 						}),
 						n.builtins.diagnostics.shellcheck.with({
-							extra_filetypes = {"bash"}
+							extra_filetypes = { "bash" },
 						}),
 
 						-- Haskell
-						n.builtins.formatting.fourmolu
-					}
+						n.builtins.formatting.fourmolu,
+
+						-- Lua
+						n.builtins.formatting.stylua,
+					},
 				})
 			end,
 			requires = { "nvim-lua/plenary.nvim" },
 		})
 		-- Treesitter
-		use{
+		use({
 			"nvim-treesitter/nvim-treesitter",
 			requires = {
 				"nvim-treesitter/nvim-treesitter-textobjects",
@@ -160,61 +163,61 @@ return require("packer").startup{
 				"RRethy/nvim-treesitter-textsubjects",
 			},
 			config = configs.treesitter,
-		}
+		})
 		-- Git
-		use{
+		use({
 			"whiteinge/diffconflicts",
 			cmd = {
 				"DiffConflicts",
 				"DiffConflictsShowHistory",
 				"DiffConflictsWithHistory",
 			},
-		}
-		use{
+		})
+		use({
 			"lewis6991/gitsigns.nvim",
 			config = configs.gitsigns,
-		}
+		})
 		-- Syntax
-		use{
+		use({
 			"ekalinin/Dockerfile.vim",
 			ft = "Dockerfile",
-		}
-		use"tpope/vim-git"
-		use{
+		})
+		use("tpope/vim-git")
+		use({
 			"McSinyx/vim-octave",
 			ft = "octave",
-		}
-		use"baskerville/vim-sxhkdrc"
-		use{
+		})
+		use("baskerville/vim-sxhkdrc")
+		use({
 			"wgwoods/vim-systemd-syntax",
 			ft = "systemd",
-		}
-		use{
+		})
+		use({
 			"ericpruitt/tmux.vim",
 			rtp = "vim/",
 			ft = "tmux",
-		}
-		use{
+		})
+		use({
 			"pboettch/vim-cmake-syntax",
 			ft = "cmake",
-		}
-		use{
+		})
+		use({
 			"kevinoid/vim-jsonc",
 			ft = "jsonc",
-		}
-		use{
+		})
+		use({
 			"chrisbra/csv.vim",
 			ft = "csv",
-		}
-		use{
+		})
+		use({
 			"rhysd/vim-llvm",
 			config = function()
 				vim.g.llvm_ext_no_mapping = true
 			end,
-		}
-		use"tridactyl/vim-tridactyl"
+		})
+		use("tridactyl/vim-tridactyl")
 		-- Language-specific
-		use{
+		use({
 			"windwp/nvim-ts-autotag",
 			ft = {
 				"html",
@@ -225,63 +228,63 @@ return require("packer").startup{
 				"svelte",
 				"php",
 			},
-		}
-		use{
+		})
+		use({
 			"Glench/Vim-Jinja2-Syntax",
 			disable = disable_feat.jinja,
-		}
+		})
 		-- Textobjects
-		use"michaeljsmith/vim-indent-object"
-		use"wellle/targets.vim"
-		use"chaoren/vim-wordmotion"
+		use("michaeljsmith/vim-indent-object")
+		use("wellle/targets.vim")
+		use("chaoren/vim-wordmotion")
 		-- UI
-		use"stevearc/dressing.nvim"
-		use"anihm136/statusline-themer"
-		use"junegunn/rainbow_parentheses.vim"
-		use{
+		use("stevearc/dressing.nvim")
+		use("anihm136/statusline-themer")
+		use("junegunn/rainbow_parentheses.vim")
+		use({
 			"norcalli/nvim-colorizer.lua",
 			ft = { "css", "javascript", "vim", "html" },
 			config = function()
-				require("colorizer").setup{ "css", "javascript", "vim", "html" }
+				require("colorizer").setup({ "css", "javascript", "vim", "html" })
 			end,
-		}
-		use"TaDaa/vimade"
-		use{
+		})
+		use("TaDaa/vimade")
+		use({
 			"famiu/feline.nvim",
 			config = function()
 				require("feline").setup()
 			end,
 			-- config = configs.feline
-		}
-		use{
+		})
+		use({
 			"goolord/alpha-nvim",
 			config = configs.alpha,
-		}
+		})
 		-- UX
-		use{
+		use({
 			"LunarWatcher/auto-pairs",
 			config = configs.auto_pairs,
-		}
-		use{
+		})
+		use({
 			"psliwka/vim-smoothie",
 			keys = { "<C-d>", "<C-u>", "<C-f>", "<C-b>" },
-		}
-		use{
+		})
+		use({
 			"kyazdani42/nvim-tree.lua",
 			requires = { "kyazdani42/nvim-web-devicons" },
 			config = configs.nvim_tree,
 			keys = { "<leader>0" },
 			cmd = { "NvimTreeToggle", "NvimTreeFindFile" },
-		}
-		use{
+		})
+		use({
 			"justinmk/vim-dirvish",
 			requires = { "kyazdani42/nvim-web-devicons" },
-		}
-		use{
+		})
+		use({
 			"machakann/vim-sandwich",
 			config = configs.sandwich,
-		}
-		use{
+		})
+		use({
 			"ggandor/lightspeed.nvim",
 			keys = {
 				"<Plug>Lightspeed_s",
@@ -294,107 +297,105 @@ return require("packer").startup{
 				"<Plug>Lightspeed_T",
 			},
 			setup = setups.lightspeed,
-		}
-		use{
+		})
+		use({
 			"phaazon/hop.nvim",
 			config = configs.hop,
-		}
-		use{ "haya14busa/vim-asterisk" }
+		})
+		use({ "haya14busa/vim-asterisk" })
 		-- keys = { "<Plug>(asterisk-z*)", "<Plug>(asterisk-z#)"},
-		use"romainl/vim-cool"
-		use{
+		use("romainl/vim-cool")
+		use({
 			"andymass/vim-matchup",
 			config = configs.matchup,
-		}
-		use{
+		})
+		use({
 			"jdhao/better-escape.vim",
 			event = "InsertEnter",
 			setup = setups.better_escape,
-		}
-		use{
+		})
+		use({
 			"inside/vim-search-pulse",
 			-- keys = { "<Plug>(pulse)" },
 			after = { "vim-asterisk" },
 			setup = setups.vim_search_pulse,
-		}
-		use{
+		})
+		use({
 			"brooth/far.vim",
 			cmd = { "Far", "Farp", "Farr", "Farf" },
-		}
+		})
 		-- Themes
-		use"AlessandroYorba/Despacio"
-		use"chuling/equinusocio-material.vim"
-		use"habamax/vim-gruvbit"
-		use"git@gitlab.com:protesilaos/tempus-themes-vim"
-		use"franbach/miramare"
-		use"lifepillar/vim-solarized8"
-		use"wadackel/vim-dogrun"
-		use"folke/tokyonight.nvim"
-		use"EdenEast/nightfox.nvim"
+		use("AlessandroYorba/Despacio")
+		use("chuling/equinusocio-material.vim")
+		use("habamax/vim-gruvbit")
+		use("git@gitlab.com:protesilaos/tempus-themes-vim")
+		use("franbach/miramare")
+		use("lifepillar/vim-solarized8")
+		use("wadackel/vim-dogrun")
+		use("folke/tokyonight.nvim")
+		use("EdenEast/nightfox.nvim")
 		-- Experimental
-		use{
+		use({
 			"anihm136/importmagic.nvim",
 			ft = "python",
 			run = ":UpdateRemotePlugins",
-		}
-		use"mfussenegger/nvim-dap"
-		use{
+		})
+		use("mfussenegger/nvim-dap")
+		use({
 			"jpalardy/vim-slime",
 			ft = "python",
 			keys = "gr",
 			config = configs.slime,
-		}
-		use{
+		})
+		use({
 			"thinca/vim-quickrun",
 			config = function()
-				vim.cmd[[ runtime after/plugin/quickrun.vim ]]
+				vim.cmd([[ runtime after/plugin/quickrun.vim ]])
 			end,
 			requires = { {
 				"Shougo/vimproc.vim",
 				run = "make",
 			} },
-		}
-		use{
+		})
+		use({
 			"ThePrimeagen/harpoon",
 			config = configs.harpoon,
-		}
+		})
 		-- Nvim
-		use"antoinemadec/FixCursorHold.nvim"
-		use{
+		use("antoinemadec/FixCursorHold.nvim")
+		use({
 			"Shatur/neovim-session-manager",
 			config = function()
-				require("session_manager").setup{
-					autoload_mode = require(
-						"session_manager.config"
-					).AutoloadMode.Disabled,
-				}
+				require("session_manager").setup({
+					autoload_mode = require("session_manager.config").AutoloadMode.Disabled,
+				})
 			end,
-		}
-		use{
+		})
+		use({
 			"nvim-telescope/telescope.nvim",
 			requires = {
 				"nvim-lua/plenary.nvim",
 				"kyazdani42/nvim-web-devicons",
 			},
 			config = configs.telescope,
-		}
-		use{
+		})
+		use({
 			"nvim-telescope/telescope-fzf-native.nvim",
 			run = "make",
 			requires = { "nvim-telescope/telescope.nvim" },
-		}
-		use{
+		})
+		use({
 			"nvim-telescope/telescope-frecency.nvim",
 			requires = { "nvim-telescope/telescope.nvim", "tami5/sql.nvim" },
-		}
-		use{
+		})
+		use({
 			"nvim-telescope/telescope-symbols.nvim",
 			requires = { "nvim-telescope/telescope.nvim" },
-		}
-		use"weilbith/nvim-lsp-smag"
+		})
+		use("weilbith/nvim-lsp-smag")
 	end,
 	config = {
 		compile_path = vim.fn.stdpath("config") .. "/lua/packer_compiled.lua",
 		ensure_dependencies = true,
 	},
-}
+})

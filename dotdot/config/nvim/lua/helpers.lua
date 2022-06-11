@@ -20,10 +20,10 @@ helpers.open_window = function(val, checkvar)
 end
 
 -- lsp formatting
-helpers.formatting = function()
+helpers.format = function()
 	vim.cmd[[undojoin]]
-	vim.lsp.buf.formatting(
-		vim.g[string.format("format_options_%s", vim.bo.filetype)] or {}
+	vim.lsp.buf.format(
+		vim.tbl_extend("force", {async = true}, vim.g[string.format("format_options_%s", vim.bo.filetype)] or {})
 	)
 end
 

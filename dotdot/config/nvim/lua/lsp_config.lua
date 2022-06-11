@@ -95,9 +95,9 @@ local on_attach = function(client, bufnr)
 	mapper("n", "]e", "<cmd>lua vim.diagnostic.goto_next()<cr>")
 	mapper("n", "<leader>ce", "<cmd>lua vim.diagnostic.setloclist()<cr>")
 	mapper("n", "<leader>cl", "<cmd>lua vim.diagnostic.open_float()<cr>")
-	mapper("n", "<leader>cf", "<cmd>lua helpers.formatting()<cr>")
+	mapper("n", "<leader>cf", "<cmd>lua helpers.format()<cr>")
 	mapper("n", "<leader>cn", "<cmd>lua vim.lsp.buf.rename()<cr>")
-	mapper("n", "<leader>ca", "<cmd>Telescope lsp_code_actions<cr>")
+	mapper("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>")
 	mapper("n", "<leader>cr", "<cmd>lua vim.lsp.buf.references()<cr>")
 end
 

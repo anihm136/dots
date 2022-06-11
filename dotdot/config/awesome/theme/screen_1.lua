@@ -1,19 +1,18 @@
-local gears = require('gears')
-local lain = require('lain')
-local awful = require('awful')
-local wibox = require('wibox')
-local dpi = require('beautiful.xresources').apply_dpi
-local deepcopy = require('utils').deepcopy
+local gears = require("gears")
+local lain = require("lain")
+local awful = require("awful")
+local wibox = require("wibox")
+local dpi = require("beautiful.xresources").apply_dpi
+local deepcopy = require("utils").deepcopy
 
-local screen_theme = deepcopy(require'beautiful'.get())
-screen_theme.font = 'Inter 14'
-screen_theme.taglist_font = 'Inter Black 12'
+local screen_theme = deepcopy(require("beautiful").get())
+screen_theme.font = "Inter 14"
+screen_theme.taglist_font = "Inter Black 12"
 screen_theme.menu_height = dpi(35)
 screen_theme.menu_width = dpi(250)
-screen_theme.taglist_squares_sel = screen_theme.dir .. '/icons/square_unsel.png'
-screen_theme.taglist_squares_unsel =
-	screen_theme.dir .. '/icons/square_unsel.png'
-screen_theme.disk = screen_theme.dir .. '/icons/disk.png'
+screen_theme.taglist_squares_sel = screen_theme.dir .. "/icons/square_unsel.png"
+screen_theme.taglist_squares_unsel = screen_theme.dir .. "/icons/square_unsel.png"
+screen_theme.disk = screen_theme.dir .. "/icons/disk.png"
 {%@@ if profile == "apex" @@%}
 screen_theme.ac = screen_theme.dir .. "/icons/ac.png"
 screen_theme.bat = screen_theme.dir .. "/icons/bat.png"
@@ -30,13 +29,13 @@ local green = "#87ed87"
 local markup = lain.util.markup
 
 -- Textclock
-local clock = wibox.widget.textclock('%a, %d %b %l:%M %p', 60)
-clock.font = 'Inter Black 12'
+local clock = wibox.widget.textclock("%a, %d %b %l:%M %p", 60)
+clock.font = "Inter Black 12"
 clock.align = "center"
-clock.forced_width = dpi(180)
+clock.forced_width = dpi(190)
 
 -- Calendar
-local month_calendar = awful.widget.calendar_popup.month{
+local month_calendar = awful.widget.calendar_popup.month({
 	margin = dpi(10),
 	style_header = {
 		border_width = 0,
@@ -50,12 +49,12 @@ local month_calendar = awful.widget.calendar_popup.month{
 		fg_color = screen_theme.bg_normal,
 	},
 	style_weekday = { border_width = 0 },
-}
-month_calendar:attach(clock, 'tr')
+})
+month_calendar:attach(clock, "tr")
 
 -- /home fs
 local fsicon = wibox.widget.imagebox(screen_theme.disk)
-local fsbar = wibox.widget{
+local fsbar = wibox.widget({
 	forced_height = dpi(1),
 	forced_width = dpi(65),
 	color = screen_theme.fg_normal,
@@ -65,40 +64,40 @@ local fsbar = wibox.widget{
 	ticks = true,
 	ticks_size = dpi(6),
 	widget = wibox.widget.progressbar,
-}
-screen_theme.fs = lain.widget.fs{
+})
+screen_theme.fs = lain.widget.fs({
 	notification_preset = {
 		fg = screen_theme.fg_normal,
 		bg = screen_theme.bg_normal,
-		font = 'Overpass Mono 10.5',
-		title = 'Storage overview',
+		font = "Overpass Mono 10.5",
+		title = "Storage overview",
 		width = 0,
 	},
-	showpopup = 'off',
+	showpopup = "off",
 	settings = function()
-		if fs_now['/'].percentage < 90 then
+		if fs_now["/"].percentage < 90 then
 			fsbar:set_color(screen_theme.fg_normal)
 		else
-			fsbar:set_color('#EB8F8F')
+			fsbar:set_color("#EB8F8F")
 		end
-		fsbar:set_value(fs_now['/'].percentage / 100)
+		fsbar:set_value(fs_now["/"].percentage / 100)
 	end,
-}
-local fswidget = wibox.widget{
+})
+local fswidget = wibox.widget({
 	{
 		fsbar,
 		widget = wibox.container.background,
-		bg = '#474747',
+		bg = "#474747",
 		shape = gears.shape.rectangle,
 	},
 	widget = wibox.container.margin,
 	margins = 5,
-}
+})
 
-fswidget:connect_signal('mouse::enter', function()
+fswidget:connect_signal("mouse::enter", function()
 	screen_theme.fs.show(0)
 end)
-fswidget:connect_signal('mouse::leave', function()
+fswidget:connect_signal("mouse::leave", function()
 	screen_theme.fs.hide()
 end)
 --]]
@@ -211,23 +210,27 @@ local volumewidget =
 {%@@ endif @@%}
 
 -- Separators
-local first = wibox.widget.textbox(markup.font('Inter Mono 3', ' '))
-local small_spr = wibox.widget.textbox(markup.font('Inter Mono 4', ' '))
-local bar_spr =
-	wibox.widget.textbox(
-		markup.font('Inter Mono 3', ' ') .. markup.fontfg(
-			screen_theme.font,
-			'#777777',
-			'|'
-		) .. markup.font('Inter Mono 5', ' ')
-	)
+local first = wibox.widget.textbox(markup.font("Inter Mono 3", " "))
+local small_spr = wibox.widget.textbox(markup.font("Inter Mono 4", " "))
+local bar_spr = wibox.widget.textbox(
+	markup.font("Inter Mono 3", " ")
+		.. markup.fontfg(screen_theme.font, "#777777", "|")
+		.. markup.font("Inter Mono 5", " ")
+)
 
 -- Eminent-like task filtering
 local orig_filter = awful.widget.taglist.filter.all
 
 -- Taglist label functions
 awful.widget.taglist.filter.all = function(t, args)
-	if t.selected or #t:clients() > 0 then
+	local has_visible_clients = false
+	for _, c in pairs(t:clients()) do
+		if not c.skip_taskbar then
+			has_visible_clients = true
+			break
+		end
+	end
+	if t.selected or has_visible_clients then
 		return orig_filter(t, args)
 	end
 end
@@ -235,9 +238,9 @@ end
 function screen_theme.at_screen_connect(s)
 	-- Tags
 	{%@@ if profile == "sorcery" @@%}
-	local tagnames = awful.util.tagnames_1
+	local tagnames = { "WS1_1", "WS1_2", "WWW", "MEDIA", "EMACS", "E1" }
 	{%@@ elif profile == "apex" @@%}
-	local tagnames = awful.util.tagnames
+	local tagnames = {"WS1", "WS2", "WS3", "WWW", "SOCIAL", "MEDIA", "EMACS", "READ", "9"}
 	{%@@ endif @@%}
 	for i, tag in pairs(tagnames) do
 		awful.tag.add(tag, {
@@ -248,15 +251,15 @@ function screen_theme.at_screen_connect(s)
 	end
 
 	-- Create a taglist widget
-	s.mytaglist = awful.widget.taglist{
+	s.mytaglist = awful.widget.taglist({
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
 		buttons = awful.util.taglist_buttons,
 		style = { font = screen_theme.taglist_font },
-	}
+	})
 
 	-- Create a tasklist widget
-	s.mytasklist = awful.widget.tasklist{
+	s.mytasklist = awful.widget.tasklist({
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = awful.util.tasklist_buttons,
@@ -265,7 +268,7 @@ function screen_theme.at_screen_connect(s)
 			{
 				{
 					{
-						id = 'text_role',
+						id = "text_role",
 						widget = wibox.widget.textbox,
 					},
 					layout = wibox.layout.fixed.horizontal,
@@ -274,22 +277,22 @@ function screen_theme.at_screen_connect(s)
 				right = 10,
 				widget = wibox.container.margin,
 			},
-			id = 'background_role',
+			id = "background_role",
 			widget = wibox.container.background,
 		},
-	}
+	})
 
 	-- Create the wibox
 	s.mywibox = awful.wibar({
-		position = 'top',
+		position = "top",
 		screen = s,
-		height = screen_theme.menu_height,
-		bg = screen_theme.bg_normal,
-		fg = screen_theme.fg_normal,
+		visible = false,
+		ontop = true,
+		stretch = true
 	})
 
 	-- Add widgets to the wibox
-	s.mywibox:setup{
+	s.mywibox:setup({
 		layout = wibox.layout.align.horizontal,
 		{
 			{
@@ -311,7 +314,7 @@ function screen_theme.at_screen_connect(s)
 				{
 					wibox.widget.systray(),
 					widget = wibox.container.margin,
-					margins = { top = 3, bottom = 3 }
+					margins = { top = 3, bottom = 3 },
 				},
 				bar_spr,
 				{%@@ if profile == "apex" @@%}
@@ -330,8 +333,36 @@ function screen_theme.at_screen_connect(s)
 			widget = wibox.container.margin,
 			margins = { right = 5 },
 		},
-	}
-end
+	})
 
+	local function show_wibar()
+		-- comment this out if you want to show bar even for fullscreen windows
+		if next(s.clients) and s.clients[1].fullscreen then
+			return
+		end
+		-- moving the mouse within 5px of the bottom of the screen shows the bar
+		if mouse.screen == s and mouse.coords().y < 5 then
+			s.mywibox.visible = true
+		end
+	end
+
+	s.show_wibar_timer = gears.timer({
+		timeout = 0.25, -- 250ms delay between checks if the bar should be shown
+		callback = show_wibar,
+		autostart = true,
+	})
+
+	s.mywibox:connect_signal("property::visible", function()
+		if s.mywibox.visible then
+			s.show_wibar_timer:stop()
+		else
+			s.show_wibar_timer:start()
+		end
+	end)
+
+	s.mywibox:connect_signal("mouse::leave", function()
+		s.mywibox.visible = false
+	end)
+end
 
 return screen_theme

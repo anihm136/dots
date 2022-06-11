@@ -66,17 +66,17 @@ naughty.config.padding = dpi(30)
 naughty.config.spacing = dpi(30)
 naughty.config.icon_dirs =
 	{
-		"/usr/share/icons/Sardi/scalable/actions/",
-		"/usr/share/icons/Sardi/scalable/animations/",
-		"/usr/share/icons/Sardi/scalable/apps/",
-		"/usr/share/icons/Sardi/scalable/categories/",
-		"/usr/share/icons/Sardi/scalable/devices/",
-		"/usr/share/icons/Sardi/scalable/emblems/",
-		"/usr/share/icons/Sardi/scalable/mimetypes/",
-		"/usr/share/icons/Sardi/scalable/notifications/",
-		"/usr/share/icons/Sardi/scalable/panel/",
-		"/usr/share/icons/Sardi/scalable/places/",
-		"/usr/share/icons/Sardi/scalable/status/",
+		"/usr/share/icons/breeze-dark/actions/",
+		"/usr/share/icons/breeze-dark/animations/",
+		"/usr/share/icons/breeze-dark/apps/",
+		"/usr/share/icons/breeze-dark/categories/",
+		"/usr/share/icons/breeze-dark/devices/",
+		"/usr/share/icons/breeze-dark/emblems/",
+		"/usr/share/icons/breeze-dark/mimetypes/",
+		"/usr/share/icons/breeze-dark/notifications/",
+		"/usr/share/icons/breeze-dark/panel/",
+		"/usr/share/icons/breeze-dark/places/",
+		"/usr/share/icons/breeze-dark/status/",
 	}
 
 local function handle_brave_apps(args)
@@ -84,7 +84,7 @@ local function handle_brave_apps(args)
 
 	for _, app in ipairs(brave_apps) do
 		local app_pattern = "^" .. app .. "\n\n"
-		local app_name = string.match(args.message, app_pattern)
+		local app_name = string.match(args.message or "", app_pattern)
 		if app_name ~= nil then
 			args.message = string.gsub(args.message, app_pattern, "")
 			args.actions = nil
