@@ -39,13 +39,13 @@ local month_calendar = awful.widget.calendar_popup.month({
 	margin = dpi(10),
 	style_header = {
 		border_width = 0,
-		bg_color = screen_theme.bg_urgent,
+		bg_color = screen_theme.bg_focus,
 		fg_color = screen_theme.bg_normal,
 	},
 	style_normal = { border_width = 0 },
 	style_focus = {
 		border_width = 0,
-		bg_color = screen_theme.bg_urgent,
+		bg_color = screen_theme.bg_focus,
 		fg_color = screen_theme.bg_normal,
 	},
 	style_weekday = { border_width = 0 },
@@ -209,32 +209,6 @@ local volumewidget =
 	wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
 {%@@ endif @@%}
 
--- Separators
-local first = wibox.widget.textbox(markup.font("Inter Mono 3", " "))
-local small_spr = wibox.widget.textbox(markup.font("Inter Mono 4", " "))
-local bar_spr = wibox.widget.textbox(
-	markup.font("Inter Mono 3", " ")
-		.. markup.fontfg(screen_theme.font, "#777777", "|")
-		.. markup.font("Inter Mono 5", " ")
-)
-
--- Eminent-like task filtering
-local orig_filter = awful.widget.taglist.filter.all
-
--- Taglist label functions
-awful.widget.taglist.filter.all = function(t, args)
-	local has_visible_clients = false
-	for _, c in pairs(t:clients()) do
-		if not c.skip_taskbar then
-			has_visible_clients = true
-			break
-		end
-	end
-	if t.selected or has_visible_clients then
-		return orig_filter(t, args)
-	end
-end
-
 function screen_theme.at_screen_connect(s)
 	-- Tags
 	{%@@ if profile == "sorcery" @@%}
@@ -263,13 +237,25 @@ function screen_theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = awful.util.tasklist_buttons,
-		style = { font = screen_theme.font },
+		style = {
+			font = screen_theme.font,
+			border_width = 1,
+			border_color = "#777777",
+			shape = function(cr, width, height)
+				return gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true)
+			end,
+		},
+		layout = {
+			layout = wibox.layout.flex.horizontal,
+			spacing = 10,
+		},
 		widget_template = {
 			{
 				{
 					{
 						id = "text_role",
 						widget = wibox.widget.textbox,
+						align = "right"
 					},
 					layout = wibox.layout.fixed.horizontal,
 				},
@@ -288,50 +274,66 @@ function screen_theme.at_screen_connect(s)
 		screen = s,
 		visible = false,
 		ontop = true,
-		stretch = true
-	})
-
-	-- Add widgets to the wibox
-	s.mywibox:setup({
-		layout = wibox.layout.align.horizontal,
-		{
+		stretch = true,
+		restrict_workarea = false,
+		widget = {
+			layout = wibox.layout.align.horizontal,
 			{
-				layout = wibox.layout.fixed.horizontal,
-				small_spr,
-				s.mylayoutbox,
-				first,
-				bar_spr,
-				s.mytaglist,
-				first,
-			},
-			widget = wibox.container.margin,
-			margins = { left = 5 },
-		},
-		s.mytasklist,
-		{
-			{
-				layout = wibox.layout.fixed.horizontal,
 				{
-					wibox.widget.systray(),
-					widget = wibox.container.margin,
-					margins = { top = 3, bottom = 3 },
+					layout = wibox.layout.fixed.horizontal,
+					s.mylayoutbox,
+					s.mytaglist,
+					spacing = 10,
+					spacing_widget = wibox.widget.separator({
+						thickness = 2,
+						span_ratio = 0.8,
+						color = "#777777",
+					}),
 				},
-				bar_spr,
-				{%@@ if profile == "apex" @@%}
-				baticon,
-				batwidget,
-				bar_spr,
-				volicon,
-				volumewidget,
-				bar_spr,
-				{%@@ endif @@%}
-				fsicon,
-				fswidget,
-				bar_spr,
-				clock,
+				widget = wibox.container.margin,
+				margins = { left = 5 },
 			},
-			widget = wibox.container.margin,
-			margins = { right = 5 },
+			{
+				s.mytasklist,
+				widget = wibox.container.margin,
+				margins = { left = 20, right = 20 },
+			},
+			{
+				{
+					layout = wibox.layout.fixed.horizontal,
+					{
+						wibox.widget.systray(),
+						widget = wibox.container.margin,
+						margins = { top = 3, bottom = 3 },
+					},
+					{%@@ if profile == "apex" @@%}
+					{
+						baticon,
+						batwidget,
+						layout = wibox.layout.align.horizontal,
+					},
+					{
+						volicon,
+						volumewidget,
+						layout = wibox.layout.align.horizontal,
+					},
+					{%@@ endif @@%}
+					{
+						fsicon,
+						fswidget,
+						layout = wibox.layout.align.horizontal,
+					},
+					clock,
+					spacing = 10,
+					spacing_widget = wibox.widget.separator({
+						thickness = 2,
+						span_ratio = 0.8,
+						color = "#777777",
+					}),
+				},
+				widget = wibox.container.margin,
+				margins = { right = 5 },
+			},
 		},
 	})
 

@@ -1,13 +1,14 @@
+#!/bin/sh
+
 export CALIBRE_USE_DARK_PALETTE=1
 export QT_QPA_PLATFORMTHEME=qt5ct
 
 {%@@ if profile == "apex" @@%}
 xrandr --output eDP1 --primary --mode 3200x1800
 {%@@ endif @@%}
-eval $(gnome-keyring-daemon --start)
+eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
 xset s 600 5
-jack_control start
 xss-lock -n /usr/lib/xsecurelock/dimmer -l -- xsecurelock &
 picom --experimental-backends -b
 lxsession &

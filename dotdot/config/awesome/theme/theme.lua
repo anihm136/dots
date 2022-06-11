@@ -44,7 +44,8 @@ theme.layout_termfair = theme.dir .. '/icons/termfair.png'
 theme.layout_centerwork = theme.dir .. '/icons/centerwork.png'
 theme.useless_gap = 6
 theme.tasklist_disable_icon = true
-theme.icon_theme = 'Papirus'
+theme.icon_theme = 'breeze-dark'
+theme.systray_icon_spacing = 5
 
 function theme.at_screen_connect(s)
 	-- We need one layoutbox per screen.

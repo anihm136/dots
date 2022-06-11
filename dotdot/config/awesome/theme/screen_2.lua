@@ -159,15 +159,6 @@ screen_theme.mpd.widget:buttons(my_table.join(
 	end)
 ))
 
--- Separators
-local first = wibox.widget.textbox(markup.font("Inter Mono 3", " "))
-local small_spr = wibox.widget.textbox(markup.font("Inter Mono 4", " "))
-local bar_spr = wibox.widget.textbox(
-	markup.font("Inter Mono 5", " ")
-		.. markup.fontfg(screen_theme.font, "#777777", "|")
-		.. markup.font("Inter Mono 5", " ")
-)
-
 function screen_theme.at_screen_connect(s)
 	-- Tags
 	local tagnames = { "WS2_1", "WS2_2", "SOCIAL", "MEDIA", "E2" }
@@ -196,13 +187,25 @@ function screen_theme.at_screen_connect(s)
 		screen = s,
 		filter = awful.widget.tasklist.filter.currenttags,
 		buttons = awful.util.tasklist_buttons,
-		style = { font = screen_theme.font },
+		style = {
+			font = screen_theme.font,
+			border_width = 1,
+			border_color = "#777777",
+			shape = function(cr, width, height)
+				return gears.shape.partially_rounded_rect(cr, width, height, false, false, true, true)
+			end,
+		},
+		layout = {
+			layout = wibox.layout.flex.horizontal,
+			spacing = 10,
+		},
 		widget_template = {
 			{
 				{
 					{
 						id = "text_role",
 						widget = wibox.widget.textbox,
+						align = "right",
 					},
 					layout = wibox.layout.fixed.horizontal,
 				},
@@ -221,38 +224,50 @@ function screen_theme.at_screen_connect(s)
 		screen = s,
 		visible = false,
 		ontop = true,
-		stretch = true
-	})
-
-	-- Add widgets to the wibox
-	s.mywibox:setup({
-		layout = wibox.layout.align.horizontal,
-		{
+		stretch = true,
+		restrict_workarea = false,
+		widget = {
+			layout = wibox.layout.align.horizontal,
 			{
-				layout = wibox.layout.fixed.horizontal,
-				s.mylayoutbox,
-				first,
-				bar_spr,
-				s.mytaglist,
-				first,
-				s.mypromptbox,
+				{
+					layout = wibox.layout.fixed.horizontal,
+					s.mylayoutbox,
+					s.mytaglist,
+					spacing = 10,
+					spacing_widget = wibox.widget.separator({
+						thickness = 2,
+						span_ratio = 0.8,
+						color = "#777777",
+					}),
+				},
+				widget = wibox.container.margin,
+				margins = { left = 5 },
 			},
-			widget = wibox.container.margin,
-			margins = { left = 5 },
-		},
-		s.mytasklist,
-		{
 			{
-				layout = wibox.layout.fixed.horizontal,
-				-- wibox.container.background(mpdicon, screen_theme.bg_normal),
-				wibox.container.background(screen_theme.mpd.widget, screen_theme.bg_focus),
-				bar_spr,
-				volicon,
-				small_spr,
-				volumewidget,
+				s.mytasklist,
+				widget = wibox.container.margin,
+				margins = { left = 20, right = 20 },
 			},
-			widget = wibox.container.margin,
-			margins = { right = 5 },
+			{
+				{
+					layout = wibox.layout.fixed.horizontal,
+					-- wibox.container.background(mpdicon, screen_theme.bg_normal),
+					wibox.container.background(screen_theme.mpd.widget, screen_theme.bg_focus),
+					{
+						volicon,
+						volumewidget,
+						layout = wibox.layout.align.horizontal,
+					},
+					spacing = 10,
+					spacing_widget = wibox.widget.separator({
+						thickness = 2,
+						span_ratio = 0.8,
+						color = "#777777",
+					}),
+				},
+				widget = wibox.container.margin,
+				margins = { right = 5 },
+			},
 		},
 	})
 

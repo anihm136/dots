@@ -1,5 +1,5 @@
 super + b
-  $BROWSER
+  firefox
 
 super + F9
   mnt
@@ -8,31 +8,22 @@ super + F10
   umt
 
 super + BackSpace
-  power
-
-super + e
-  $GUIEDITOR
+  rofi -modi "power-menu:rofi-power-menu" -show power-menu -theme "themes/powermenu"
 
 super + f
-  $FILE
+  thunar
 
 super + Return
-  $TERMINAL
-
-super + shift + s
-  $SETTINGS
+  kitty || uxterm
 
 super + c
-  $CALC
+  galculator
 
 super + shift + x
-  eval $LOCKER
+  loginctl lock-session
 
 Menu
-  eval $LAUNCHER
-
-super + r
-  eval $RUNNER
+  rofi -modi run,drun -show drun -show-icons -display-run "Launch" -display-drun "Launch"
 
 alt + Tab
   rofiwindow

@@ -19,7 +19,7 @@ require("awful.hotkeys_popup.keys")
 require("notifications")
 
 -- Set default applications
-require("default_apps")
+require("apps.default_apps")
 
 -- UI stuff
 require("ui")
@@ -52,6 +52,3 @@ gears.timer({
 		collectgarbage()
 	end,
 })
-
--- Autostart applications
-awful.spawn.easy_async_with_shell("~/.config/awesome/autorun.sh")

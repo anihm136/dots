@@ -1,4 +1,9 @@
 configuration {
 	matching: "fuzzy";
+	tokenize: true;
+	run-list-command: "showaliases";
+	run-command: "/bin/bash -i -c {cmd}";
+	sort: true;
+	sorting-method: "fzf";
 }
 @theme "themes/default"
