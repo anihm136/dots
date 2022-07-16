@@ -115,12 +115,6 @@ function rules.create(clientkeys, clientbuttons)
 			properties = { floating = true },
 		},
 		{
-			rule = { instance = "copyq" },
-			properties = {
-				skip_taskbar = true,
-			},
-		},
-		{
 			-- Rofi
 			rule_any = {
 				name = { "rofi" },

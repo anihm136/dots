@@ -115,49 +115,7 @@ local volumewidget = wibox.widget({
 	margins = 4,
 })
 
--- MPD
-local musicplr = string.format("%s -T Music -e ncmpcpp", awful.util.terminal)
-screen_theme.mpd = lain.widget.mpd({
-	settings = function()
-		local total_length = #mpd_now.artist + #mpd_now.title
-		local percent = 35 / total_length
-
-		local max_artist = math.floor(#mpd_now.artist * percent)
-		local max_title = math.floor(#mpd_now.title * percent)
-		mpd_now.artist = mpd_now.artist:shorten(max_artist)
-		mpd_now.title = mpd_now.title:shorten(max_title)
-		if mpd_now.state == "play" then
-			artist = " " .. mpd_now.artist .. " "
-			title = mpd_now.title .. " "
-		elseif mpd_now.state == "pause" then
-			artist = " mpd "
-			title = "paused "
-		else
-			artist = ""
-			title = ""
-		end
-
-		widget:set_markup(markup.font("Inter 9", markup("#78FFA4", artist) .. title))
-	end,
-	notify = "off",
-})
-screen_theme.mpd.widget:buttons(my_table.join(
-	awful.button({ "Mod4" }, 1, function()
-		awful.spawn(musicplr)
-	end),
-	awful.button({}, 1, function()
-		os.execute("mpc prev")
-		screen_theme.mpd.update()
-	end),
-	awful.button({}, 2, function()
-		os.execute("mpc toggle")
-		screen_theme.mpd.update()
-	end),
-	awful.button({}, 3, function()
-		os.execute("mpc next")
-		screen_theme.mpd.update()
-	end)
-))
+local music = require('widgets.music')
 
 function screen_theme.at_screen_connect(s)
 	-- Tags
@@ -251,8 +209,7 @@ function screen_theme.at_screen_connect(s)
 			{
 				{
 					layout = wibox.layout.fixed.horizontal,
-					-- wibox.container.background(mpdicon, screen_theme.bg_normal),
-					wibox.container.background(screen_theme.mpd.widget, screen_theme.bg_focus),
+					music,
 					{
 						volicon,
 						volumewidget,
@@ -272,20 +229,22 @@ function screen_theme.at_screen_connect(s)
 	})
 
 	local function show_wibar()
-		-- comment this out if you want to show bar even for fullscreen windows
 		if next(s.clients) and s.clients[1].fullscreen then
 			return
 		end
-		-- moving the mouse within 5px of the bottom of the screen shows the bar
-		if mouse.screen == s and mouse.coords().y < 5 then
+		if mouse.screen == s and mouse.coords().y < 2 then
 			s.mywibox.visible = true
 		end
 	end
 
 	s.show_wibar_timer = gears.timer({
-		timeout = 0.25, -- 250ms delay between checks if the bar should be shown
+		timeout = 0.25,
 		callback = show_wibar,
 		autostart = true,
+	})
+	s.hide_wibar_timer = gears.timer({
+		timeout = 2,
+		callback = function() s.mywibox.visible = false end,
 	})
 
 	s.mywibox:connect_signal("property::visible", function()
@@ -295,9 +254,11 @@ function screen_theme.at_screen_connect(s)
 			s.show_wibar_timer:start()
 		end
 	end)
-
+	s.mywibox:connect_signal("mouse::enter", function()
+		s.hide_wibar_timer:stop()
+	end)
 	s.mywibox:connect_signal("mouse::leave", function()
-		s.mywibox.visible = false
+		s.hide_wibar_timer:start()
 	end)
 end
 

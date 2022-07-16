@@ -415,6 +415,18 @@ keys.globalkeys = my_table.join(
 	end, {
 		description = "copy gtk to terminal",
 		group = "hotkeys",
+	}),
+	awful.key({ modkey }, "F1", function()
+		require("apps.scratchpad").term:toggle()
+	end, {
+		description = "toggle scratchpad terminal",
+		group = "hotkeys",
+	}),
+	awful.key({ modkey }, "k", function()
+		require("apps.scratchpad").copyq:toggle()
+	end, {
+		description = "toggle copyq",
+		group = "hotkeys",
 	})
 )
 

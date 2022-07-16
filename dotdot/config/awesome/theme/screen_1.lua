@@ -26,7 +26,6 @@ screen_theme.vol_mute = screen_theme.dir .. "/icons/vol_mute.png"
 local red = "#EB8F8F"
 local green = "#87ed87"
 {%@@ endif @@%}
-local markup = lain.util.markup
 
 -- Textclock
 local clock = wibox.widget.textclock("%a, %d %b %l:%M %p", 60)
@@ -338,20 +337,22 @@ function screen_theme.at_screen_connect(s)
 	})
 
 	local function show_wibar()
-		-- comment this out if you want to show bar even for fullscreen windows
 		if next(s.clients) and s.clients[1].fullscreen then
 			return
 		end
-		-- moving the mouse within 5px of the bottom of the screen shows the bar
-		if mouse.screen == s and mouse.coords().y < 5 then
+		if mouse.screen == s and mouse.coords().y < 2 then
 			s.mywibox.visible = true
 		end
 	end
 
 	s.show_wibar_timer = gears.timer({
-		timeout = 0.25, -- 250ms delay between checks if the bar should be shown
+		timeout = 0.25,
 		callback = show_wibar,
 		autostart = true,
+	})
+	s.hide_wibar_timer = gears.timer({
+		timeout = 2,
+		callback = function() s.mywibox.visible = false end,
 	})
 
 	s.mywibox:connect_signal("property::visible", function()
@@ -361,9 +362,11 @@ function screen_theme.at_screen_connect(s)
 			s.show_wibar_timer:start()
 		end
 	end)
-
+	s.mywibox:connect_signal("mouse::enter", function()
+		s.hide_wibar_timer:stop()
+	end)
 	s.mywibox:connect_signal("mouse::leave", function()
-		s.mywibox.visible = false
+		s.hide_wibar_timer:start()
 	end)
 end
 
