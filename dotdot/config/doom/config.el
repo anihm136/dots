@@ -17,8 +17,13 @@
 
 ;; Utility variables
 
+{%@@ if profile == "localhost" @@%}
+(defconst ani/org-directory "~/storage/shared/Documents/org/"
+  "The default directory for org files.")
+{%@@ else @@%}
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
+{%@@ endif @@%}
 
 (defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-tomorrow-night)
   "Set of dark themes to choose from.")
@@ -52,9 +57,12 @@
         doom-modeline-unicode-fallback t
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
+{%@@ if profile != "localhost" and profile != "anihm" @@%}
 (load! "lisp/llvm-mode")
+{%@@ endif @@%}
 
 ;; Deferred loading
+{%@@ if profile != "localhost" and profile != "anihm" @@%}
 (defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
       (progn
@@ -63,51 +71,57 @@
         (format "\\textattachfile{%s}{%s}" (match-string 1 text) (match-string 2 text))
         )
     text))
+{%@@ endif @@%}
 
 (use-package! org
   :defer t
   :config
-  (setq org-export-filter-link-functions '(ox-markup-filter-attach)
-        org-ellipsis " ▾ "
-        org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil
-        org-refile-allow-creating-parent-nodes 'confirm
-        org-catch-invisible-edits 'smart
-        org-list-demote-modify-bullet '(("+" . "*") ("-" . "+") ("*" . "-") ("1." . "a."))
-        org-startup-folded 'content
-        org-log-done 'time
-        org-log-into-drawer t
-        org-log-state-notes-insert-after-drawers nil
-        org-clock-mode-line-total 'today
-        org-attach-id-dir ".attach/"
-        org-attach-dir-relative t
-        org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
-                            (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
-        org-capture-templates
-        `(("i" "Inbox" entry
-           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-           "* REFILE %i%?")
-          ("l" "Org protocol" entry
-           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-           "* READ [[%:link][%:description]]\n %i"
-           :immediate-finish t)
-          ("k" "Clipboard link" entry
-           (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-           "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
+  (setq
+   org-fold-catch-invisible-edits 'show-and-error
+   org-startup-folded 'content
+{%@@ if profile != "localhost" and profile != "anihm" @@%}
+   ;; Embed attached files when converting from org to pdf
+   org-export-filter-link-functions '(ox-markup-filter-attach)
+{%@@ endif @@%}
+   ;; Display
+   org-ellipsis " ▾ "
+   org-list-demote-modify-bullet '(("+" . "*") ("-" . "+") ("*" . "-") ("1." . "a."))
+   ;; Refile
+   org-refile-use-outline-path 'file
+   org-refile-allow-creating-parent-nodes 'confirm
+   org-outline-path-complete-in-steps nil
+   ;; TODO state changes
+   org-log-done 'time
+   org-log-into-drawer t
+   ;; Repeating TODO settings
+   org-log-repeat 'nil
+   org-todo-repeat-to-state t
+   ;; Clock time display
+   org-clock-mode-line-total 'current
+   ;; Org-attach settings
+   org-attach-id-dir ".attach/"
+   org-attach-dir-relative t
+   ;; TODO states
+   org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
+                       (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
+   ;; Capture templates
+   org-capture-templates
+   `(("i" "Inbox" entry
+      (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+      "* REFILE %i%?")
+     ("l" "Org protocol" entry
+      (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+      "* READ [[%:link][%:description]]\n %i"
+      :immediate-finish t)
+     ("k" "Clipboard link" entry
+      (file ,(concat ani/org-directory "GTD/" "inbox.org"))
+      "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode)))
 
 (add-hook! 'org-mode-hook 'org-fragtog-mode)
 (add-hook! 'org-mode-hook 'org-appear-mode)
 (add-hook! 'org-mode-hook '+org-pretty-mode)
-
-(use-package! org-diagrams
-  :commands (org-diagrams-insert-at-point-and-edit org-diagrams-edit-at-point org-diagrams-init)
-  :config (progn
-            (setq
-             org-diagrams-editor "drawio"
-             org-diagrams-on-update "drawio -x -f png -o ${OUT} ${IN}")
-            (org-diagrams-init)))
 
 (map! :map org-mode-map
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
@@ -144,11 +158,12 @@
                                                          ((org-ql-block-header ,gtd/next-action-head)))
                                     (org-ql-search-block '(or (todo "REFILE")
                                                               (and (todo "PROJECT")
-                                                                   (children (not (todo "PROJECT" "DONE")))))
+                                                                   (children (not (todo "PROJECT" "DONE" "CANCELLED")))))
                                                          ((org-ql-block-header ,gtd/project-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org")))))
                                     (org-ql-search-block '(todo "REFILE" "TODO")
                                                          ((org-ql-block-header ,gtd/task-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org")))))
-                                    (org-ql-search-block '(todo "RECURRING")
+                                    (org-ql-search-block '(and (todo "RECURRING")
+                                                               (not (scheduled)))
                                                          ((org-ql-block-header ,gtd/recurring-head)))
                                     (org-ql-search-block '(todo "WAITING")
                                                          ((org-ql-block-header ,gtd/waiting-head)))))
@@ -172,11 +187,6 @@
 
 (add-hook! 'auto-save-hook 'org-save-all-org-buffers)
 
-(use-package! org-protocol
-  :defer t
-  :config
-  (setq org-protocol-default-template-key "l"))
-
 (use-package! org-roam
   :defer t
   :custom-face
@@ -191,34 +201,44 @@
            :unnarrowed t))
         org-roam-buffer-width 0.25))
 
-(use-package! magit
-  :defer t
-  :config
-  (setq magit-repository-directories '(("~/code/vcs/" . 2) ("~/code/os_contrib/" . 2))
-        global-git-commit-mode t))
-
-(use-package! company
-  :defer t
-  :config
-  (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
-                            company-preview-if-just-one-frontend
-                            company-echo-metadata-frontend)))
-
-(use-package! aas
-  :hook (LaTeX-mode . ass-activate-for-major-mode)
-  :hook (org-mode . ass-activate-for-major-mode))
-
-(use-package! laas
-  :hook (LaTeX-mode . laas-mode)
-  :config ; do whatever here
-  (aas-set-snippets 'laas-mode
-                    ;; set condition!
-                    :cond #'texmathp ; expand only while in math
-                    "supp" "\\supp"
-                    "On" "O(n)"
-                    "O1" "O(1)"
-                    "Olog" "O(\\log n)"
-                    "Olon" "O(n \\log n)"))
+(defadvice org-archive-subtree (around fix-hierarchy activate)
+  (let* ((fix-archive-p (and (not current-prefix-arg)
+                             (not (use-region-p))))
+         (afile (car (org-archive--compute-location org-archive-location)))
+         (buffer (or (find-buffer-visiting afile) (find-file-noselect afile))))
+    ad-do-it
+    (when fix-archive-p
+      (with-current-buffer buffer
+        (goto-char (point-max))
+        (while (org-up-heading-safe))
+        (let* ((olpath (org-entry-get (point) "ARCHIVE_OLPATH"))
+               (path (and olpath (split-string olpath "/")))
+               (level 1)
+               tree-text)
+          (when olpath
+            (org-mark-subtree)
+            (setq tree-text (buffer-substring (region-beginning) (region-end)))
+            (let (this-command) (org-cut-subtree))
+            (goto-char (point-min))
+            (save-restriction
+              (widen)
+              (-each path
+                (lambda (heading)
+                  (if (re-search-forward
+                       (rx-to-string
+                        `(: bol (repeat ,level "*") (1+ " ") ,heading)) nil t)
+                      (org-narrow-to-subtree)
+                    (goto-char (point-max))
+                    (unless (looking-at "^")
+                      (insert "\n"))
+                    (insert (make-string level ?*)
+                            " "
+                            heading
+                            "\n"))
+                  (cl-incf level)))
+              (widen)
+              (org-end-of-subtree t t)
+              (org-paste-subtree level tree-text))))))))
 
 (use-package! org-download
   :config
@@ -235,12 +255,56 @@
              (org-link-escape (file-relative-name filename))))
    org-image-actual-width 400))
 
+(use-package! org-diagrams
+  :commands (org-diagrams-insert-at-point-and-edit org-diagrams-edit-at-point org-diagrams-init)
+  :config (progn
+            (setq
+             org-diagrams-editor "drawio"
+             org-diagrams-on-update "drawio -x -f png -o ${OUT} ${IN}")
+            (org-diagrams-init)))
+
+(use-package! company
+  :defer t
+  :config
+  (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+                            company-preview-if-just-one-frontend
+                            company-echo-metadata-frontend)))
+
+{%@@ if profile != "localhost" and profile != "anihm" @@%}
+(use-package! org-protocol
+  :defer t
+  :config
+  (setq org-protocol-default-template-key "l"))
+
+(use-package! magit
+  :defer t
+  :config
+  (setq magit-repository-directories '(("~/code/vcs/" . 2) ("~/code/os_contrib/" . 2))
+        global-git-commit-mode t))
+
+(use-package! aas
+  :hook (LaTeX-mode . ass-activate-for-major-mode)
+  :hook (org-mode . ass-activate-for-major-mode))
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config ; do whatever here
+  (aas-set-snippets 'laas-mode
+    ;; set condition!
+    :cond #'texmathp ; expand only while in math
+    "supp" "\\supp"
+    "On" "O(n)"
+    "O1" "O(1)"
+    "Olog" "O(\\log n)"
+    "Olon" "O(n \\log n)"))
+
 (use-package! engrave-faces-latex
   :after ox-latex)
 
 (load! "+org-latex")
 
 (load! "+engrave-faces")
+{%@@ endif @@%}
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
@@ -248,6 +312,7 @@
 
 ;; Utility functions and keymaps
 
+{%@@ if profile != "localhost" and profile != "anihm" @@%}
 (defun forward-to-argsep ()
   (interactive)
   (while (progn (comment-forward most-positive-fixnum)
@@ -305,6 +370,7 @@
                       (- pt b (length ws-first))))
       (goto-char (+ b (length ws-first)
                     (- pt-original (+ pt 1 (length ws-second))))))))
+{%@@ endif @@%}
 
 (defun +ani/evil-unimpaired-paste-above ()
   "Linewise paste above."
@@ -325,6 +391,14 @@
     (when (not (member 'evil-yank-line-handler (get-text-property 0 'yank-handler (evil-get-register register))))
       (evil-insert-newline-below))
     (evil-paste-after 1 register)))
+
+(defun org-archive-done-tasks ()
+  (interactive)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/DONE|CANCELLED" 'agenda))
 
 (defun +ani/my-init-func ()
   "Function to run on init."

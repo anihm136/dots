@@ -186,3 +186,4 @@ profiles:
     - d_config_zsh
     - f_zshenv
     - f_aliases
+    - d_config_doom

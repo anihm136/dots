@@ -5,6 +5,9 @@ local dpi = require('beautiful.xresources').apply_dpi
 local my_table = gears.table
 
 local theme = {}
+theme.colors = {
+	blue = '#78A4FF'
+}
 theme.dir = gears.filesystem.get_configuration_dir() .. 'theme'
 theme.font = 'Inter 13'
 theme.fg_normal = '#BBBBBB'
@@ -12,7 +15,7 @@ theme.fg_focus = '#222222'
 theme.bg_normal = '#222222'
 theme.bg_focus = '#BBBBBB'
 theme.fg_urgent = '#222222'
-theme.bg_urgent = '#78A4FF'
+theme.bg_urgent = theme.colors.blue
 theme.border_width = dpi(1)
 theme.border_normal = '#111111'
 theme.border_focus = '#93B6FF'
