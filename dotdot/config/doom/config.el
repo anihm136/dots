@@ -57,12 +57,12 @@
         doom-modeline-unicode-fallback t
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
-{%@@ if profile != "localhost" and profile != "anihm" @@%}
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (load! "lisp/llvm-mode")
 {%@@ endif @@%}
 
 ;; Deferred loading
-{%@@ if profile != "localhost" and profile != "anihm" @@%}
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
       (progn
@@ -79,7 +79,7 @@
   (setq
    org-fold-catch-invisible-edits 'show-and-error
    org-startup-folded 'content
-{%@@ if profile != "localhost" and profile != "anihm" @@%}
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
    ;; Embed attached files when converting from org to pdf
    org-export-filter-link-functions '(ox-markup-filter-attach)
 {%@@ endif @@%}
@@ -270,7 +270,7 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
-{%@@ if profile != "localhost" and profile != "anihm" @@%}
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (use-package! org-protocol
   :defer t
   :config
@@ -312,7 +312,7 @@
 
 ;; Utility functions and keymaps
 
-{%@@ if profile != "localhost" and profile != "anihm" @@%}
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (defun forward-to-argsep ()
   (interactive)
   (while (progn (comment-forward most-positive-fixnum)

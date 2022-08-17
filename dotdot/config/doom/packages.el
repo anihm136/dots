@@ -50,17 +50,19 @@
 ;; our package manager can't deal with; see raxod502/straight.el#279)
                                         ;(package! builtin-package :recipe (:branch "develop"))
 
+{%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (package! aas
   :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas
   :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
+(package! org-diagrams
+  :recipe (:host github :repo "anihm136/org-diagrams" :branch "hotfix"))
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+{%@@ endif @@%}
 (package! org-fragtog
   :recipe (:host github :repo "io12/org-fragtog"))
 (package! org-appear
   :recipe (:host github :repo "awth13/org-appear"))
-(package! org-diagrams
-  :recipe (:host github :repo "anihm136/org-diagrams" :branch "hotfix"))
 (package! aggressive-indent)
 (package! org-ql)
-(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
 (package! code-review :disable t)
