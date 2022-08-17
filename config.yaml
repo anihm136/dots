@@ -181,3 +181,8 @@ profiles:
     - f_tmux.conf
     - d_config_git
     - d_moc
+  anihm2:
+    dotfiles:
+    - d_config_zsh
+    - f_zshenv
+    - f_aliases

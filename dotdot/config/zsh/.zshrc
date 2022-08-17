@@ -28,8 +28,10 @@ autoload -Uz run-help-git run-help-ip run-help-openssl run-help-p4 run-help-sudo
 # Source files from config dirs and files
 for f in $ZDOTDIR/zshrc.d/**/*.zsh(N); do [ -r "$f" ] && source "$f"; done
 
+{%@@ if profile != "anihm2" @@%}
 # Load ASDF
 [[ -f ${ASDF_DIR}/asdf.sh ]] && source ${ASDF_DIR}/asdf.sh
+{%@@ endif @@%}
 
 # Load aliases
 # Aliases are placed in $HOME so that bash can also use them
@@ -51,6 +53,7 @@ compdef _git ggl=git-checkout
 compdef _git ggfl=git-checkout
 compdef _git ggf=git-checkout
 
+{%@@ if profile != "anihm2" @@%}
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('{{@@ home @@}}/.local/share/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -65,6 +68,7 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+{%@@ endif @@%}
 
 # Include dotfiles in glob matching
 setopt globdots
@@ -74,9 +78,11 @@ zstyle ':completion:*' special-dirs false
 setopt extendedglob
 
 # Load completions and hooks for various tools
-eval "$(asdf exec direnv hook zsh)"
 eval "$(zoxide init --cmd j --hook pwd zsh)"
 eval "$(register-python-argcomplete pipx)"
+
+{%@@ if profile != "anihm2" @@%}
+eval "$(asdf exec direnv hook zsh)"
 eval $(register-python-argcomplete ansible)
 eval $(register-python-argcomplete ansible-config)
 eval $(register-python-argcomplete ansible-console)
@@ -87,6 +93,8 @@ eval $(register-python-argcomplete ansible-playbook)
 eval $(register-python-argcomplete ansible-pull)
 eval $(register-python-argcomplete ansible-vault)
 complete -C '/sbin/aws_completer' aws
+{%@@ endif @@%}
+
 if (command -v perl && command -v cpanm) >/dev/null 2>&1; then
   [[ -d "$HOME/perl5/lib/perl5" ]] && eval $(perl -I "$HOME/perl5/lib/perl5" -Mlocal::lib)
 fi
@@ -107,13 +115,22 @@ TRAPUSR2() {
 [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
 
 # Load fzf helpers
+{%@@ if profile == "anihm2" @@%}
+source /usr/share/doc/fzf/examples/completion.zsh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+{%@@ else @@%}
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
+{%@@ endif @@%}
 
 # Load command-not-found handler
+{%@@ if profile != "anihm2" @@%}
 source /usr/share/doc/pkgfile/command-not-found.zsh
+{%@@ endif @@%}
 
+{%@@ if profile != "anihm2" @@%}
 # Set $JAVA_HOME using ASDF
 source "$ASDF_DATA_DIR/plugins/java/set-java-home.zsh"
+{%@@ endif @@%}
 
 # zprof
