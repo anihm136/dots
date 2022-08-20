@@ -119,9 +119,7 @@
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode)))
 
-(add-hook! 'org-mode-hook 'org-fragtog-mode)
-(add-hook! 'org-mode-hook 'org-appear-mode)
-(add-hook! 'org-mode-hook '+org-pretty-mode)
+(add-hook! org-mode #'org-fragtog-mode #'org-appear-mode #'+org-pretty-mode)
 
 (map! :map org-mode-map
       :i "C-c b" (lambda () (interactive) (org-emphasize ?*))
@@ -180,7 +178,20 @@
                                                          ((org-agenda-files '(,(concat ani/org-directory "GTD/" "learning.org")))))))
                                   ("gp" "Stuck projects"
                                    ((org-ql-search-block '(and (todo "PROJECT")
-                                                               (not (children (todo "PROJECT" "NEXT")))))))))))
+                                                               (not (children (todo "PROJECT" "NEXT"))))))))))
+  :config
+  (defun handle-recurring-todos (org-todo-orig &optional arg)
+    (let ((org-old-state (substring-no-properties (org-get-todo-state)))
+          (org-repeat (org-get-repeat)))
+      (funcall org-todo-orig arg)
+      (when (and (equal org-old-state "RECURRING")
+                 (not org-repeat)
+                 (org-entry-is-done-p))
+        (let ((current-prefix-arg '(4)))
+          (call-interactively 'org-schedule)
+          (funcall org-todo-orig "RECURRING")))))
+  (advice-add 'org-todo :around #'handle-recurring-todos))
+
 
 (map! :map org-agenda-mode-map
       :localleader :prefix "d" :desc "Schedule item for today" :n "t" (lambda () (interactive) (org-agenda-schedule nil "+0d")))
@@ -290,13 +301,13 @@
   :hook (LaTeX-mode . laas-mode)
   :config ; do whatever here
   (aas-set-snippets 'laas-mode
-    ;; set condition!
-    :cond #'texmathp ; expand only while in math
-    "supp" "\\supp"
-    "On" "O(n)"
-    "O1" "O(1)"
-    "Olog" "O(\\log n)"
-    "Olon" "O(n \\log n)"))
+                    ;; set condition!
+                    :cond #'texmathp ; expand only while in math
+                    "supp" "\\supp"
+                    "On" "O(n)"
+                    "O1" "O(1)"
+                    "Olog" "O(\\log n)"
+                    "Olon" "O(n \\log n)"))
 
 (use-package! engrave-faces-latex
   :after ox-latex)
@@ -311,66 +322,6 @@
 (add-hook! 'after-init-hook '+ani/my-init-func)
 
 ;; Utility functions and keymaps
-
-{%@@ if profile != "localhost" and profile != "anihm2" @@%}
-(defun forward-to-argsep ()
-  (interactive)
-  (while (progn (comment-forward most-positive-fixnum)
-                (looking-at "[^,)]"))
-    (condition-case ex (forward-sexp)
-      ('scan-error (if (looking-at "[<>]")
-                       (forward-char)
-                     (throw ex nil)))))
-  (point))
-
-(defun backward-to-argsep ()
-  (interactive)
-  (let ((pt (point)) cur)
-    (up-list -1)
-    (while (looking-at "<")
-      (up-list -1))
-    (forward-char)
-    (while (progn (setq cur (point))
-                  (> pt (forward-to-argsep)))
-      (forward-char))
-    (goto-char cur)))
-
-(defun transpose-args-direction (is_forward)
-  (interactive)
-  (let* ((pt-original (point))
-         (pt (progn (when (not is_forward)
-                      (goto-char (- (backward-to-argsep) 1))
-                      (unless (looking-at ",")
-                        (goto-char pt-original)
-                        (user-error "Argument separator not found")))
-                    (point)))
-         (b (backward-to-argsep))
-         (sep (progn (goto-char pt)
-                     (forward-to-argsep)))
-         (e (progn (unless (looking-at ",")
-                     (goto-char pt-original)
-                     (user-error "Argument separator not found"))
-                   (forward-char)
-                   (forward-to-argsep)))
-         (ws-first (buffer-substring-no-properties
-                    (goto-char b)
-                    (progn (skip-chars-forward "[[:space:]\n]")
-                           (point))))
-         (first (buffer-substring-no-properties (point) sep))
-         (ws-second (buffer-substring-no-properties
-                     (goto-char (1+ sep))
-                     (progn (skip-chars-forward "[[:space:]\n]")
-                            (point))))
-         (second (buffer-substring-no-properties (point) e)))
-    (delete-region b e)
-    (insert ws-first second "," ws-second first)
-
-    (if is_forward
-        (goto-char (+ (- (point) (length first))
-                      (- pt b (length ws-first))))
-      (goto-char (+ b (length ws-first)
-                    (- pt-original (+ pt 1 (length ws-second))))))))
-{%@@ endif @@%}
 
 (defun +ani/evil-unimpaired-paste-above ()
   "Linewise paste above."
@@ -425,10 +376,6 @@
         :nv "M-j" 'drag-stuff-down
         :nv "M-k" 'drag-stuff-up
         :v "o" "$"
-        :desc "Transpose function argument to the right"
-        :n "g>" '(lambda () (interactive) (transpose-args-direction t))
-        :desc "Transpose function argument to the left"
-        :n "g<" '(lambda () (interactive) (transpose-args-direction nil))
         :n "]p" '+ani/evil-unimpaired-paste-below
         :n "[p" '+ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
