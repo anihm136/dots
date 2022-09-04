@@ -1,12 +1,11 @@
-#!/usr/env zsh
+alias dotdrop='(){(cd ~/code/vcs/dots; pipenv run ./dotdrop.sh $@) ;}'
 
-alias help=run-help
+alias -g '...'='../..'
+alias -g '....'='../../..'
+alias -g '.....'='../../../..'
+alias -g '......'='../../../../..'
 
 # Git aliases
-function current_branch() {
-	git_current_branch
-}
-
 function gsetup() {
 	local main
 	if git branch | grep -w 'main' > /dev/null 2>&1; then

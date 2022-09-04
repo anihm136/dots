@@ -8,7 +8,5 @@ xrandr --output eDP1 --primary --mode 3200x1800
 {%@@ endif @@%}
 eval "$(gnome-keyring-daemon --start)"
 export SSH_AUTH_SOCK
-xset s 600 5
-xss-lock -n /usr/lib/xsecurelock/dimmer -l -- xsecurelock &
-picom --experimental-backends -b
+xset s 600
 lxsession &

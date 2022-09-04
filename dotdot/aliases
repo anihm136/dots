@@ -7,27 +7,21 @@ alias calc='libreoffice --nologo --calc &!'
 alias impress='libreoffice --nologo --impress &!'
 alias ee="nvim"
 alias bt='bluetoothctl'
-alias rmf='rm -rf'
-alias mng='python manage.py'
-alias cenvc='conda create --yes -n'
 alias bgd='bg; disown'
 alias tmuxn='direnv exec / tmux new-session'
 alias nnn='nnn -e'
 alias o='xdg-open'
-alias dotdrop='(){(cd ~/code/vcs/dots; pipenv run ./dotdrop.sh $@) ;}'
 alias ssh='kitty +kitten ssh'
 alias lg='lazygit'
 alias pvpn='protonvpn-cli'
-alias timesync='sudo ntpdate pool.ntp.org'
 alias tmpd='cd $(mktemp -d)'
 alias tmuxonly="tmux kill-pane -a -t 1"
-# alias instagram="firefox -P Instagram --kiosk 'https://www.instagram.com' &!; sleep 2; awesome-client 'local c = client.focus; c.name = [[Instagram - Mozilla Firefox]]; c.fullscreen = false; require[[awful]].rules.apply(c)'"
 alias instagram="brave --profile-directory='Profile 3' --app='https://www.instagram.com' &!"
-# alias whatsapp="firefox -P WhatsApp --kiosk 'https://web.whatsapp.com' &!; sleep 2; awesome-client 'local c = client.focus; c.name = [[WhatsApp - Mozilla Firefox]]; c.fullscreen = false; require[[awful]].rules.apply(c)'"
 alias whatsapp="brave --profile-directory='Profile 4' --app='https://web.whatsapp.com' &!"
 alias spotify="brave --profile-directory='Profile 5' --app='https://open.spotify.com' &!"
 
 # Common aliases
+alias ls='ls --color=tty'
 alias l='ls -lFh'     
 alias la='ls -lAFh'   
 alias lt='ls -ltFh'   
@@ -39,39 +33,14 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 
 # Arco stuff
-alias unlock="sudo rm /var/lib/pacman/db.lck"
 alias free="free -mt"
 alias merge="xrdb -merge ~/.Xresources"
-alias upall='paru -Syu'
-alias update-grub="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias update-fc='sudo fc-cache -fv'
 alias mirror="sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist"
 alias mirrord="sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist"
 alias mirrors="sudo reflector --latest 50 --number 20 --sort score --save /etc/pacman.d/mirrorlist"
 alias mirrora="sudo reflector --latest 50 --number 20 --sort age --save /etc/pacman.d/mirrorlist"
 
-alias vbm="sudo /usr/local/bin/arcolinux-vbox-share"
-
-alias yta-aac="youtube-dl --extract-audio --audio-format aac "
-alias yta-best="youtube-dl --extract-audio --audio-format best "
-alias yta-flac="youtube-dl --extract-audio --audio-format flac "
-alias yta-m4a="youtube-dl --extract-audio --audio-format m4a "
-alias yta-mp3="youtube-dl --extract-audio --audio-format mp3 "
-alias yta-opus="youtube-dl --extract-audio --audio-format opus "
-alias yta-vorbis="youtube-dl --extract-audio --audio-format vorbis "
-alias yta-wav="youtube-dl --extract-audio --audio-format wav "
-alias ytv-best="youtube-dl -f bestvideo+bestaudio "
-
-#Recent Installed Packages
-alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
-alias riplong="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -3000 | nl"
-
-#get the error messages from journalctl
-alias jctl="journalctl -p 3 -xb"
-alias ssn="sudo shutdown now"
-alias sr="sudo reboot"
-alias hiber="systemctl hibernate"
-
-# Trizen aliases
+# Paru aliases
 alias prrem='paru -Rnsu'
-alias prback='paru -Qqne | rg -vU "linux" > ~/.local/share/packages/repo-packages.txt && paru -Qqme | rg -v "mkinitcpio" > ~/.local/share/packages/aur-packages.txt'
+alias upall='paru -Syu'

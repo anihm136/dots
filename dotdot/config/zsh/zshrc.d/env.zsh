@@ -14,5 +14,7 @@ export FZF_CTRL_T_COMMAND="fd --hidden --follow --exclude .git --exclude node_mo
 # Don't print logs when changing into directory
 export DIRENV_LOG_FORMAT=
 
-# Default editor
+# Defaults
 export EDITOR="nvim"
+export PAGER="less"
+export LESS="-R"

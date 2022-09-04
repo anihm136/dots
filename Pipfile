@@ -11,6 +11,7 @@ Jinja2 = "*"
 requests = "*"
 packaging = "*"
 toml = "*"
+distro = "*"
 
 [dev-packages]
 

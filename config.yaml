@@ -138,6 +138,9 @@ dotfiles:
   d_config_mopidy:
     src: config/mopidy
     dst: ~/.config/mopidy
+  d_config_tridactyl:
+    src: config/tridactyl
+    dst: ~/.config/tridactyl
 profiles:
   sorcery:
     dotfiles:
@@ -162,6 +165,7 @@ profiles:
     - d_config_git
     - d_config_ncmpcpp
     # - d_config_mopidy
+    - d_config_tridactyl
   apex:
     dotfiles:
     - d_config_awesome

@@ -1,0 +1,35 @@
+sanitize tridactyllocal tridactylsync
+
+" General Settings
+set configversion 2.0
+set update.lastchecktime 1614006631422
+
+set smoothscroll true
+set allowautofocs false
+set searchengine ddg
+set editorcmd kitty -e nvim -U NONE
+set findcase sensitive
+set hintdelay 100
+
+" Binds
+bind j scrollline 5
+bind k scrollline -5
+bind d composite tabprev; tabclose #
+bind D tabclose
+bind gd tabdetach
+bind gD composite tabduplicate; tabdetach
+bind --mode=visual t composite js document.getSelection().toString() | fillcmdline tabopen
+unbind --mode=ex <C-c>
+
+colorscheme railscasts
+
+" Aliases
+alias tabuniq jsb browser.tabs.query({}).then(tabs => browser.tabs.remove(tabs.filter((tab, index) => tabs.slice(index + 1).find(t => t.url == tab.url)).map(tab => tab.id)))
+
+" Blacklist
+blacklistadd configure.zsa.io
+blacklistadd docs.google.com
+blacklistadd mail.google.com
+
+" For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
+" vim: set filetype=tridactyl
