@@ -1,3 +1,5 @@
+# Something first
+
 {%@@ if profile != "anihm2" @@%}
 # Load ASDF
 [[ -f ${ASDF_DIR}/asdf.sh ]] && source ${ASDF_DIR}/asdf.sh

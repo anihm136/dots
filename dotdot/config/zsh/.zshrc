@@ -1,5 +1,5 @@
 # zmodload zsh/zprof
-module_path+=( "~/.local/share/zi/zmodules/zpmod/Src" )
+module_path+=( "{{@@ home @@}}/.local/share/zi/zmodules/zpmod/Src" )
 zmodload zi/zpmod
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
