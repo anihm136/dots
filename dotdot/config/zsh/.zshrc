@@ -27,14 +27,3 @@ for f in $ZDOTDIR/zshrc.d/**/*.zsh(N); do [ -r "$f" ] && source "$f"; done
 [[ -f /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
 {%@@ endif @@%}
 # zprof
-
-
-# Load fzf helpers
-{%@@ if profile == "anihm2" @@%}
-source /usr/share/doc/fzf/examples/completion.zsh
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-{%@@ else @@%}
-source /usr/share/fzf/completion.zsh
-source /usr/share/fzf/key-bindings.zsh
-{%@@ endif @@%}
-

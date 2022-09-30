@@ -5,7 +5,6 @@ path+=("$XDG_CONFIG_HOME/emacs/bin")
 if [ -d "$HOME/.local/bin" ] ; then
 	path+=("$HOME/.local/bin")
 	path+=("$HOME/.local/bin/scripts")
-	path+=("$HOME/.local/bin/scripts/scripts_personal")
 fi
 export PATH
 

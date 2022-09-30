@@ -117,7 +117,16 @@
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
       "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
   (with-eval-after-load 'flycheck
-    (flycheck-add-mode 'proselint 'org-mode)))
+    (flycheck-add-mode 'proselint 'org-mode))
+  (add-hook! 'org-capture-after-finalize-hook (org-element-cache-reset t))
+  (defadvice! ani/org--restart-mode-h-careful-restart (fn &rest args)
+    :around #'+org--restart-mode-h
+    (let ((old-org-capture-current-plist (and (bound-and-true-p org-capture-mode)
+                                              (bound-and-true-p org-capture-current-plist))))
+      (apply fn args)
+      (when old-org-capture-current-plist
+        (setq-local org-capture-current-plist old-org-capture-current-plist)
+        (org-capture-mode +1)))))
 
 (add-hook! org-mode #'org-fragtog-mode #'org-appear-mode #'+org-pretty-mode)
 
@@ -212,7 +221,7 @@
            :unnarrowed t))
         org-roam-buffer-width 0.25))
 
-(defadvice org-archive-subtree (around fix-hierarchy activate)
+(defadvice ani/org-archive-subtree (around fix-hierarchy activate)
   (let* ((fix-archive-p (and (not current-prefix-arg)
                              (not (use-region-p))))
          (afile (car (org-archive--compute-location org-archive-location)))
@@ -349,7 +358,8 @@
    (lambda ()
      (org-archive-subtree)
      (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-   "/DONE|CANCELLED" 'agenda))
+   "/DONE|CANCELLED"
+   'agenda))
 
 (defun +ani/my-init-func ()
   "Function to run on init."

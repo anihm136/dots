@@ -64,13 +64,11 @@ function rules.create(clientkeys, clientbuttons)
 		{
 			rule_any = {
 				class = {
-					"Thunderbird",
+					"thunderbird",
 					"discord",
 					"Slack",
 					"Element",
-					"Microsoft Teams - Preview",
 					"TelegramDesktop",
-					"Signal",
 					"Zulip",
 				},
 			},

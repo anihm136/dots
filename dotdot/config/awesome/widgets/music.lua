@@ -133,7 +133,8 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
 	popup_player:set_markup_silently("<b>" .. player_name .. "</b>")
 	title_widget:set_markup_silently(title)
 	popup_title:set_markup_silently(title)
-	popup_artist:set_markup_silently(artist)(awful.placement.top_right + awful.placement.no_offscreen)(
+	popup_artist:set_markup_silently(artist)
+	(awful.placement.top_right + awful.placement.no_offscreen)(
 		player_popup,
 		{ margins = dpi(10) }
 	)
