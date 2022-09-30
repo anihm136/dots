@@ -138,7 +138,6 @@
 (use-package! org-agenda
   :defer t
   :init
-  (defalias '+org--restart-mode-h #'ignore)
   (setq
    org-agenda-files `(,(concat ani/org-directory "GTD/"))
    org-refile-targets `((,(concat ani/org-directory "GTD/" "projects.org") :maxlevel . 3)
