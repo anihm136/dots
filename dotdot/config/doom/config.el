@@ -377,6 +377,10 @@
         evil-respect-visual-line-mode nil
         doom-fallback-buffer-name "► Doom"
         +doom-dashboard-name "► Doom"
+{%@@ if profile == "anihm2" @@%}
+	magic-mode-alist (assq-delete-all 'ess-SAS-log-mode-p magic-mode-alist)
+        magic-mode-alist (assq-delete-all 'ess-SAS-listing-mode-p magic-mode-alist)
+{%@@ endif @@%}
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
         :nv "C-S-x" 'evil-numbers/dec-at-pt
