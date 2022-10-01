@@ -198,7 +198,7 @@
         (let ((current-prefix-arg '(4)))
           (call-interactively 'org-schedule)
           (funcall org-todo-orig "RECURRING")))))
-  (advice-add 'org-todo :around #'handle-recurring-todos)
+  (advice-add 'org-todo :around #'ani/org-handle-recurring-todos)
   (defun ani/org-handle-waiting-todos ()
     (when (and (equal org-state "WAITING"))
       (let ((current-prefix-arg '(4)))
