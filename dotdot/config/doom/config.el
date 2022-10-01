@@ -188,7 +188,7 @@
                                    ((org-ql-search-block '(and (todo "PROJECT")
                                                                (not (children (todo "PROJECT" "NEXT"))))))))))
   :config
-  (defun handle-recurring-todos (org-todo-orig &optional arg)
+  (defun ani/org-handle-recurring-todos (org-todo-orig &optional arg)
     (let ((org-old-state (substring-no-properties (org-get-todo-state)))
           (org-repeat (org-get-repeat)))
       (funcall org-todo-orig arg)
@@ -198,8 +198,12 @@
         (let ((current-prefix-arg '(4)))
           (call-interactively 'org-schedule)
           (funcall org-todo-orig "RECURRING")))))
-  (advice-add 'org-todo :around #'handle-recurring-todos))
-
+  (advice-add 'org-todo :around #'handle-recurring-todos)
+  (defun ani/org-handle-waiting-todos ()
+    (when (and (equal org-state "WAITING"))
+      (let ((current-prefix-arg '(4)))
+        (call-interactively 'org-schedule))))
+  (add-hook! 'org-after-todo-state-change-hook #'ani/org-handle-waiting-todos))
 
 (map! :map org-agenda-mode-map
       :localleader :prefix "d" :desc "Schedule item for today" :n "t" (lambda () (interactive) (org-agenda-schedule nil "+0d")))
