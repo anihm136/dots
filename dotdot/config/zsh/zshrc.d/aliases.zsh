@@ -1,4 +1,4 @@
-alias dotdrop='(){(cd ~/code/vcs/dots; pipenv run ./dotdrop.sh $@) ;}'
+alias dotdrop='(){(cd ~/.dots; pipenv run ./dotdrop.sh $@) ;}'
 
 alias -g '...'='../..'
 alias -g '....'='../../..'
