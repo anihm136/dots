@@ -161,6 +161,7 @@ return require("packer").startup({
 				"nvim-treesitter/nvim-treesitter-textobjects",
 				"JoosepAlviste/nvim-ts-context-commentstring",
 				"RRethy/nvim-treesitter-textsubjects",
+				"nvim-treesitter/playground"
 			},
 			config = configs.treesitter,
 		})

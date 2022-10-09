@@ -1,13 +1,13 @@
 actions:
-  antibody: antibody bundle < ~/.config/zsh/zsh_plugins.txt > ~/.config/zsh/zsh_plugins.sh
   awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
     origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling
     ]] && git -C ~/.config/awesome/bling pull origin master || gh repo clone BlingCorp/bling
     ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
-    || mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm'
+    || (mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm)'
   neovim: '[[ -d ~/.local/share/nvim/site/pack/packer ]] || git clone --depth 1 https://github.com/wbthomason/packer.nvim
     ~/.local/share/nvim/site/pack/packer/start/packer.nvim'
+  zsh: trash ~/.config/zsh/**/*.zwc
 dynvariables:
   home: echo $HOME
 config:
@@ -15,8 +15,8 @@ config:
   create: true
   dotpath: dotdot
   keepdot: false
-  link_dotfile_default: link
-  link_on_import: link
+  link_dotfile_default: nolink
+  link_on_import: nolink
   longkey: true
   showdiff: true
   workdir: ~/.local/share/dotdrop
@@ -89,16 +89,8 @@ dotfiles:
     src: config/zsh
     dst: ~/.config/zsh
     actions:
-    - antibody
-    instignore:
-    - zsh_plugins.sh
-    - .zcompdump
-    upignore:
-    - zsh_plugins.sh
-    - .zcompdump
-    cmpignore:
-    - zsh_plugins.sh
-    - .zcompdump
+    - zsh
+    ignore_missing_in_dotdrop: true
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json
@@ -155,7 +147,6 @@ profiles:
     - d_config_ripgrep
     - d_config_rofi
     - d_config_sxhkd
-    - d_config_tilda
     - d_config_zsh
     - f_config_screenkey.json
     - f_zshenv
@@ -164,7 +155,7 @@ profiles:
     - f_tmux.conf
     - d_config_git
     - d_config_ncmpcpp
-    # - d_config_mopidy
+        # - d_config_mopidy
     - d_config_tridactyl
   apex:
     dotfiles:
@@ -175,7 +166,6 @@ profiles:
     - f_config_picom.conf
     - d_config_ripgrep
     - d_config_rofi
-    - d_config_tilda
     - d_config_sxhkd
     - d_config_zsh
     - f_zshenv

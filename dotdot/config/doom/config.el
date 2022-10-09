@@ -57,10 +57,6 @@
         doom-modeline-unicode-fallback t
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
-{%@@ if profile != "localhost" and profile != "anihm2" @@%}
-(load! "lisp/llvm-mode")
-{%@@ endif @@%}
-
 ;; Deferred loading
 {%@@ if profile != "localhost" and profile != "anihm2" @@%}
 (defun ox-markup-filter-attach (text backend info)
@@ -96,7 +92,7 @@
    ;; Repeating TODO settings
    org-log-repeat 'nil
    org-todo-repeat-to-state t
-   ;; Clock time display
+   ;; Clock
    org-clock-mode-line-total 'current
    ;; Org-attach settings
    org-attach-id-dir ".attach/"
@@ -116,6 +112,7 @@
      ("k" "Clipboard link" entry
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
       "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
+  (org-clock-persistence-insinuate)
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
   (add-hook! 'org-capture-after-finalize-hook (org-element-cache-reset t))
@@ -370,6 +367,7 @@
   (+ani/set-random-theme)
   (setq-default uniquify-buffer-name-style 'forward
                 window-combination-resize t
+                org-clock-persist t
                 x-stretch-cursor t)
   (setq lsp-signature-doc-lines 1
         company-idle-delay nil
