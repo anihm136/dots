@@ -181,6 +181,7 @@ profiles:
     - f_zshenv
     - f_aliases
     - d_config_doom
+    - d_config_ripgrep
   localhost:
     dotfiles:
     - d_config_doom
