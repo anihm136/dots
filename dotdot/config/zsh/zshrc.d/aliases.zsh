@@ -1,3 +1,7 @@
+# Load aliases
+# Aliases are placed in $HOME so that bash can also use them
+[[ -f $HOME/.aliases ]] && source $HOME/.aliases
+
 alias dotdrop='(){(cd ~/.dots || exit; pipenv run ./dotdrop.sh $@) ;}'
 
 alias -g '...'='../..'

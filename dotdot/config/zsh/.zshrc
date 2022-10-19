@@ -18,12 +18,8 @@ for f in $ZDOTDIR/zshrc.d/**/*.zsh(N); do [ -r "$f" ] && source "$f"; done
 # Load p10k theme
 [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
 
-# Load aliases
-# Aliases are placed in $HOME so that bash can also use them
-[[ -f $HOME/.aliases ]] && source $HOME/.aliases
-
-# Load command-not-found handler
 {%@@ if profile != "anihm2" @@%}
+# Load command-not-found handler
 [[ -f /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
 {%@@ endif @@%}
 # zprof
