@@ -114,8 +114,6 @@ tm() {
   fi
 }
 
-direnv() { asdf exec direnv "$@"; }
-
 addtool() {
   local lang=${1}
 

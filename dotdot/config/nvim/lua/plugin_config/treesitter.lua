@@ -3,11 +3,6 @@ return function()
 		ensure_installed = 'all',
 		highlight = { enable = true },
 		textobjects = {
-			swap = {
-				enable = true,
-				swap_next = { ['g>'] = '@parameter.inner' },
-				swap_previous = { ['g<'] = '@parameter.inner' },
-			},
 			select = {
 				enable = true,
 				keymaps = {
@@ -20,15 +15,8 @@ return function()
 		},
 		indent = { enable = false },
 		context_commentstring = { enable = true },
-		autotag = { enable = true },
-		matchup = { enable = true },
-		textsubjects = {
-			enable = true,
-			keymaps = {
-				['.'] = 'textsubjects-smart',
-				[';'] = 'textsubjects-container-outer',
-			},
-		},
+		-- autotag = { enable = true },
+		-- matchup = { enable = true },
 	}
 
 end

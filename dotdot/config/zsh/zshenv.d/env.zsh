@@ -9,6 +9,6 @@ fi
 export PATH
 
 # Settings
-export SUDO_ASKPASS="{{@@ home @@}}/.local/bin/scripts/scripts_personal/askpass"
+export SUDO_ASKPASS="$HOME/.local/bin/scripts/askpass"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export MSSQL_CLI_TELEMETRY_OPTOUT=1

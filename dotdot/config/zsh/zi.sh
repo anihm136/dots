@@ -16,6 +16,7 @@ autoload -Uz _zi
 zi ice depth"1"
 zi light romkatv/powerlevel10k
 # Completions
+zi wait pack for system-completions
 zi ice wait lucid
 zi light zsh-users/zsh-completions
 zi ice wait lucid as"completion"

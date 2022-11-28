@@ -2,7 +2,7 @@
 source /usr/share/doc/fzf/examples/completion.zsh
 {%@@ else @@%}
 eval "$(zoxide init --cmd j --hook pwd zsh)"
-eval "$(asdf exec direnv hook zsh)"
+eval "$(direnv hook zsh)"
 
 autoload -Uz bashcompinit && bashcompinit
 eval "$(register-python-argcomplete pipx)"
