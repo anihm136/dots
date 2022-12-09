@@ -98,7 +98,7 @@
    org-attach-id-dir ".attach/"
    org-attach-dir-relative t
    ;; TODO states
-   org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
+   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
                        (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
    ;; Capture templates
    org-capture-templates
@@ -157,9 +157,11 @@
                                   ("gg" "GTD overview"
                                    ((org-ql-search-block '(todo)
                                                          ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org")))))
-                                    (org-ql-search-block '(and (todo "NEXT")
+                                    (org-ql-search-block '(and (todo "INPROGRESS")
                                                                (not (scheduled)))
                                                          ((org-ql-block-header ,gtd/next-action-head)))
+                                    (org-ql-search-block '(todo "WAITING")
+                                                         ((org-ql-block-header ,gtd/waiting-head)))
                                     (org-ql-search-block '(or (todo "REFILE")
                                                               (and (todo "PROJECT")
                                                                    (children (not (todo "PROJECT" "DONE" "CANCELLED")))))
@@ -169,9 +171,7 @@
                                     (org-ql-search-block '(and (todo "RECURRING")
                                                                (not (scheduled))
                                                                (not (tags "norepeat")))
-                                                         ((org-ql-block-header ,gtd/recurring-head)))
-                                    (org-ql-search-block '(todo "WAITING")
-                                                         ((org-ql-block-header ,gtd/waiting-head)))))
+                                                         ((org-ql-block-header ,gtd/recurring-head)))))
                                   ("gt" "Today"
                                    ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day "+0d")))))
                                   ("gs" "Review someday"
