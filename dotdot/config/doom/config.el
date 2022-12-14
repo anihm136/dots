@@ -98,7 +98,7 @@
    org-attach-id-dir ".attach/"
    org-attach-dir-relative t
    ;; TODO states
-   org-todo-keywords '((sequence "TODO(t)" "INPROGRESS(n)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
+   org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
                        (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
    ;; Capture templates
    org-capture-templates
@@ -146,28 +146,21 @@
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-prewarning-if-scheduled t
    org-agenda-custom-commands (let
-                                  ((gtd/next-action-head "Next actions:")
-                                   (gtd/project-todos-head "Projects:")
-                                   (gtd/task-todos-head "Tasks:")
+                                  ((gtd/inbox-head  "Dump:")
+                                   (gtd/next-action-head "Next actions:")
                                    (gtd/waiting-head  "Waiting on:")
-                                   (gtd/inbox-head  "Dump:")
                                    (gtd/recurring-head  "Recurring tasks:")
-                                   (gtd/someday-head  "Review someday tasks:"))
+                                   (gtd/someday-head  "Review someday tasks:")
+                                   (gtd/stuck-projects-head  "Review stuck projects:"))
                                 `(("g" . "GTD")
                                   ("gg" "GTD overview"
                                    ((org-ql-search-block '(todo)
                                                          ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org")))))
-                                    (org-ql-search-block '(and (todo "INPROGRESS")
+                                    (org-ql-search-block '(and (todo "TODO")
                                                                (not (scheduled)))
-                                                         ((org-ql-block-header ,gtd/next-action-head)))
+                                                         ((org-ql-block-header ,gtd/next-action-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org") ,(concat ani/org-directory "GTD/" "projects.org")))))
                                     (org-ql-search-block '(todo "WAITING")
                                                          ((org-ql-block-header ,gtd/waiting-head)))
-                                    (org-ql-search-block '(or (todo "REFILE")
-                                                              (and (todo "PROJECT")
-                                                                   (children (not (todo "PROJECT" "DONE" "CANCELLED")))))
-                                                         ((org-ql-block-header ,gtd/project-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "projects.org")))))
-                                    (org-ql-search-block '(todo "REFILE" "TODO")
-                                                         ((org-ql-block-header ,gtd/task-todos-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org")))))
                                     (org-ql-search-block '(and (todo "RECURRING")
                                                                (not (scheduled))
                                                                (not (tags "norepeat")))
@@ -176,16 +169,14 @@
                                    ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day "+0d")))))
                                   ("gs" "Review someday"
                                    ((org-ql-search-block '(todo)
-                                                         ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "someday.org")))))))
-                                  ("r" "Reading list"
-                                   ((org-ql-search-block '(todo "READ")
-                                                         ((org-agenda-files '(,(concat ani/org-directory "GTD/" "reading.org")))))))
+                                                         ((org-ql-block-header ,gtd/someday-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "someday.org")))))))
                                   ("l" "Learning topics"
                                    ((org-ql-search-block '(todo "LEARN")
                                                          ((org-agenda-files '(,(concat ani/org-directory "GTD/" "learning.org")))))))
                                   ("gp" "Stuck projects"
                                    ((org-ql-search-block '(and (todo "PROJECT")
-                                                               (not (children (todo "PROJECT" "NEXT"))))))))))
+                                                               (not (children (todo "TODO" "PROJECT" "RECURRING"))))
+                                                         ((org-ql-block-header ,gtd/stuck-projects-head))))))))
   :config
   (defun ani/org-handle-recurring-todos (org-todo-orig &optional arg)
     (let ((org-old-state (substring-no-properties (org-get-todo-state)))
