@@ -1,4 +1,3 @@
-require('gen_config')
-require('plugin_install')
-
-_G.helpers = require('helpers')
+require("gen_config")
+require("helpers")
+require("plugins")

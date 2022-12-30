@@ -28,7 +28,7 @@ alias lt='ls -ltFh'
 alias ldot='ls -ld .*'
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
 alias grep='grep --color'
-alias rm='rm -iv'
+alias rm='echo "Do not use rm. Use trash instead"; false'
 alias cp='cp -iv'
 alias mv='mv -iv'
 
