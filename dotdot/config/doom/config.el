@@ -58,7 +58,7 @@
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
 ;; Deferred loading
-{%@@ if profile != "localhost" and profile != "anihm2" @@%}
+{%@@ if profile != "localhost" and profile != "work" @@%}
 (defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
       (progn
@@ -75,7 +75,7 @@
   (setq
    org-fold-catch-invisible-edits 'show-and-error
    org-startup-folded 'content
-{%@@ if profile != "localhost" and profile != "anihm2" @@%}
+{%@@ if profile != "localhost" and profile != "work" @@%}
    ;; Embed attached files when converting from org to pdf
    org-export-filter-link-functions '(ox-markup-filter-attach)
 {%@@ endif @@%}
@@ -283,7 +283,7 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
-{%@@ if profile != "localhost" and profile != "anihm2" @@%}
+{%@@ if profile != "localhost" and profile != "work" @@%}
 (use-package! org-protocol
   :defer t
   :config
@@ -372,7 +372,7 @@
         evil-respect-visual-line-mode nil
         doom-fallback-buffer-name "► Doom"
         +doom-dashboard-name "► Doom"
-{%@@ if profile == "anihm2" @@%}
+{%@@ if profile == "work" @@%}
 	magic-mode-alist (assq-delete-all 'ess-SAS-log-mode-p magic-mode-alist)
         magic-mode-alist (assq-delete-all 'ess-SAS-listing-mode-p magic-mode-alist)
 {%@@ endif @@%}

@@ -5,8 +5,6 @@ actions:
     ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || (mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm)'
-  neovim: '[[ -d ~/.local/share/nvim/site/pack/packer ]] || git clone --depth 1 https://github.com/wbthomason/packer.nvim
-    ~/.local/share/nvim/site/pack/packer/start/packer.nvim'
   zsh: trash ~/.config/zsh/**/*.zwc
 dynvariables:
   home: echo $HOME
@@ -28,8 +26,6 @@ dotfiles:
   d_config_nvim:
     src: config/nvim
     dst: ~/.config/nvim
-    actions:
-    - neovim
   d_config_alacritty:
     src: config/alacritty
     dst: ~/.config/alacritty
@@ -175,13 +171,14 @@ profiles:
     - f_tmux.conf
     - d_config_git
     - d_moc
-  anihm2:
+  work:
     dotfiles:
     - d_config_zsh
     - f_zshenv
     - f_aliases
     - d_config_doom
     - d_config_ripgrep
+    - d_config_nvim
   localhost:
     dotfiles:
     - d_config_doom

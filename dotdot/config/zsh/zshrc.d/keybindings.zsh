@@ -45,8 +45,8 @@ bindkey "^[m" copy-prev-shell-word
 #bindkey '^X^N' accept-and-infer-next-history
 
 # Load fzf keybindings
-{%@@ if profile == "anihm2" @@%}
-source /usr/share/doc/fzf/examples/key-bindings.zsh
+{%@@ if profile == "work" @@%}
+source /opt/homebrew/Cellar/fzf/0.35.1/shell/key-bindings.zsh
 {%@@ else @@%}
 source /usr/share/fzf/key-bindings.zsh
 {%@@ endif @@%}

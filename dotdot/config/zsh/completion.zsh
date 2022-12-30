@@ -1,5 +1,5 @@
-{%@@ if profile == "anihm2" @@%}
-source /usr/share/doc/fzf/examples/completion.zsh
+{%@@ if profile == "work" @@%}
+source /opt/homebrew/Cellar/fzf/0.35.1/shell/completion.zsh
 {%@@ else @@%}
 eval "$(zoxide init --cmd j --hook pwd zsh)"
 eval "$(direnv hook zsh)"

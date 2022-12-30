@@ -1,6 +1,8 @@
 # zmodload zsh/zprof
+{%@@ if profile != "work" @@%}
 module_path+=( "{{@@ home @@}}/.local/share/zi/zmodules/zpmod/Src" )
 zmodload zi/zpmod
+{%@@ endif @@%}
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -18,7 +20,7 @@ for f in $ZDOTDIR/zshrc.d/**/*.zsh(N); do [ -r "$f" ] && source "$f"; done
 # Load p10k theme
 [[ ! -f "$ZDOTDIR/.p10k.zsh" ]] || source "$ZDOTDIR/.p10k.zsh"
 
-{%@@ if profile != "anihm2" @@%}
+{%@@ if profile != "work" @@%}
 # Load command-not-found handler
 [[ -f /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
 {%@@ endif @@%}
