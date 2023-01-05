@@ -1,6 +1,3 @@
-eval "$(zoxide init --cmd j --hook pwd zsh)"
-eval "$(direnv hook zsh)"
-
 {%@@ if profile == "work" @@%}
 source /opt/homebrew/Cellar/fzf/0.35.1/shell/completion.zsh
 {%@@ else @@%}
