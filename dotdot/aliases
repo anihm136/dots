@@ -22,9 +22,9 @@ alias spotify="brave --profile-directory='Profile 5' --app='https://open.spotify
 
 # Common aliases
 alias ls='ls --color=tty'
-alias l='ls -lFh'     
-alias la='ls -lAFh'   
-alias lt='ls -ltFh'   
+alias l='ls -lFh'
+alias la='ls -lAFh'
+alias lt='ls -ltFh'
 alias ldot='ls -ld .*'
 alias zshrc='${=EDITOR} ${ZDOTDIR:-$HOME}/.zshrc'
 alias grep='grep --color'

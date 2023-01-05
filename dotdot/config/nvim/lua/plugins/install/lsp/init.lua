@@ -10,7 +10,7 @@ return {
 		require("plugins.install.lsp.diagnostics")
 		
 		require("mason").setup{
-			PATH = "append"
+			PATH = "append",
 			pip = {
 				upgrade_pip = true
 			}
