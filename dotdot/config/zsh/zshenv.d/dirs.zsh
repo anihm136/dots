@@ -30,3 +30,10 @@ export NPM_CONFIG_PREFIX="$HOME/dev/node"
 export ASDF_DIR="/opt/asdf-vm"
 export ASDF_CONFIG_FILE="$XDG_CONFIG_HOME/asdf/asdfrc"
 export ASDF_DATA_DIR="$XDG_DATA_HOME/asdf"
+# Less
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
+# Minikube
+export MINIKUBE_HOME="$XDG_DATA_HOME"/minikube
+# Terminfo
+export TERMINFO="$XDG_DATA_HOME"/terminfo
+export TERMINFO_DIRS="$XDG_DATA_HOME"/terminfo:/usr/share/terminfo

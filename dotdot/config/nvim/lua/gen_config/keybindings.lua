@@ -1,43 +1,59 @@
-local map = function(mode, key, action)
-	vim.keymap.set(mode, key, action, {
+local map = function(mode, key, action, desc)
+	local opts = {
 		noremap = true,
 		silent = true,
 		unique = true,
-	})
+	}
+	if desc ~= nil then
+		opts.desc = desc
+	end
+	vim.keymap.set(mode, key, action, opts)
 end
 
-local map2 = function(mode, key, action)
-	vim.keymap.set(mode, key, action, {
+local map2 = function(mode, key, action, desc)
+	local opts = {
 		noremap = true,
 		unique = true,
-	})
+	}
+	if desc ~= nil then
+		opts.desc = desc
+	end
+	vim.keymap.set(mode, key, action, opts)
 end
 
-local mape = function(mode, key, action)
-	vim.keymap.set(mode, key, action, {
+local mape = function(mode, key, action, desc)
+	local opts = {
 		noremap = true,
 		silent = true,
 		unique = true,
 		expr = true,
-	})
+	}
+	if desc ~= nil then
+		opts.desc = desc
+	end
+	vim.keymap.set(mode, key, action, opts)
 end
 
-local mape2 = function(mode, key, action)
-	vim.keymap.set(mode, key, action, {
+local mape2 = function(mode, key, action, desc)
+	local opts = {
 		noremap = true,
 		unique = true,
 		expr = true,
-	})
+	}
+	if desc ~= nil then
+		opts.desc = desc
+	end
+	vim.keymap.set(mode, key, action, opts)
 end
 
 vim.g.mapleader = " "
 
 -- Working with files
-map("n", "<leader>fs", "<cmd>w<cr>") -- save current buffer
-map("n", "<leader>fS", "<cmd>wa!<cr>") -- save all buffers
-map2("n", "<leader>e", [[:edit <c-r>=fnameescape(expand("%:p:h"))<cr>/]]) -- edit file in current dir
+map("n", "<leader>fs", "<cmd>w<cr>", "Save current buffer")
+map("n", "<leader>fS", "<cmd>wa!<cr>", "Save all buffers")
+map2("n", "<leader>e", [[:edit <c-r>=fnameescape(expand("%:p:h"))<cr>/]], "Edit file in current directory")
 
--- -- Editing
+-- Editing
 map("x", "o", "$h") -- select to end of line
 mape("x", "p", function()
 	return string.format('pgv"%sy', vim.v.register)
@@ -65,5 +81,5 @@ map("x", "<s-up>", "<up>")
 map("x", "<s-down>", "<down>")
 
 -- Text objects
-map("x", "ag", "<esc>GVgg")
+map("x", "ag", "<esc>GVgg") -- whole buffer
 map("o", "ag", ":<c-u>normal vag<cr><c-o>")

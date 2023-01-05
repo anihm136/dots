@@ -1,6 +1,6 @@
 return {
 	["sumneko_lua"] = {},
 	["gopls"] = {},
-	["pyright"] = {},
+	["jedi_language_server"] = {},
 	["clangd"] = {},
 }

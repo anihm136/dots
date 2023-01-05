@@ -7,9 +7,16 @@ return {
 	},
 	event = "BufReadPre",
 	config = function()
-		require("mason").setup()
+		require("plugins.install.lsp.diagnostics")
+		
+		require("mason").setup{
+			PATH = "append"
+			pip = {
+				upgrade_pip = true
+			}
+		}
 
-		local lsp_configs = require("plugins.install.lsp.config")
+		local lsp_configs = require("plugins.install.lsp.server_config")
 		require("mason-lspconfig").setup({
 			ensure_installed = vim.tbl_keys(lsp_configs),
 		})
