@@ -26,6 +26,8 @@ zi ice wait lucid as"completion" blockf
 zi snippet OMZP::pip/_pip
 zi ice wait lucid as"completion" blockf
 zi snippet ${ASDF_DIR}/completions/_asdf
+zi ice wait lucid as"completion" blockf
+zi snippet ~/.dots/dotdrop/completion/_dotdrop.sh-completion.zsh
 zi ice wait lucid
 zi snippet $ZDOTDIR/completion.zsh
 zi ice wait lucid atload"zicompinit_fast; zicdreplay"
