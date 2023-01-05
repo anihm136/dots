@@ -38,8 +38,5 @@ zi ice wait lucid
 zi snippet OMZP::web-search
 zi ice wait lucid
 zi load wfxr/forgit
-# Directory settings
-zi ice wait lucid
-zi snippet PZTM::directory
 # Syntax highlighting
 zi light z-shell/F-Sy-H

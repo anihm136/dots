@@ -5,4 +5,4 @@ autoload -Uz url-quote-magic
 zle -N self-insert url-quote-magic
 
 # Set shell options
-setopt INTERACTIVE_COMMENTS # Enable comments in interactive shell.
+setopt interactivecomments # Enable comments in interactive shell.
