@@ -1,12 +1,14 @@
 return {
 	"jose-elias-alvarez/null-ls.nvim",
-	dependencies = { "nvim-lua/plenary.nvim" },
+	dependencies = { "nvim-lua/plenary.nvim",
+	"jay-babu/mason-null-ls.nvim",
+},
 	config = function()
 		local n = require("null-ls")
 		n.setup({
 			sources = {
 				-- Python
-				n.builtins.diagnostics.flake8,
+				-- n.builtins.diagnostics.flake8,
 				n.builtins.formatting.black,
 				n.builtins.formatting.isort.with({
 					extra_args = { "--profile", "black" },
@@ -41,6 +43,10 @@ return {
 				-- Lua
 				n.builtins.formatting.stylua,
 			},
+		})
+
+		require("mason-null-ls").setup({
+			automatic_installation = true,
 		})
 	end,
 }

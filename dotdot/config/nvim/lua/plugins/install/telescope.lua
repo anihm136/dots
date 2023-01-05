@@ -97,6 +97,7 @@ return {
 			local opts = {
 				noremap = true,
 				silent = true,
+				unique = true
 			}
 			if desc ~= nil then
 				opts.desc = desc

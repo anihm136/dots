@@ -33,6 +33,9 @@ return {
 				{ name = "buffer" },
 			},
 			completion = { autocomplete = false },
+			window = {
+				documentation = cmp.config.window.bordered()
+			},
 		})
 
 		cmp.setup.filetype("lua", {

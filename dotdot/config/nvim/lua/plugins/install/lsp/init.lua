@@ -8,6 +8,7 @@ return {
 	event = "BufReadPre",
 	config = function()
 		require("plugins.install.lsp.diagnostics")
+		require("plugins.install.lsp.handlers")
 		
 		require("mason").setup{
 			PATH = "append",
@@ -18,7 +19,7 @@ return {
 
 		local lsp_configs = require("plugins.install.lsp.server_config")
 		require("mason-lspconfig").setup({
-			ensure_installed = vim.tbl_keys(lsp_configs),
+			automatic_installation = true
 		})
 
 		local l = require("lspconfig")
@@ -27,7 +28,9 @@ return {
 		capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 		local options = {
-			-- on_attach = on_attach,
+			on_attach = function(client, bufnr)
+				require("plugins.install.lsp.keybindings")(client, bufnr)
+			end,
 			capabilities = capabilities,
 			flags = {
 				debounce_text_changes = 150,
