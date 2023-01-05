@@ -16,14 +16,16 @@ autoload -Uz _zi
 zi ice depth"1"
 zi light romkatv/powerlevel10k
 # Completions
-zi ice wait lucid
+zi ice wait lucid as"completion"
 zi light zsh-users/zsh-completions
-zi ice wait lucid as"completion"
+zi ice wait lucid as"completion" blockf
 zi snippet OMZP::fd/_fd
-zi ice wait lucid as"completion"
+zi ice wait lucid as"completion" blockf
 zi snippet OMZP::ripgrep/_ripgrep
-zi ice wait lucid as"completion"
+zi ice wait lucid as"completion" blockf
 zi snippet OMZP::pip/_pip
+zi ice wait lucid as"completion" blockf
+zi snippet ${ASDF_DIR}/completions/_asdf
 zi ice wait lucid
 zi snippet $ZDOTDIR/completion.zsh
 zi ice wait lucid atload"zicompinit_fast; zicdreplay"
