@@ -9,7 +9,7 @@ return {
 	config = function()
 		require("plugins.install.lsp.diagnostics")
 		require("plugins.install.lsp.handlers")
-		
+
 		require("mason").setup{
 			PATH = "append",
 			pip = {

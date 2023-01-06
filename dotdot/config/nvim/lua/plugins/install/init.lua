@@ -9,6 +9,15 @@ return {
 		event = "VeryLazy"
 	},
 
+	-- UX
+
+
+	-- UI
+	{
+		"stevearc/dressing.nvim",
+		event = "VeryLazy"
+	},
+
 	-- Treesitter
 	{
 		"nvim-treesitter/playground",

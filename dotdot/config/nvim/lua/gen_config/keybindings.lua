@@ -83,4 +83,6 @@ map("x", "<s-down>", "<down>")
 
 -- Text objects
 map("x", "ag", "<esc>GVgg") -- whole buffer
-map("o", "ag", ":<c-u>normal vag<cr><c-o>")
+map("o", "ag", ":<c-u>normal vag<cr>")
+map("x", "il", "g_o^") -- single line
+map("o", "il", ":<c-u>normal vil<cr>")

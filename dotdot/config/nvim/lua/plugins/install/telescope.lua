@@ -85,7 +85,6 @@ return {
 			local opts = {}
 			opts.show_all_buffers = true
 			opts.sort_lastused = true
-			opts.layout_config.height = 0.2
 			require('telescope.builtin').buffers(opts)
 		end
 
