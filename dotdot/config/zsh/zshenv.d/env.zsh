@@ -8,6 +8,7 @@ path+=("$XDG_CONFIG_HOME/emacs/bin")
 {%@@ if profile == "work" @@%}
 brewprefix=/opt/homebrew
 path+=("$brewprefix/bin:$brewprefix/sbin:$PATH")
+source "$brewprefix/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
 export MANPATH="$brewprefix/share/man:$MANPATH"
 unset brewprefix
 {%@@ else @@%}

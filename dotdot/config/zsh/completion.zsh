@@ -1,7 +1,9 @@
-{%@@ if profile == "work" @@%}
-source /opt/homebrew/Cellar/fzf/0.35.1/shell/completion.zsh
-{%@@ else @@%}
 autoload -Uz bashcompinit && bashcompinit
+{%@@ if profile == "work" @@%}
+source "$(brew --prefix)/Cellar/fzf/0.35.1/shell/completion.zsh"
+source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+{%@@ else @@%}
 eval "$(register-python-argcomplete pipx)"
 
 eval $(register-python-argcomplete ansible)
