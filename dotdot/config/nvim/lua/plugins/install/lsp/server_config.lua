@@ -5,4 +5,5 @@ return {
 	["gopls"] = {},
 	["jedi_language_server"] = {},
 	["clangd"] = {},
+	["terraformls"] = {}
 }

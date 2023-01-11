@@ -42,6 +42,11 @@ return {
 
 				-- Lua
 				n.builtins.formatting.stylua,
+
+				-- Terraform
+				n.builtins.formatting.terraform_fmt.with({
+					filetypes = { 'terraform', 'tf', 'hcl' },
+				}),
 			},
 		})
 
