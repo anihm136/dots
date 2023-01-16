@@ -15,6 +15,8 @@
 
 (setq org-directory nil)
 
+(setq doom-theme 'doom-monokai-pro)
+
 ;; Utility variables
 
 {%@@ if profile == "localhost" @@%}
@@ -24,12 +26,6 @@
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
 {%@@ endif @@%}
-
-(defvar dark-themes '(doom-one doom-gruvbox doom-solarized-dark doom-spacegrey doom-monokai-pro doom-tomorrow-night)
-  "Set of dark themes to choose from.")
-
-(defvar light-themes '(doom-gruvbox-light doom-solarized-light doom-flatwhite)
-  "Set of light themes to choose from.")
 
 ;; Eager loading
 (setq-default tab-width 2
@@ -357,7 +353,6 @@
 (defun +ani/my-init-func ()
   "Function to run on init."
   (global-subword-mode t)
-  (+ani/set-random-theme)
   (setq-default uniquify-buffer-name-style 'forward
                 window-combination-resize t
                 org-clock-persist t
@@ -387,17 +382,4 @@
         :n "]p" '+ani/evil-unimpaired-paste-below
         :n "[p" '+ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
-        :i "C-v" "C-r +"
-        :desc "Set random theme"
-        :n "<f12>" '+ani/set-random-theme
-        :n "S-<f12>" (λ! () (+ani/set-random-theme 't))))
-
-
-(defun +ani/set-random-theme (&optional light)
-  "Set the theme to a random dark theme.
-If LIGHT is non-nil, use a random light theme instead."
-  (interactive)
-  (random t)
-  (let ((themes (if light light-themes dark-themes)))
-    (load-theme (nth (random (length themes)) themes) t))
-  (princ (cdr custom-enabled-themes)))
+        :i "C-v" "C-r +"))
