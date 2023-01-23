@@ -1,6 +1,6 @@
 autoload -Uz bashcompinit && bashcompinit
 {%@@ if profile == "work" @@%}
-source "$(brew --prefix)/Cellar/fzf/0.35.1/shell/completion.zsh"
+source "$(brew --prefix)/Cellar/fzf/$(fzf --version | cut -d ' ' -f 1)/shell/completion.zsh"
 source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 complete -o nospace -C /opt/homebrew/bin/terraform terraform
 {%@@ else @@%}

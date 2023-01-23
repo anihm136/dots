@@ -66,6 +66,4 @@
   :recipe (:host github :repo "awth13/org-appear"))
 (package! aggressive-indent)
 (package! org-ql)
-(package! rose-pine-color
-		  :recipe (:host github :repo "thongpv87/rose-pine-emacs"))
 (package! code-review :disable t)

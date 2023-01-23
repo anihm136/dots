@@ -46,7 +46,7 @@ bindkey "^[m" copy-prev-shell-word
 
 # Load fzf keybindings
 {%@@ if profile == "work" @@%}
-source /opt/homebrew/Cellar/fzf/0.35.1/shell/key-bindings.zsh
+source "$(brew --prefix)/Cellar/fzf/$(fzf --version | cut -d ' ' -f 1)/shell/key-bindings.zsh"
 {%@@ else @@%}
 source /usr/share/fzf/key-bindings.zsh
 {%@@ endif @@%}
