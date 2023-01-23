@@ -108,6 +108,39 @@
      ("k" "Clipboard link" entry
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
       "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
+
+  (defun ani/org-handle-recurring-todos (org-todo-orig &optional arg)
+    (let ((org-old-state (substring-no-properties (org-get-todo-state)))
+          (org-repeat (org-get-repeat)))
+      (funcall org-todo-orig arg)
+      (when (and (equal org-old-state "RECURRING")
+                 (not org-repeat)
+                 (org-entry-is-done-p))
+        (let ((current-prefix-arg '(4)))
+          (call-interactively 'org-schedule)
+          (funcall org-todo-orig "RECURRING")))))
+  (advice-add 'org-todo :around #'ani/org-handle-recurring-todos)
+
+  (defun ani/org-handle-waiting-todos ()
+    (when (and (equal org-state "WAITING"))
+      (let ((current-prefix-arg '(4)))
+        (call-interactively 'org-schedule))))
+  (add-hook! 'org-after-todo-state-change-hook #'ani/org-handle-waiting-todos)
+
+  (defun ani/org-process-inbox-item ()
+    "Process a single item in the inbox."
+    (org-with-wide-buffer
+     (org-todo)
+     (org-set-tags-command)
+     (org-priority)
+     (org-refile)))
+
+  (defun ani/org-process-inbox ()
+    "Process all items in the inbox."
+    (interactive)
+    (find-file (concat ani/org-directory "GTD/" "inbox.org"))
+    (org-map-entries #'ani/org-process-inbox-item nil `(,(concat ani/org-directory "GTD/" "inbox.org"))))
+
   (org-clock-persistence-insinuate)
   (with-eval-after-load 'flycheck
     (flycheck-add-mode 'proselint 'org-mode))
@@ -174,25 +207,9 @@
                                                                (not (children (todo "TODO" "PROJECT" "RECURRING"))))
                                                          ((org-ql-block-header ,gtd/stuck-projects-head))))))))
   :config
-  (defun ani/org-handle-recurring-todos (org-todo-orig &optional arg)
-    (let ((org-old-state (substring-no-properties (org-get-todo-state)))
-          (org-repeat (org-get-repeat)))
-      (funcall org-todo-orig arg)
-      (when (and (equal org-old-state "RECURRING")
-                 (not org-repeat)
-                 (org-entry-is-done-p))
-        (let ((current-prefix-arg '(4)))
-          (call-interactively 'org-schedule)
-          (funcall org-todo-orig "RECURRING")))))
-  (advice-add 'org-todo :around #'ani/org-handle-recurring-todos)
-  (defun ani/org-handle-waiting-todos ()
-    (when (and (equal org-state "WAITING"))
-      (let ((current-prefix-arg '(4)))
-        (call-interactively 'org-schedule))))
-  (add-hook! 'org-after-todo-state-change-hook #'ani/org-handle-waiting-todos))
+  (map! :map org-agenda-mode-map
+        :localleader :prefix "d" :desc "Schedule item for today" :n "t" (lambda () (interactive) (org-agenda-schedule nil "+0d"))))
 
-(map! :map org-agenda-mode-map
-      :localleader :prefix "d" :desc "Schedule item for today" :n "t" (lambda () (interactive) (org-agenda-schedule nil "+0d")))
 
 (add-hook! 'auto-save-hook 'org-save-all-org-buffers)
 

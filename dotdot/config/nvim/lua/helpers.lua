@@ -45,12 +45,6 @@ end
 
 _G.helpers = helpers
 
--- Add debug print function to global namespace
-_G.P = function(v)
-	print(vim.inspect(v))
-	return v
-end
-
 -- Return char at index if index is a number, else default behavior
 getmetatable("").__index = function(str, i)
 	if type(i) == "number" then

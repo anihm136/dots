@@ -129,6 +129,9 @@ dotfiles:
   d_config_tridactyl:
     src: config/tridactyl
     dst: ~/.config/tridactyl
+  d_config_newsboat:
+    src: config/newsboat
+    dst: ~/.config/newsboat
 profiles:
   sorcery:
     dotfiles:
@@ -153,6 +156,7 @@ profiles:
     - d_config_ncmpcpp
         # - d_config_mopidy
     - d_config_tridactyl
+    - d_config_newsboat
   apex:
     dotfiles:
     - d_config_awesome
