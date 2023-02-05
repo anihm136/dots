@@ -86,7 +86,10 @@ dotfiles:
     dst: ~/.config/zsh
     actions:
     - zsh
-    ignore_missing_in_dotdrop: true
+    upignore:
+      - "*.zwc"
+    cmpignore:
+      - "*.zwc"
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json
@@ -151,7 +154,6 @@ profiles:
     - f_zshenv
     - f_xprofile
     - f_aliases
-    - f_tmux.conf
     - d_config_git
     - d_config_ncmpcpp
         # - d_config_mopidy
@@ -172,7 +174,6 @@ profiles:
     - f_xprofile
     - f_aliases
     - d_config_interception
-    - f_tmux.conf
     - d_config_git
     - d_moc
   work:

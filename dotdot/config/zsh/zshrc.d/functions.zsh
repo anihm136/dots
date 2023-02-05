@@ -91,61 +91,6 @@ dlmn() {
   done
 }
 
-codi() {
-  local syntax="${1:-python}"
-  shift
-  nvim -c \
-    "let g:startify_disable_at_vimenter = 1 |\
-    set bt=nofile ls=0 noru nonu nornu |\
-    hi ColorColumn ctermbg=NONE |\
-    hi VertSplit ctermbg=NONE |\
-    hi NonText ctermfg=0 |\
-    Codi $syntax" "$@"
-}
-
-tm() {
-  [[ -z $(pgrep tmux) ]] && direnv exec / tmux new-session -d
-  while [[ $(tmux show-option -s @tmux-resurrect-restoring | cut -d ' ' -f 2) != "0" ]] ; do
-    sleep 2
-  done
-  local session=$(tmux ls -F '#S' | fzf -0 --header='Select session to attach to')
-  if [[ -n $session ]]; then
-    tmux attach -t $session
-  fi
-}
-
-addtool() {
-  local lang=${1}
-
-  if [[ ! $lang ]]; then
-    lang=$(asdf plugin-list | fzf)
-  fi
-
-  if [[ $lang ]]; then
-    local versions=$(asdf list-all $lang | fzf --tac --no-sort --multi)
-    if [[ $versions ]]; then
-      for version in $(echo $versions);
-      do; asdf install $lang $version; done;
-    fi
-  fi
-}
-
-remtool() {
-  local lang=${1}
-
-  if [[ ! $lang ]]; then
-    lang=$(asdf plugin-list | fzf)
-  fi
-
-  if [[ $lang ]]; then
-    local versions=$(asdf list $lang | fzf -m)
-    if [[ $versions ]]; then
-      for version in $(echo $versions);
-      do; asdf uninstall $lang $version; done;
-    fi
-  fi
-}
-
 swapfiles() {
   local TMPFILE=$(mktemp)
   mv "$1" "$TMPFILE" && mv "$2" "$1" && mv "$TMPFILE" "$2"

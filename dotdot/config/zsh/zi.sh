@@ -12,6 +12,9 @@ autoload -Uz _zi
 (( ${+_comps} )) && _comps[zi]=_zi
 
 # Install plugins
+# Eval annex
+zi ice atinit'Z_A_USECOMP=1'
+zi light z-shell/z-a-eval
 # Theme
 zi ice depth"1"
 zi light romkatv/powerlevel10k
