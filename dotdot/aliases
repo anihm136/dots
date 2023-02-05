@@ -8,12 +8,14 @@ alias impress='libreoffice --nologo --impress &!'
 alias ee="nvim"
 alias bt='bluetoothctl'
 alias bgd='bg; disown'
+alias tmuxn='direnv exec / tmux new-session'
 alias nnn='nnn -e'
 alias o='xdg-open'
 alias ssh='kitty +kitten ssh'
 alias lg='lazygit'
 alias pvpn='protonvpn-cli'
 alias tmpd='cd $(mktemp -d)'
+alias tmuxonly="tmux kill-pane -a -t 1"
 alias instagram="brave --profile-directory='Profile 3' --app='https://www.instagram.com' &!"
 alias whatsapp="brave --profile-directory='Profile 4' --app='https://web.whatsapp.com' &!"
 alias spotify="brave --profile-directory='Profile 5' --app='https://open.spotify.com' &!"

@@ -2,7 +2,7 @@
 urls-source                 "freshrss"
 freshrss-url                "https://rss.anihm136.dev/api/greader.php"
 freshrss-login              "anirudh"
-freshrss-passwordeval       "bw unlock $(askpass) | grep export | cut -d'\"' -f2 | xargs -i bw --session '{}' get password rss"
+freshrss-passwordeval       "bw unlock $(askpass 'Enter your BitWarden master password') | grep export | cut -d'\"' -f2 | xargs -i bw --session '{}' get password rss"
 freshrss-min-items          100
 freshrss-flag-star          "s"
 freshrss-show-special-feeds "false"
@@ -27,5 +27,17 @@ highlight article "\\((link|image|video)\\)" color8 default
 highlight article "https?://[^ ]+"           color4 default
 highlight article "\[[0-9]+\]"               color6 default bold
 
-# Set browser
-browser "firefox --new-tab %u"
+# General
+browser "firefox --private-window %u"
+auto-reload yes
+
+# More vim-like bindings
+unbind-key j
+unbind-key k
+unbind-key J
+unbind-key K
+
+bind-key j down
+bind-key k up
+bind-key l open
+bind-key h quit

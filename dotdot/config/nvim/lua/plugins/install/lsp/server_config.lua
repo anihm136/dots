@@ -5,5 +5,9 @@ return {
 	["gopls"] = {},
 	["jedi_language_server"] = {},
 	["clangd"] = {},
-	["terraformls"] = {}
+	["terraformls"] = {},
+	["solargraph"] = {
+		single_file_support = true,
+	},
+	["typeprof"] = {}
 }

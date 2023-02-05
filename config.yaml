@@ -87,9 +87,9 @@ dotfiles:
     actions:
     - zsh
     upignore:
-      - "*.zwc"
+    - '*.zwc'
     cmpignore:
-      - "*.zwc"
+    - '*.zwc'
   f_config_screenkey.json:
     src: config/screenkey.json
     dst: ~/.config/screenkey.json

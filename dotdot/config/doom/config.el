@@ -129,8 +129,9 @@
 
   (defun ani/org-process-inbox-item ()
     "Process a single item in the inbox."
+    (interactive)
     (org-with-wide-buffer
-     (org-todo)
+     (call-interactively #'org-todo)
      (org-set-tags-command)
      (org-priority)
      (org-refile)))
@@ -334,11 +335,11 @@
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
-(add-hook! 'after-init-hook '+ani/my-init-func)
+(add-hook! 'after-init-hook 'ani/my-init-func)
 
 ;; Utility functions and keymaps
 
-(defun +ani/evil-unimpaired-paste-above ()
+(defun ani/evil-unimpaired-paste-above ()
   "Linewise paste above."
   (interactive)
   (let ((register (if evil-this-register
@@ -348,7 +349,7 @@
       (evil-insert-newline-above))
     (evil-paste-before 1 register)))
 
-(defun +ani/evil-unimpaired-paste-below ()
+(defun ani/evil-unimpaired-paste-below ()
   "Linewise paste below."
   (interactive)
   (let ((register (if evil-this-register
@@ -367,9 +368,10 @@
    "/DONE|CANCELLED"
    'agenda))
 
-(defun +ani/my-init-func ()
+(defun ani/my-init-func ()
   "Function to run on init."
   (global-subword-mode t)
+  (global-auto-revert-mode t)
   (setq-default uniquify-buffer-name-style 'forward
                 window-combination-resize t
                 org-clock-persist t
@@ -396,7 +398,7 @@
         :nv "M-j" 'drag-stuff-down
         :nv "M-k" 'drag-stuff-up
         :v "o" "$"
-        :n "]p" '+ani/evil-unimpaired-paste-below
-        :n "[p" '+ani/evil-unimpaired-paste-above
+        :n "]p" 'ani/evil-unimpaired-paste-below
+        :n "[p" 'ani/evil-unimpaired-paste-above
         :desc "Paste in insert mode"
         :i "C-v" "C-r +"))

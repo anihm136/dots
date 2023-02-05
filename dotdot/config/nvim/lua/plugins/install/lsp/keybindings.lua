@@ -5,7 +5,6 @@ return function(client, bufnr)
 			noremap = true,
 			silent = true,
 			buffer = bufnr,
-			unique = true,
 			desc = desc
 		}
 		vim.keymap.set(modes, lhs, rhs, opts)
