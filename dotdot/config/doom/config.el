@@ -94,20 +94,19 @@
    org-attach-id-dir ".attach/"
    org-attach-dir-relative t
    ;; TODO states
-   org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "RECURRING(a)" "|" "DONE(d)" "CANCELLED(c)")
-                       (sequence "REFILE(f)" "READ(r)" "LEARN(l)" "PROJECT(p)" "|"))
+   org-todo-keywords '((sequence "TODO(t)" "WAITING(w@)" "RECURRING(r)" "|" "DONE(d)" "CANCELLED(c)")
+                       (sequence "PROJECT(p)" "|"))
    ;; Capture templates
    org-capture-templates
    `(("i" "Inbox" entry
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-      "* REFILE %i%?")
+      "* TODO %i%?")
      ("l" "Org protocol" entry
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-      "* READ [[%:link][%:description]]\n %i"
-      :immediate-finish t)
+      "* TODO [[%:link][%:description]]\n %i" :immediate-finish t)
      ("k" "Clipboard link" entry
       (file ,(concat ani/org-directory "GTD/" "inbox.org"))
-      "* READ %(org-cliplink-capture)\n" :immediate-finish t)))
+      "* TODO %(org-cliplink-capture)\n" :immediate-finish t)))
 
   (defun ani/org-handle-recurring-todos (org-todo-orig &optional arg)
     (let ((org-old-state (substring-no-properties (org-get-todo-state)))
@@ -176,7 +175,7 @@
    org-agenda-skip-scheduled-if-done t
    org-agenda-skip-deadline-prewarning-if-scheduled t
    org-agenda-custom-commands (let
-                                  ((gtd/inbox-head  "Dump:")
+                                  ((gtd/inbox-head  "Refile:")
                                    (gtd/next-action-head "Next actions:")
                                    (gtd/waiting-head  "Waiting on:")
                                    (gtd/recurring-head  "Recurring tasks:")
@@ -184,25 +183,28 @@
                                    (gtd/stuck-projects-head  "Review stuck projects:"))
                                 `(("g" . "GTD")
                                   ("gg" "GTD overview"
-                                   ((org-ql-search-block '(todo)
-                                                         ((org-ql-block-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org")))))
-                                    (org-ql-search-block '(and (todo "TODO")
-                                                               (not (scheduled)))
-                                                         ((org-ql-block-header ,gtd/next-action-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org") ,(concat ani/org-directory "GTD/" "projects.org")))))
-                                    (org-ql-search-block '(todo "WAITING")
-                                                         ((org-ql-block-header ,gtd/waiting-head)))
-                                    (org-ql-search-block '(and (todo "RECURRING")
-                                                               (not (scheduled))
-                                                               (not (tags "norepeat")))
-                                                         ((org-ql-block-header ,gtd/recurring-head)))))
+                                   ((alltodo ""
+                                             ((org-agenda-overriding-header ,gtd/inbox-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "inbox.org")))))
+                                    (todo "TODO"
+                                          ((org-agenda-overriding-header ,gtd/next-action-head)
+                                           (org-agenda-files '(,(concat ani/org-directory "GTD/" "tasks.org") ,(concat ani/org-directory "GTD/" "projects.org")))
+                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))
+                                    (todo "WAITING"
+                                          ((org-agenda-overriding-header ,gtd/waiting-head)))
+                                    (todo "RECURRING"
+                                          ((org-agenda-overriding-header ,gtd/recurring-head)
+                                           (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled))))))
                                   ("gt" "Today"
-                                   ((agenda "" ((org-agenda-span 1) (org-agenda-start-on-weekday nil) (org-agenda-start-day "+0d")))))
-                                  ("gs" "Review someday"
+                                   ((agenda ""
+                                            ((org-agenda-span 1)
+                                             (org-agenda-start-on-weekday nil)
+                                             (org-agenda-start-day "+0d")))))
+                                  ("gs" "Things to do someday"
                                    ((org-ql-search-block '(todo)
                                                          ((org-ql-block-header ,gtd/someday-head) (org-agenda-files '(,(concat ani/org-directory "GTD/" "someday.org")))))))
-                                  ("l" "Learning topics"
-                                   ((org-ql-search-block '(todo "LEARN")
-                                                         ((org-agenda-files '(,(concat ani/org-directory "GTD/" "learning.org")))))))
+                                  ("l" "Things to learn"
+                                   ((todo "TODO"
+                                          ((org-agenda-files '(,(concat ani/org-directory "GTD/" "learning.org")))))))
                                   ("gp" "Stuck projects"
                                    ((org-ql-search-block '(and (todo "PROJECT")
                                                                (not (children (todo "TODO" "PROJECT" "RECURRING"))))

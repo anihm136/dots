@@ -135,6 +135,9 @@ dotfiles:
   d_config_newsboat:
     src: config/newsboat
     dst: ~/.config/newsboat
+  d_config_zellij:
+    src: config/zellij
+    dst: ~/.config/zellij
 profiles:
   sorcery:
     dotfiles:
@@ -159,6 +162,7 @@ profiles:
         # - d_config_mopidy
     - d_config_tridactyl
     - d_config_newsboat
+    - d_config_zellij
   apex:
     dotfiles:
     - d_config_awesome
