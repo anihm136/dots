@@ -180,10 +180,8 @@ function screen_theme.at_screen_connect(s)
 	s.mywibox = awful.wibar({
 		position = "top",
 		screen = s,
-		visible = false,
 		ontop = true,
 		stretch = true,
-		restrict_workarea = false,
 		widget = {
 			layout = wibox.layout.align.horizontal,
 			{
@@ -227,39 +225,6 @@ function screen_theme.at_screen_connect(s)
 			},
 		},
 	})
-
-	local function show_wibar()
-		if next(s.clients) and s.clients[1].fullscreen then
-			return
-		end
-		if mouse.screen == s and mouse.coords().y < 2 then
-			s.mywibox.visible = true
-		end
-	end
-
-	s.show_wibar_timer = gears.timer({
-		timeout = 0.25,
-		callback = show_wibar,
-		autostart = true,
-	})
-	s.hide_wibar_timer = gears.timer({
-		timeout = 2,
-		callback = function() s.mywibox.visible = false end,
-	})
-
-	s.mywibox:connect_signal("property::visible", function()
-		if s.mywibox.visible then
-			s.show_wibar_timer:stop()
-		else
-			s.show_wibar_timer:start()
-		end
-	end)
-	s.mywibox:connect_signal("mouse::enter", function()
-		s.hide_wibar_timer:stop()
-	end)
-	s.mywibox:connect_signal("mouse::leave", function()
-		s.hide_wibar_timer:start()
-	end)
 end
 
 return screen_theme

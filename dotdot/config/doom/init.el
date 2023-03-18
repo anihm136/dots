@@ -67,6 +67,7 @@
         +dragndrop
         +pretty
         +roam2)               ; organize your plain life in plain text
+       beancount
 
        :email
 
