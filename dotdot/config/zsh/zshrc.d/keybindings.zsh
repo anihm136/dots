@@ -45,8 +45,5 @@ bindkey "^[m" copy-prev-shell-word
 #bindkey '^X^N' accept-and-infer-next-history
 
 # Load fzf keybindings
-{%@@ if profile == "work" @@%}
-source "$(brew --prefix)/Cellar/fzf/$(fzf --version | cut -d ' ' -f 1)/shell/key-bindings.zsh"
-{%@@ else @@%}
-source /usr/share/fzf/key-bindings.zsh
-{%@@ endif @@%}
+zi ice wait lucid
+zi snippet "https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh"
