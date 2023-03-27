@@ -52,7 +52,7 @@ vim.g.mapleader = " "
 map("n", "<leader>fs", "<cmd>w<cr>", "Save current buffer")
 map("n", "<leader>fS", "<cmd>wa!<cr>", "Save all buffers")
 maploud("n", "<leader>e", [[:edit <c-r>=fnameescape(expand("%:p:h"))<cr>/]], "Edit file in current directory")
-map("n", "<leader>bd", vim.api.nvim_buf_delete, "Close current buffer")
+map("n", "<leader>bd", function() vim.api.nvim_buf_delete(0, {}) end, "Close current buffer")
 
 -- Editing
 map("x", "o", "$h") -- select to end of line

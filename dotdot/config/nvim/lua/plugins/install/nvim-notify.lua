@@ -7,7 +7,7 @@ return {
 		require("notify").setup({
 			render = "minimal",
 			stages = "slide",
-			timeout = 2000
+			timeout = 2000,
 		})
-	end
+	end,
 }

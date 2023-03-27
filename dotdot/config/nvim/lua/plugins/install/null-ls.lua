@@ -1,8 +1,10 @@
 return {
 	"jose-elias-alvarez/null-ls.nvim",
-	dependencies = { "nvim-lua/plenary.nvim",
-	"jay-babu/mason-null-ls.nvim",
-},
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+		"jay-babu/mason-null-ls.nvim",
+	},
+	event = "VeryLazy",
 	config = function()
 		local n = require("null-ls")
 		n.setup({
@@ -24,9 +26,9 @@ return {
 				}),
 
 				-- JS
-				-- n.builtins.formatting.prettierd,
-				-- n.builtins.diagnostics.eslint_d,
-				-- n.builtins.formatting.eslint_d,
+				n.builtins.formatting.prettierd,
+				n.builtins.diagnostics.eslint_d,
+				n.builtins.formatting.eslint_d,
 
 				-- Sh
 				n.builtins.diagnostics.zsh,
@@ -45,7 +47,7 @@ return {
 
 				-- Terraform
 				n.builtins.formatting.terraform_fmt.with({
-					filetypes = { 'terraform', 'tf', 'hcl' },
+					filetypes = { "terraform", "tf", "hcl" },
 				}),
 			},
 		})

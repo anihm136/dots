@@ -2,9 +2,9 @@ vim.diagnostic.config({
 	underline = true,
 	virtual_text = { spacing = 4, prefix = "● ", source = true },
 	float = {
-		source = true
+		source = true,
 	},
-	severity_sort = true
+	severity_sort = true,
 })
 
 local diagnostic_signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
@@ -17,7 +17,7 @@ local function map(modes, lhs, rhs, desc)
 	local opts = {
 		noremap = true,
 		silent = true,
-		desc = desc
+		desc = desc,
 	}
 	vim.keymap.set(modes, lhs, rhs, opts)
 end

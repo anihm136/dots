@@ -34,7 +34,7 @@ return {
 			},
 			completion = { autocomplete = false },
 			window = {
-				documentation = cmp.config.window.bordered()
+				documentation = cmp.config.window.bordered(),
 			},
 		})
 

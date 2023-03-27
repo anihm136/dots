@@ -44,6 +44,5 @@ bindkey "^[m" copy-prev-shell-word
 # bindkey -s '^X^Z' '%-^M'
 #bindkey '^X^N' accept-and-infer-next-history
 
-# Load fzf keybindings
 zi ice wait lucid
 zi snippet "https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh"

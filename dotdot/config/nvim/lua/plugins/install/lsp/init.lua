@@ -10,16 +10,16 @@ return {
 		require("plugins.install.lsp.diagnostics")
 		require("plugins.install.lsp.handlers")
 
-		require("mason").setup{
+		require("mason").setup({
 			PATH = "append",
 			pip = {
-				upgrade_pip = true
-			}
-		}
+				upgrade_pip = true,
+			},
+		})
 
 		local lsp_configs = require("plugins.install.lsp.server_config")
 		require("mason-lspconfig").setup({
-			automatic_installation = true
+			automatic_installation = true,
 		})
 
 		local l = require("lspconfig")

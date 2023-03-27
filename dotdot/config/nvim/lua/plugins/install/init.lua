@@ -2,20 +2,19 @@ return {
 	-- Utilities
 	{
 		"tpope/vim-eunuch",
-		event = "VeryLazy"
+		event = "VeryLazy",
 	},
 	{
 		"romainl/vim-cool",
-		event = "VeryLazy"
+		event = "VeryLazy",
 	},
 
 	-- UX
 
-
 	-- UI
 	{
 		"stevearc/dressing.nvim",
-		event = "VeryLazy"
+		event = "VeryLazy",
 	},
 
 	-- Treesitter
