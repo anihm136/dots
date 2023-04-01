@@ -5,7 +5,7 @@ return {
 		settings = {
 			Lua = {
 				format = {
-			enable = false,
+					enable = false,
 				},
 			},
 		},

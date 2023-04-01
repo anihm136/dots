@@ -189,6 +189,7 @@ profiles:
     - d_config_ripgrep
     - d_config_nvim
     - d_config_kitty
+    - d_config_zellij
   localhost:
     dotfiles:
     - d_config_doom
