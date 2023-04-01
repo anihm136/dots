@@ -1,7 +1,6 @@
 cf() {
   local file
 
-
   file="$(locate -Ai -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1)"
 
   if [[ -n $file ]]
@@ -94,4 +93,22 @@ dlmn() {
 swapfiles() {
   local TMPFILE=$(mktemp)
   mv "$1" "$TMPFILE" && mv "$2" "$1" && mv "$TMPFILE" "$2"
+}
+
+take() {
+  mkdir -p $@ && cd ${@:$#}
+}
+
+open() {
+  local open_cmd
+
+  case "$OSTYPE" in
+    darwin*)  open_cmd='open' ;;
+    linux*)   open_cmd='nohup xdg-open' ;;
+    *)        echo "Platform $OSTYPE not supported"
+              return 1
+              ;;
+  esac
+
+  ${=open_cmd} "$@" &>/dev/null
 }

@@ -138,6 +138,15 @@ dotfiles:
   d_config_zellij:
     src: config/zellij
     dst: ~/.config/zellij
+  d_config_bat:
+    src: config/bat
+    dst: ~/.config/bat
+  d_config_zathura:
+    src: config/zathura
+    dst: ~/.config/zathura
+  f_config_lazygit_config.yml:
+    src: config/lazygit/config.yml
+    dst: ~/.config/lazygit/config.yml
 profiles:
   sorcery:
     dotfiles:
@@ -163,6 +172,9 @@ profiles:
     - d_config_tridactyl
     - d_config_newsboat
     - d_config_zellij
+    - d_config_bat
+    - d_config_zathura
+    - f_config_lazygit_config.yml
   apex:
     dotfiles:
     - d_config_awesome

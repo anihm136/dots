@@ -6,7 +6,6 @@ export FZF_CTRL_T_COMMAND="fd --hidden --follow --exclude .git --exclude node_mo
 
 # Colorscheme
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS"
- --color=fg:#e0def4,bg:#191725,hl:#6e6a86
- --color=fg+:#908caa,bg+:#1f1d2e,hl+:#908caa
- --color=info:#9ccfd8,prompt:#f6c177,pointer:#c4a7e7
- --color=marker:#ebbcba,spinner:#eb6f92,header:#ebbcba"
+--color=spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"

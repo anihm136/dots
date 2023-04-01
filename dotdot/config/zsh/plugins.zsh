@@ -1,7 +1,6 @@
 # Annexes
 zi ice atinit'Z_A_USECOMP=1'
 zi light z-shell/z-a-eval
-zi light z-shell/z-a-bin-gem-node
 
 # Theme
 zi ice depth"1"

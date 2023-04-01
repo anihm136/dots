@@ -3,29 +3,19 @@
 (setq user-full-name "Anirudh H M"
       user-mail-address "anihm136@gmail.com")
 
-{%@@ if profile == "sorcery" @@%}
 (setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 16)
       doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 16))
-{%@@ elif profile == "apex" @@%}
-(setq doom-font (font-spec :family "Iosevka Nerd Font Mono" :size 36)
-      doom-variable-pitch-font (font-spec :family "Overpass" :weight 'normal :size 36))
-{%@@ endif @@%}
 
 (setq display-line-numbers-type 'relative)
 
 (setq org-directory nil)
 
-(setq doom-theme 'catppuccin)
+(setq doom-theme 'doom-monokai-pro)
 
 ;; Utility variables
 
-{%@@ if profile == "localhost" @@%}
-(defconst ani/org-directory "~/storage/shared/Documents/org/"
-  "The default directory for org files.")
-{%@@ else @@%}
 (defconst ani/org-directory "~/Documents/org/"
   "The default directory for org files.")
-{%@@ endif @@%}
 
 ;; Eager loading
 (setq-default tab-width 2
@@ -54,7 +44,6 @@
         doom-modeline-buffer-file-name-style 'truncate-upto-root))
 
 ;; Deferred loading
-{%@@ if profile != "localhost" and profile != "work" @@%}
 (defun ox-markup-filter-attach (text backend info)
   (if (and (equal backend 'latex) (string-match-p "\.attach" text))
       (progn
@@ -63,7 +52,6 @@
         (format "\\textattachfile{%s}{%s}" (match-string 1 text) (match-string 2 text))
         )
     text))
-{%@@ endif @@%}
 
 (use-package! org
   :defer t
@@ -71,10 +59,8 @@
   (setq
    org-fold-catch-invisible-edits 'show-and-error
    org-startup-folded 'content
-{%@@ if profile != "localhost" and profile != "work" @@%}
    ;; Embed attached files when converting from org to pdf
    org-export-filter-link-functions '(ox-markup-filter-attach)
-{%@@ endif @@%}
    ;; Display
    org-ellipsis " ▾ "
    org-list-demote-modify-bullet '(("+" . "*") ("-" . "+") ("*" . "-") ("1." . "a."))
@@ -299,7 +285,6 @@
                             company-preview-if-just-one-frontend
                             company-echo-metadata-frontend)))
 
-{%@@ if profile != "localhost" and profile != "work" @@%}
 (use-package! org-protocol
   :defer t
   :config
@@ -333,7 +318,6 @@
 (load! "+org-latex")
 
 (load! "+engrave-faces")
-{%@@ endif @@%}
 
 (add-hook! 'prog-mode-hook (lambda ()(modify-syntax-entry ?_ "w")))
 
@@ -388,10 +372,6 @@
         evil-respect-visual-line-mode nil
         doom-fallback-buffer-name "► Doom"
         +doom-dashboard-name "► Doom"
-{%@@ if profile == "work" @@%}
-	magic-mode-alist (assq-delete-all 'ess-SAS-log-mode-p magic-mode-alist)
-        magic-mode-alist (assq-delete-all 'ess-SAS-listing-mode-p magic-mode-alist)
-{%@@ endif @@%}
         alert-default-style 'libnotify)
   (map! :nv "C-a" 'evil-numbers/inc-at-pt
         :nv "C-S-x" 'evil-numbers/dec-at-pt

@@ -12,4 +12,3 @@ autoload -Uz _zi
 (( ${+_comps} )) && _comps[zi]=_zi
 
 source "${ZDOTDIR}/plugins.zsh"
-source "${ZDOTDIR}/tools.zsh"

@@ -7,16 +7,11 @@ return {
 		"hrsh7th/cmp-path",
 		"saadparwaiz1/cmp_luasnip",
 		"L3MON4D3/LuaSnip",
-		"rcarriga/cmp-dap",
 	},
 	config = function()
 		local cmp = require("cmp")
 
 		cmp.setup({
-
-			enabled = function()
-				return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt" or require("cmp_dap").is_dap_buffer()
-			end,
 			snippet = {
 				expand = function(args)
 					require("luasnip").lsp_expand(args.body)
@@ -50,12 +45,6 @@ return {
 				{ name = "luasnip" },
 				{ name = "path" },
 				{ name = "buffer" },
-			},
-		})
-
-		cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-			sources = {
-				{ name = "dap" },
 			},
 		})
 	end,
