@@ -4,6 +4,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 	path+=("$HOME/.local/bin/scripts")
 fi
 path+=("$XDG_CONFIG_HOME/emacs/bin")
+path+=("$NPM_CONFIG_PREFIX/bin")
 
 {%@@ if profile == "work" @@%}
 brewprefix=/opt/homebrew
@@ -13,7 +14,6 @@ export MANPATH="$brewprefix/share/man:$MANPATH"
 unset brewprefix
 {%@@ else @@%}
 path+=("$HOME/.cargo/bin")
-path+=("$NPM_CONFIG_PREFIX/bin")
 
 # Settings
 export SUDO_ASKPASS="$HOME/.local/bin/scripts/askpass"

@@ -110,5 +110,5 @@ open() {
               ;;
   esac
 
-  ${=open_cmd} "$@" &>/dev/null
+  /usr/bin/env ${open_cmd} "$@" &>/dev/null
 }
