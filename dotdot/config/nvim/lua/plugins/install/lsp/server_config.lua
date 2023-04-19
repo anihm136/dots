@@ -19,4 +19,6 @@ return {
 	},
 	["tsserver"] = {},
 	["typeprof"] = {},
+	["volar"] = {},
+	["tailwindcss"] = {}
 }
