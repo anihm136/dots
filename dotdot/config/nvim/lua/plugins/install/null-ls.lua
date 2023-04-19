@@ -10,11 +10,10 @@ return {
 		n.setup({
 			sources = {
 				-- Python
-				-- n.builtins.diagnostics.flake8,
+				n.builtins.diagnostics.ruff,
+				n.builtins.diagnostics.mypy,
 				n.builtins.formatting.black,
-				n.builtins.formatting.isort.with({
-					extra_args = { "--profile", "black" },
-				}),
+				n.builtins.formatting.ruff,
 
 				-- Go
 				n.builtins.diagnostics.golangci_lint,
