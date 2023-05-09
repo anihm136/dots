@@ -9,6 +9,8 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local modkey = "Mod4"
 local altkey = "Mod1"
 local ctrl = "Control"
+local super = { modkey }
+local hyper = { modkey, ctrl, "Shift", altkey }
 local keys = {}
 
 -- ===================================================================
@@ -141,8 +143,8 @@ keys.clientbuttons = gears.table.join(
 		})
 	end),
 	-- Move and Resize Client
-	awful.button({ modkey }, 1, awful.mouse.client.move),
-	awful.button({ modkey }, 3, awful.mouse.client.resize)
+	awful.button(super, 1, awful.mouse.client.move),
+	awful.button(super, 3, awful.mouse.client.resize)
 )
 
 awful.util.taglist_buttons = my_table.join(awful.button({}, 1, function(t)
@@ -210,7 +212,7 @@ keys.globalkeys = my_table.join(
 		group = "awesome",
 	}),
 	-- Show help
-	awful.key({ modkey }, "s", hotkeys_popup.show_help, {
+	awful.key(super, "s", hotkeys_popup.show_help, {
 		description = "show help",
 		group = "awesome",
 	}),
@@ -218,28 +220,56 @@ keys.globalkeys = my_table.join(
 	-- CLIENT FOCUSING
 	-- =========================================
 	-- Focus client by direction (arrow keys)
-	awful.key({ modkey }, "Down", function()
+	awful.key(super, "Down", function()
 		awful.client.focus.global_bydirection("down", client.focused, true)
 		raise_client()
 	end, {
 		description = "focus down",
 		group = "client",
 	}),
-	awful.key({ modkey }, "Up", function()
+	awful.key(super, "Up", function()
 		awful.client.focus.global_bydirection("up", client.focused, true)
 		raise_client()
 	end, {
 		description = "focus up",
 		group = "client",
 	}),
-	awful.key({ modkey }, "Left", function()
+	awful.key(super, "Left", function()
 		awful.client.focus.global_bydirection("left", client.focused, true)
 		raise_client()
 	end, {
 		description = "focus left",
 		group = "client",
 	}),
-	awful.key({ modkey }, "Right", function()
+	awful.key(super, "Right", function()
+		awful.client.focus.global_bydirection("right", client.focused, true)
+		raise_client()
+	end, {
+		description = "focus right",
+		group = "client",
+	}),
+	awful.key(hyper, "j", function()
+		awful.client.focus.global_bydirection("down", client.focused, true)
+		raise_client()
+	end, {
+		description = "focus down",
+		group = "client",
+	}),
+	awful.key(hyper, "k", function()
+		awful.client.focus.global_bydirection("up", client.focused, true)
+		raise_client()
+	end, {
+		description = "focus up",
+		group = "client",
+	}),
+	awful.key(hyper, "h", function()
+		awful.client.focus.global_bydirection("left", client.focused, true)
+		raise_client()
+	end, {
+		description = "focus left",
+		group = "client",
+	}),
+	awful.key(hyper, "l", function()
 		awful.client.focus.global_bydirection("right", client.focused, true)
 		raise_client()
 	end, {
@@ -260,55 +290,30 @@ keys.globalkeys = my_table.join(
 		description = "focus next idx",
 		group = "client",
 	}),
-	awful.key({ modkey, altkey }, "Left", function()
+	awful.key(hyper, "p", function()
 		awful.client.focus.byidx(-1)
 		raise_client()
 	end, {
 		description = "focus previous idx",
 		group = "client",
 	}),
-	awful.key({ modkey, altkey }, "Right", function()
+	awful.key(hyper, "n", function()
 		awful.client.focus.byidx(1)
 		raise_client()
 	end, {
 		description = "focus next idx",
 		group = "client",
 	}),
-	awful.key({ modkey, altkey, "Ctrl" }, "Left", function()
-		awful.screen.focus_bydirection("left", awful.screen.focused())
-	end, {
-		description = "focus left",
-		group = "screen",
-	}),
-	awful.key({ modkey, altkey, "Ctrl" }, "Right", function()
-		awful.screen.focus_bydirection("right", awful.screen.focused())
-	end, {
-		description = "focus right",
-		group = "screen",
-	}),
-	awful.key({ modkey, altkey, "Ctrl" }, "Up", function()
-		awful.screen.focus_bydirection("up", awful.screen.focused())
-	end, {
-		description = "focus up",
-		group = "screen",
-	}),
-	awful.key({ modkey, altkey, "Ctrl" }, "Down", function()
-		awful.screen.focus_bydirection("down", awful.screen.focused())
-	end, {
-		description = "focus down",
-		group = "screen",
-	}),
 
-	-- Focus client by index (history)
-	awful.key({ modkey }, "u", awful.client.urgent.jumpto, {
+	awful.key(super, "u", awful.client.urgent.jumpto, {
 		description = "jump to urgent client",
 		group = "client",
 	}),
-	awful.key({ modkey }, "'", awful.tag.history.restore, {
+	awful.key(super, "'", awful.tag.history.restore, {
 		description = "go back",
 		group = "tag",
 	}),
-	awful.key({ modkey }, "o", function()
+	awful.key(super, "o", function()
 		awful.screen.focus_relative(1)
 	end, {
 		description = "jump to other screen",
@@ -353,28 +358,11 @@ keys.globalkeys = my_table.join(
 		group = "layout",
 	}),
 	-- =========================================
-	-- GAP CONTROL
-	-- =========================================
-
-	-- Gap control
-	awful.key({ modkey, "Shift" }, "minus", function()
-		awful.tag.incgap(5, nil)
-	end, {
-		description = "increment gaps size for the current tag",
-		group = "gaps",
-	}),
-	awful.key({ modkey }, "minus", function()
-		awful.tag.incgap(-5, nil)
-	end, {
-		description = "decrement gap size for the current tag",
-		group = "gaps",
-	}),
-	-- =========================================
 	-- LAYOUT SELECTION
 	-- =========================================
 
 	-- select next layout
-	awful.key({ modkey }, "space", function()
+	awful.key(super, "space", function()
 		awful.layout.inc(1)
 	end, {
 		description = "select next",
@@ -402,27 +390,7 @@ keys.globalkeys = my_table.join(
 		description = "restore minimized",
 		group = "client",
 	}),
-	-- Copy primary to clipboard (terminals to gtk)
-	awful.key({ modkey, "Shift" }, "c", function()
-		awful.spawn.with_shell("xsel | xsel -i -b")
-	end, {
-		description = "copy terminal to gtk",
-		group = "hotkeys",
-	}),
-	-- Copy clipboard to primary (gtk to terminals)
-	awful.key({ modkey, "Shift" }, "v", function()
-		awful.spawn.with_shell("xsel -b | xsel")
-	end, {
-		description = "copy gtk to terminal",
-		group = "hotkeys",
-	}),
-	awful.key({ modkey }, "F1", function()
-		require("apps.scratchpad").term:toggle()
-	end, {
-		description = "toggle scratchpad terminal",
-		group = "hotkeys",
-	}),
-	awful.key({ modkey }, "k", function()
+	awful.key(super, "k", function()
 		require("apps.scratchpad").copyq:toggle()
 	end, {
 		description = "toggle copyq",
@@ -437,20 +405,8 @@ keys.globalkeys = my_table.join(
 keys.clientkeys = gears.table.join(
 	-- Maximize
 	-- Move to edge or swap by direction
-	awful.key({ modkey, "Shift" }, "o", function(c)
+	awful.key(hyper, "o", function(c)
 		c:move_to_screen()
-	end),
-	awful.key({ modkey, "Shift" }, "Down", function(c)
-		move_client(c, "down")
-	end),
-	awful.key({ modkey, "Shift" }, "Up", function(c)
-		move_client(c, "up")
-	end),
-	awful.key({ modkey, "Shift" }, "Left", function(c)
-		move_client(c, "left")
-	end),
-	awful.key({ modkey, "Shift" }, "Right", function(c)
-		move_client(c, "right")
 	end),
 	-- CLIENT RESIZING
 	awful.key({ modkey, ctrl }, "Down", function(c)
@@ -495,20 +451,20 @@ keys.clientkeys = gears.table.join(
 		group = "client",
 	}),
 	-- close client
-	awful.key({ modkey }, "q", function(c)
+	awful.key(super, "q", function(c)
 		c:kill()
 	end, {
 		description = "close",
 		group = "client",
 	}),
 	-- Minimize
-	awful.key({ modkey }, "n", function(c)
+	awful.key(super, "n", function(c)
 		c.minimized = true
 	end, {
 		description = "minimize",
 		group = "client",
 	}),
-	awful.key({ modkey }, "m", function(c)
+	awful.key(super, "m", function(c)
 		c.maximized = not c.maximized
 		c:raise()
 	end, {
@@ -522,7 +478,7 @@ for i = 1, 6 do
 	keys.globalkeys = gears.table.join(
 		keys.globalkeys,
 		-- Switch to tag
-		awful.key({ modkey }, "#" .. i + 9, function()
+		awful.key(super, "#" .. i + 9, function()
 			local screen = awful.screen.focused()
 			local tag = screen.tags[i]
 			if tag then

@@ -1,8 +1,4 @@
 actions:
-  awesome: '[[ -d ~/.config/awesome/lain ]] && git -C ~/.config/awesome/lain pull
-    origin master || gh repo clone lcpz/lain ~/.config/awesome/lain; [[ -d ~/.config/awesome/bling
-    ]] && git -C ~/.config/awesome/bling pull origin master || gh repo clone BlingCorp/bling
-    ~/.config/awesome/bling'
   tmux: '[[ -d ~/.tmux/plugins/tpm ]] && git -C ~/.tmux/plugins/tpm pull origin master
     || (mkdir -p .tmux/plugins && gh repo clone tmux-plugins/tpm ~/.tmux/plugins/tpm)'
   zsh: trash ~/.config/zsh/**/*.zwc
@@ -32,8 +28,6 @@ dotfiles:
   d_config_awesome:
     src: config/awesome
     dst: ~/.config/awesome
-    actions:
-    - awesome
     upignore:
     - lain
     - bling

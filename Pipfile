@@ -7,11 +7,11 @@ name = "pypi"
 docopt = "*"
 "ruamel.yaml" = "*"
 python-magic = "*"
-Jinja2 = "*"
 requests = "*"
 packaging = "*"
 toml = "*"
 distro = "*"
+jinja2 = "*"
 
 [dev-packages]
 
