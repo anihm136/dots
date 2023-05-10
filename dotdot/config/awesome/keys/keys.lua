@@ -390,10 +390,10 @@ keys.globalkeys = my_table.join(
 		description = "restore minimized",
 		group = "client",
 	}),
-	awful.key(super, "k", function()
-		require("apps.scratchpad").copyq:toggle()
+	awful.key(super, "t", function()
+		require("apps.scratchpad").term:toggle()
 	end, {
-		description = "toggle copyq",
+		description = "toggle scratch terminal",
 		group = "hotkeys",
 	})
 )

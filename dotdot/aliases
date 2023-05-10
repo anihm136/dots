@@ -16,6 +16,7 @@ alias tmpd='cd $(mktemp -d)'
 alias instagram="brave --profile-directory='Profile 3' --app='https://www.instagram.com' &!"
 alias whatsapp="brave --profile-directory='Profile 4' --app='https://web.whatsapp.com' &!"
 alias spotify="brave --profile-directory='Profile 5' --app='https://open.spotify.com' &!"
+alias discord="brave --profile-directory='Profile 6' --app='https://discord.com' &!"
 
 # Common aliases
 alias ls='ls --color=tty'

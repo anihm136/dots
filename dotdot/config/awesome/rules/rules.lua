@@ -135,11 +135,7 @@ function rules.create(clientkeys, clientbuttons)
 		},
 		{
 			rule_any = {
-				instance = { "www.instagram.com", "web.whatsapp.com" },
-				name = {
-					"^.*Instagram.*Mozilla Firefox$",
-					"^.*WhatsApp.*Mozilla Firefox$",
-				},
+				instance = { "www.instagram.com", "web.whatsapp.com", "discord.com" },
 			},
 			properties = {
 				screen = 2,
