@@ -23,8 +23,7 @@ screen_theme.stop = screen_theme.dir .. "/icons/stop.png"
 screen_theme.widget_music = screen_theme.dir .. "/icons/note.png"
 screen_theme.widget_music_on = screen_theme.dir .. "/icons/note_on.png"
 
-local markup = lain.util.markup
-local red = "#EB8F8F"
+local red = "#F38BA8"
 
 -- ALSA volume bar
 local volicon = wibox.widget.imagebox(screen_theme.vol)
@@ -115,7 +114,7 @@ local volumewidget = wibox.widget({
 	margins = 4,
 })
 
-local music = require('widgets.music')
+local music = require("widgets.music")
 
 function screen_theme.at_screen_connect(s)
 	-- Tags

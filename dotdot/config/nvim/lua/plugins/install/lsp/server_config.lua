@@ -20,5 +20,6 @@ return {
 	["tsserver"] = {},
 	["typeprof"] = {},
 	["volar"] = {},
-	["tailwindcss"] = {}
+	["tailwindcss"] = {},
+	["hls"] = {},
 }

@@ -208,6 +208,7 @@ local volumewidget =
 	wibox.container.margin(volumebg, dpi(2), dpi(7), dpi(4), dpi(4))
 {%@@ endif @@%}
 
+
 function screen_theme.at_screen_connect(s)
 	-- Tags
 	{%@@ if profile == "sorcery" @@%}
@@ -254,7 +255,7 @@ function screen_theme.at_screen_connect(s)
 					{
 						id = "text_role",
 						widget = wibox.widget.textbox,
-						align = "right"
+						align = "right",
 					},
 					layout = wibox.layout.fixed.horizontal,
 				},

@@ -1,1 +1,1 @@
-require('ui.wallpaper')
+require("ui.wallpaper")

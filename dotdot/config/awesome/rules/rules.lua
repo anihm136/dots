@@ -130,7 +130,7 @@ function rules.create(clientkeys, clientbuttons)
 			properties = {
 				floating = true,
 				height = screen_height() * 0.65,
-				width = screen_width() * 0.55
+				width = screen_width() * 0.55,
 			},
 		},
 		{

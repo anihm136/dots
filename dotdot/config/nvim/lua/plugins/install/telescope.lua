@@ -59,14 +59,19 @@ return {
 
 		local function edit_dotfiles()
 			local find_command = { "fd", "--hidden", "--follow", "--type", "f", "." }
-			-- local search_dirs =
-			-- { 'nvim', 'zsh', 'sxhkd', 'nnn', 'rofi', 'kitty', 'beets' }
-			-- for _, v in pairs(search_dirs) do
-			-- 	table.insert(find_command, v)
-			-- end
+			local search_dirs = {
+				vim.fn.stdpath("config_dirs"),
+				{ vim.fn.stdpath("config") },
+				{ vim.fn.stdpath("data") },
+			}
+			for _, dirs in pairs(search_dirs) do
+				for _, v in pairs(dirs) do
+					table.insert(find_command, v)
+				end
+			end
 			require("telescope.builtin").find_files({
 				prompt_title = "~ dotfiles ~",
-				cwd = "~/.config",
+				cwd = "~/.config/nvim",
 				find_command = find_command,
 			})
 		end

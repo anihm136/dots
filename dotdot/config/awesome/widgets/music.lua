@@ -136,10 +136,7 @@ playerctl:connect_signal("metadata", function(_, title, artist, album_path, albu
 	popup_artist:set_markup_silently(artist)
 
 	local position = (awful.placement.top_right + awful.placement.no_offscreen)
-	position(
-		player_popup,
-		{ margins = dpi(10) }
-	)
+	position(player_popup, { margins = dpi(10) })
 end)
 
 playerctl:connect_signal("playback_status", function(_, playing, _)
@@ -182,7 +179,7 @@ popup_next:buttons(gears.table.join(awful.button({}, 1, function()
 end)))
 
 return wibox.widget({
-	{ title_widget, widget = wibox.container.background, fg = beautiful.get().colors.blue },
+	{ title_widget, widget = wibox.container.background, fg = "#F2CDCD" },
 	widget = wibox.container.margin,
 	right = 10,
 })

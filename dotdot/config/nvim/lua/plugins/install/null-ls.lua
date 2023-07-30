@@ -39,7 +39,7 @@ return {
 				}),
 
 				-- Haskell
-				-- n.builtins.formatting.fourmolu,
+				n.builtins.formatting.fourmolu,
 
 				-- Lua
 				n.builtins.formatting.stylua,
