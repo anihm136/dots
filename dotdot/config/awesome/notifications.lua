@@ -95,7 +95,7 @@ end
 
 naughty.config.notify_callback = function(args)
 	args.screen = awful.screen.focused()
-	args = handle_brave_apps(args)
+	-- args = handle_brave_apps(args)
 	if args.actions ~= nil and #args.actions > 0 then
 		args.timeout = 0.0
 		args.ignore_suspend = true

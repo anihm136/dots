@@ -2,9 +2,7 @@
 
 (setq fancy-splash-image "{{@@ home @@}}/.config/doom/splash.svg")
 
-(doom! :input
-       
-       :completion
+(doom! :completion
        company
        (vertico
         +icons)
@@ -49,7 +47,6 @@
        syntax              ; tasing you for every semicolon you forget
        (spell
         +aspell)             ; tasing you for misspelling mispelling
-       ;;grammar           ; tasing grammar mistake every you make
 
        :tools
 {%@@ if profile != "localhost" @@%}
@@ -69,11 +66,7 @@
         +roam2)               ; organize your plain life in plain text
        beancount
 
-       :email
-
-       :app
-
        :config
        (default
-         +bindings
-         +smartparens))
+        +bindings
+        +smartparens))

@@ -12,6 +12,8 @@ packaging = "*"
 toml = "*"
 distro = "*"
 jinja2 = "*"
+tomli = "*"
+tomli-w = "*"
 
 [dev-packages]
 

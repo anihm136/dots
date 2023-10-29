@@ -11,7 +11,7 @@ return {
 		},
 	},
 	["gopls"] = {},
-	["jedi_language_server"] = {},
+	["pyright"] = {},
 	["clangd"] = {},
 	["terraformls"] = {},
 	["solargraph"] = {

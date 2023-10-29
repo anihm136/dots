@@ -33,7 +33,7 @@
               load-prefer-newer t
               org-download-image-dir "./images"
               org-download-heading-lvl 'nil
-              ispell-dictionary "en-custom"
+              ispell-dictionary "en"
               ispell-personal-dictionary (expand-file-name ".ispell_personal" doom-private-dir))
 
 (custom-set-faces! '(font-lock-comment-face :slant italic))

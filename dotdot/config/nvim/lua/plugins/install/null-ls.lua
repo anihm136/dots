@@ -11,7 +11,9 @@ return {
 			sources = {
 				-- Python
 				n.builtins.diagnostics.ruff,
-				n.builtins.diagnostics.mypy,
+				n.builtins.diagnostics.mypy.with({
+					extra_args={"--ignore-missing-imports"}
+				}),
 				n.builtins.formatting.black,
 				n.builtins.formatting.ruff,
 
