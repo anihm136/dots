@@ -199,6 +199,19 @@ keys.globalkeys = my_table.join(
 		description = "toggle notifications",
 		group = "awesome",
 	}),
+	-- Dismiss all notifications
+	awful.key({ modkey, ctrl }, "n", function()
+		naughty.destroy_all_notifications()
+		naughty.notification({
+			title = "Info",
+			message = (naughty.suspended and "Resuming" or "Suspending") .. " notifications",
+			ignore_suspend = true,
+		})
+		naughty.suspended = not naughty.suspended
+	end, {
+		description = "toggle notifications",
+		group = "awesome",
+	}),
 	-- Terminal (emergency)
 	awful.key({ ctrl, altkey }, "t", function()
 		awful.spawn(awful.util.terminal_alt)

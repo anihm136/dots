@@ -227,6 +227,9 @@
         org-roam-capture-templates
         '(("d" "default" plain "%?" :target
            (file+head "${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
+          ("p" "paper" plain "%?" :target
+           (file+head "papers/${slug}.org" "#+title: ${title}\n- paper :: \n- tags :: \n* ")
            :unnarrowed t))
         org-roam-buffer-width 0.25))
 
@@ -288,7 +291,7 @@
   :commands (org-diagrams-insert-at-point-and-edit org-diagrams-edit-at-point org-diagrams-init)
   :config (progn
             (setq
-             org-diagrams-editor "drawio"
+             org-diagrams-editor "drawio -c"
              org-diagrams-on-update "drawio -x -f png -o ${OUT} ${IN}")
             (org-diagrams-init)))
 
@@ -312,8 +315,8 @@
         global-git-commit-mode t))
 
 (use-package! aas
-  :hook (LaTeX-mode . ass-activate-for-major-mode)
-  :hook (org-mode . ass-activate-for-major-mode))
+  :hook (LaTeX-mode . aas-activate-for-major-mode)
+  :hook (org-mode . aas-activate-for-major-mode))
 
 (use-package! laas
   :hook (LaTeX-mode . laas-mode)

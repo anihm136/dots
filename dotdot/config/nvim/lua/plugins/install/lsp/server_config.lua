@@ -22,4 +22,5 @@ return {
 	["volar"] = {},
 	["tailwindcss"] = {},
 	["hls"] = {},
+	["yamlls"] = {}
 }

@@ -10,7 +10,6 @@ return {
 			ensure_installed = "all",
 			highlight = { enable = true },
 			indent = { enable = false },
-			context_commentstring = { enable = true, enable_autocmd = false },
 			-- autotag = { enable = true },
 			-- matchup = { enable = true },
 		})
