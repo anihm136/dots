@@ -2,6 +2,8 @@ return {
 	"nvimtools/none-ls.nvim",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
+		"gbprod/none-ls-shellcheck.nvim",
+		"nvimtools/none-ls-extras.nvim",
 		"jay-babu/mason-null-ls.nvim",
 	},
 	event = "VeryLazy",
@@ -10,12 +12,12 @@ return {
 		n.setup({
 			sources = {
 				-- Python
-				n.builtins.diagnostics.ruff,
+				require("none-ls.diagnostics.ruff"),
 				n.builtins.diagnostics.mypy.with({
 					extra_args={"--ignore-missing-imports"}
 				}),
 				n.builtins.formatting.black,
-				n.builtins.formatting.ruff,
+				require("none-ls.formatting.ruff"),
 
 				-- Go
 				n.builtins.diagnostics.golangci_lint,
@@ -28,15 +30,15 @@ return {
 
 				-- JS
 				n.builtins.formatting.prettierd,
-				n.builtins.diagnostics.eslint_d,
-				n.builtins.formatting.eslint_d,
+				require("none-ls.diagnostics.eslint_d"),
+				require("none-ls.formatting.eslint_d"),
 
 				-- Sh
 				n.builtins.diagnostics.zsh,
 				n.builtins.formatting.shfmt.with({
 					extra_filetypes = { "bash" },
 				}),
-				n.builtins.diagnostics.shellcheck.with({
+				require("none-ls-shellcheck.diagnostics").with({
 					extra_filetypes = { "bash" },
 				}),
 
